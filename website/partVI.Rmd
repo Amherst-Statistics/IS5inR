@@ -1,0 +1,18 @@
+<h2>
+<center>
+"Part VI: Accessing Associations Between Variables"
+</center>
+</h2>
+
+
+</br>
+<h4><right>Chapters: 22-25</right></h4>
+</br>
+
+Title  | Links to Rmd and PDF files
+------------- | -------------
+Chapter 22 : Comparing Groups | <a href='chapterfiles/Chapter22.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter22.pdf'>(pdf)</a>
+Chapter 23 : Paired Samples and Blocks | <a href='chapterfiles/Chapter23.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter23.pdf'>(pdf)</a>
+Chapter 24 : Comparing Counts | <a href='chapterfiles/Chapter24.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter24.pdf'>(pdf)</a>
+Chapter 25 : Inferences for Regression | <a href='chapterfiles/Chapter25.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter25.pdf'>(pdf)</a>
+
