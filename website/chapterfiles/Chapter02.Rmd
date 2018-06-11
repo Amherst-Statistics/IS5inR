@@ -40,7 +40,7 @@ file as well as the associated R Markdown reproducible analysis source file used
 This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum. In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses. A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (http://cran.r-project.org/web/packages/mosaic).  A paper describing the mosaic approach was published in t
 he *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
-## Chapter 1: Displaying and Describing Data
+## Chapter 2: Displaying and Describing Data
 
 ### Section 2.1: Summarizing and Displaying a Categorical Variable
 
@@ -66,63 +66,82 @@ gf_histogram(~ Age, data = Titanic, bins = 15, ylab = "# of People")
 
 #### Earthquakes and Tsunamis
 
+```{r}
+Earthquakes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tsunamis_2016.csv")
+gf_histogram(~Primary_Magnitude, data = Earthquakes, bins = 12, ylab = "Earthquakes", xlab = "Magnitude")
+```
 
+#### Stem-and-Leaf Displays
+
+See examples in textbook.
+
+```{r}
+#Don't think there is data available for this
+```
+
+#### Dotplot
+
+```{r}
+Derby <- read_csv("http://nhorton.people.amherst.edu/is5/data/Kentucky_Derby_2016.csv")
+gf_dotplot(~ Time_Sec, data = Derby, binwidth = 1)
+```
+
+#### Density Plots
+
+```{r}
+gf_dens(~ Age, data = Titanic, ylab = "Density")
+```
 
 ### Section 2.3: Shape
+
+See displays on pages 28-29.
+
+#### Consumer Price Index
+
+```{r}
+CPI <- read_csv("http://nhorton.people.amherst.edu/is5/data/CPI_Worldwide.csv")
+gf_histogram(~ `Consumer.Price.Index`, data = CPI, ylab = "# of Cities", xlab = "Consumer Price Index")
+```
+
+#### Credit Card Expenditures
+
+```{r}
+CreditCardEx <- read_csv("http://nhorton.people.amherst.edu/is5/data/Credit_card_charges.csv")
+CreditCardEx <- CreditCardEx %>%
+  rename(Charges = 'Charges($)') #The $ was giving me other errors so I renamed it
+gf_histogram(~ Charges, data = Credit_card_charges, ylab = "# of Customers", xlab = "Average Monthly Expenditure ($)")
+```
+
 ### Section 2.4: Center
+
+#### Finding Median and Mean
+
+```{r}
+gf_histogram(~ Age, data = filter(Titanic, Class == "Crew"))
+favstats(~ Age, data = filter(Titanic, Class == "Crew"))
+```
+
 ### Section 2.5: Spread
 
-See table on page 7.
+#### IQR
 
 ```{r}
-library(mosaic)
-library(readr)
-options(digits = 3)
-Tour <- 
-  read_csv("http://nhorton.people.amherst.edu/is5/data/Tour_de_France_2016.csv")
-names(Tour)
-glimpse(Tour)
-head(Tour, 3)
-tail(Tour, 8) %>%
-  select(Winner, Year, Country)
+favstats(~ Age, data = filter(Titanic, Class == "Crew"))
 ```
 
-#### Let's find who was the winner in 1998
+We can find IQR by subtracting Q1 from Q3.  
+
+### Summarizing a Distribution
 
 ```{r}
-filter(Tour, Year == 1998) %>%
-  select(Winner, Year, Country)
+Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
+gf_histogram(~ mpg, data = Nissan, bins = 18, xlab = "Fuel Efficiency (mpg)", ylab = "# of Fill-ups")
+favstats(~ mpg, data = Nissan)
 ```
 
-#### How many stages did Alberto Contador win in the years when he won the Tour?
+### Random Matters
 
 ```{r}
-filter(Tour, Winner == "Contador Alberto") %>%
-  select(Winner, Year, Stages)
-```
-
-Note that the following command generates the same output.
-
-```{r}
-Tour %>%
-  filter(Winner == "Contador Alberto") %>%
-  select(Winner, Year, Stages)
-```
-
-The pipe operator (`%>%`) can be used to connect one dataframe or command to 
-another.
-
-#### What was the slowest average speed of any tour?  Fastest?
-
-```{r}
-filter(Tour, Average.Speed == min(Average.Speed)) %>%
-  select(Year, Average.Speed)
-filter(Tour, Average.Speed == max(Average.Speed)) %>%
-  select(Year, Average.Speed)
-```
-
-#### How can we summarize the distribution of Average Speeds?
-
-```{r}
-favstats(~ Average.Speed, data = Tour)
+Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv")
+gf_histogram(~ `Commute.Time`, data = Commute, binwidth = 10, xlab = "Commute Time (min)", ylab = "# of Employees")
 ```
