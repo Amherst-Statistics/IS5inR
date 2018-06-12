@@ -37,8 +37,7 @@ as examples in the Fifth Edition of \emph{Intro Stats} (2018) by De Veaux, Velle
 More information about the book can be found at http://wps.aw.com/aw_deveaux_stats_series.  This
 file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
 
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum. In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses. A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (http://cran.r-project.org/web/packages/mosaic).  A paper describing the mosaic approach was published in t
-he *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
+This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum. In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses. A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (http://cran.r-project.org/web/packages/mosaic).  A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
 ## Chapter 2: Displaying and Describing Data
 
@@ -109,7 +108,7 @@ gf_histogram(~ `Consumer.Price.Index`, data = CPI, ylab = "# of Cities", xlab = 
 CreditCardEx <- read_csv("http://nhorton.people.amherst.edu/is5/data/Credit_card_charges.csv")
 CreditCardEx <- CreditCardEx %>%
   rename(Charges = 'Charges($)') #The $ was giving me other errors so I renamed it
-gf_histogram(~ Charges, data = Credit_card_charges, ylab = "# of Customers", xlab = "Average Monthly Expenditure ($)")
+gf_histogram(~ Charges, data = CreditCardEx, ylab = "# of Customers", xlab = "Average Monthly Expenditure ($)")
 ```
 
 ### Section 2.4: Center
@@ -129,9 +128,15 @@ favstats(~ Age, data = filter(Titanic, Class == "Crew"))
 favstats(~ Age, data = filter(Titanic, Class == "Crew"))
 ```
 
+XX MC do we want to pipe here?
+
+
+
 We can find IQR by subtracting Q1 from Q3.  
 
 ### Summarizing a Distribution
+
+XX MC please be sure that code doesn't flow into right margin...
 
 ```{r}
 Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
