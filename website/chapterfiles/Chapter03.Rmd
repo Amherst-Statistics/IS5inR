@@ -47,12 +47,23 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 OKCupid <- read_csv("http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", skip = 1)
 # If you look at the data set, you'll see that the first line is "Col1", "Col2", etc
 tally(~ CatsDogsBoth + Gender, data = OKCupid)
-# prop.table()
+tally(~ CatsDogsBoth + Gender, format = "percent", data = OKCupid)
+tally(~ CatsDogsBoth | Gender, format = "percent", data = OKCupid)
+tally(~ Gender | CatsDogsBoth, format = "percent", data = OKCupid)
 ```
 
 #### Example 3.1: Exploring Marginal Distributions
 
+```{r}
+SuperBowl <- read_csv("http://nhorton.people.amherst.edu/is5/data/Watch_the_Super_bowl.csv", skip = 1)
+tally(~ Plan + Sex, data = SuperBowl)
+```
+
 #### Example 3.2: Exploring Percentages: Children and First-Class Ticket Holders First?
+
+```{r}
+Titanic <- read_csv("http://nhorton.people.amherst.edu/is5/data/Titanic.csv")
+```
 
 ### Section 3.2: Conditional Distributions
 
