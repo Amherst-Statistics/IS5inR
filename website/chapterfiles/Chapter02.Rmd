@@ -33,7 +33,7 @@ opts_chunk$set(
 ## Introduction and background 
 
 This document is intended to help describe how to undertake analyses introduced 
-as examples in the Fifth Edition of \emph{Intro Stats} (2018) by De Veaux, Velleman, and Bock.
+as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
 More information about the book can be found at http://wps.aw.com/aw_deveaux_stats_series.  This
 file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
 
@@ -75,7 +75,9 @@ gf_histogram(~Primary_Magnitude, data = Earthquakes, bins = 12, ylab = "Earthqua
 See examples in textbook.
 
 ```{r}
-#Don't think there is data available for this
+#Pulse_rates <- read_delim("http://nhorton.people.amherst.edu/sdm4/data/Pulse_rates.txt",
+#  delim = "\t")
+#with(Pulse_rates, stem(Pulse))
 ```
 
 #### Dotplot
@@ -99,7 +101,8 @@ See displays on pages 28-29.
 
 ```{r}
 CPI <- read_csv("http://nhorton.people.amherst.edu/is5/data/CPI_Worldwide.csv")
-gf_histogram(~ `Consumer.Price.Index`, data = CPI, ylab = "# of Cities", xlab = "Consumer Price Index")
+gf_histogram(~ `Consumer.Price.Index`, data = CPI, ylab = "# of Cities", 
+             xlab = "Consumer Price Index")
 ```
 
 #### Credit Card Expenditures
@@ -108,7 +111,8 @@ gf_histogram(~ `Consumer.Price.Index`, data = CPI, ylab = "# of Cities", xlab = 
 CreditCardEx <- read_csv("http://nhorton.people.amherst.edu/is5/data/Credit_card_charges.csv")
 CreditCardEx <- CreditCardEx %>%
   rename(Charges = 'Charges($)') #The $ was giving me other errors so I renamed it
-gf_histogram(~ Charges, data = CreditCardEx, ylab = "# of Customers", xlab = "Average Monthly Expenditure ($)")
+gf_histogram(~ Charges, data = CreditCardEx, ylab = "# of Customers", 
+             xlab = "Average Monthly Expenditure ($)")
 ```
 
 ### Section 2.4: Center
@@ -116,31 +120,42 @@ gf_histogram(~ Charges, data = CreditCardEx, ylab = "# of Customers", xlab = "Av
 #### Finding Median and Mean
 
 ```{r}
-gf_histogram(~ Age, data = filter(Titanic, Class == "Crew"))
-favstats(~ Age, data = filter(Titanic, Class == "Crew"))
+TitanicCrew <- filter(Titanic, Class == "Crew")
+gf_histogram(~ Age, data = TitanicCrew)
+favstats(~ Age, data = TitanicCrew)
 ```
 
 ### Section 2.5: Spread
 
-#### IQR
+#### The Range
 
 ```{r}
-favstats(~ Age, data = filter(Titanic, Class == "Crew"))
+range(~ Age, data = TitanicCrew)
+diff(range(~ Age, data = TitanicCrew))
 ```
 
-XX MC do we want to pipe here?
+#### The Interquartile Range
 
-
+```{r}
+favstats(~ Age, data = TitanicCrew)
+IQR(~ Age, data = TitanicCrew)
+```
 
 We can find IQR by subtracting Q1 from Q3.  
 
-### Summarizing a Distribution
+#### Standard Deviation  
 
-XX MC please be sure that code doesn't flow into right margin...
+```{r}
+sd(~ Age, data = TitanicCrew)
+var(~ Age, data = TitanicCrew)
+```
+
+### Summarizing a Distribution
 
 ```{r}
 Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
-gf_histogram(~ mpg, data = Nissan, bins = 18, xlab = "Fuel Efficiency (mpg)", ylab = "# of Fill-ups")
+gf_histogram(~ mpg, data = Nissan, bins = 18, xlab = "Fuel Efficiency (mpg)", 
+             ylab = "# of Fill-ups")
 favstats(~ mpg, data = Nissan)
 ```
 
@@ -148,5 +163,6 @@ favstats(~ mpg, data = Nissan)
 
 ```{r}
 Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv")
-gf_histogram(~ `Commute.Time`, data = Commute, binwidth = 10, xlab = "Commute Time (min)", ylab = "# of Employees")
+gf_histogram(~ `Commute.Time`, data = Commute, binwidth = 10, xlab = "Commute Time (min)", 
+             ylab = "# of Employees")
 ```
