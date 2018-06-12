@@ -45,7 +45,21 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 
 ```{r}
 OKCupid <- read_csv("http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", skip = 1)
+# If you look at the data set, you'll see that the first line is "Col1", "Col2", etc
 tally(~ CatsDogsBoth + Gender, data = OKCupid)
-# XX MC let's try to extirpate any use of $
+# prop.table()
 ```
 
+#### Example 3.1: Exploring Marginal Distributions
+
+#### Example 3.2: Exploring Percentages: Children and First-Class Ticket Holders First?
+
+### Section 3.2: Conditional Distributions
+
+#### Example 3.3: Finding Conditional Distributions: Watching the Super Bowl
+
+#### Example 3.4: Looking for Associations Between Variables: Still Watching the Super Bowl
+
+#### Examining Contingency Tables
+
+#### Random Matters
