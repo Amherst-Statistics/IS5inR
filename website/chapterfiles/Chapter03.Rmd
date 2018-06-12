@@ -46,10 +46,10 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 ```{r}
 OKCupid <- read_csv("http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", skip = 1)
 # If you look at the data set, you'll see that the first line is "Col1", "Col2", etc
-tally(~ CatsDogsBoth + Gender, data = OKCupid)
-tally(~ CatsDogsBoth + Gender, format = "percent", data = OKCupid)
-tally(~ CatsDogsBoth | Gender, format = "percent", data = OKCupid)
-tally(~ Gender | CatsDogsBoth, format = "percent", data = OKCupid)
+tally(~ CatsDogsBoth + Gender, margin = TRUE, data = OKCupid)
+tally(~ CatsDogsBoth + Gender, format = "percent", margin = TRUE, data = OKCupid)
+tally(~ CatsDogsBoth | Gender, format = "percent", margin = TRUE, data = OKCupid)
+tally(~ Gender | CatsDogsBoth, format = "percent", margin = TRUE, data = OKCupid)
 ```
 
 #### Example 3.1: Exploring Marginal Distributions
@@ -63,9 +63,20 @@ tally(~ Plan + Sex, data = SuperBowl)
 
 ```{r}
 Titanic <- read_csv("http://nhorton.people.amherst.edu/is5/data/Titanic.csv")
+tally(~ Class + Survived, format = "percent", margin = TRUE, data = Titanic)
+tally(~ Survived | Class, format = "percent", margin = TRUE, data = Titanic)
+tally(~ Class | Survived, format = "percent", margin = TRUE, data = Titanic)
 ```
 
 ### Section 3.2: Conditional Distributions
+
+See displays on 68-69.
+
+```{r}
+barplot(tally(~ CatsDogsBoth + Gender, data = OKCupid), beside = TRUE)
+#There are many who don't own either
+barplot(tally(~ CatsDogsBoth + Gender, data = filter(OKCupid, CatsDogsBoth != "NA")), beside = TRUE)
+```
 
 #### Example 3.3: Finding Conditional Distributions: Watching the Super Bowl
 
