@@ -80,8 +80,27 @@ barplot(tally(~ CatsDogsBoth + Gender, data = filter(OKCupid, CatsDogsBoth != "N
 
 #### Example 3.3: Finding Conditional Distributions: Watching the Super Bowl
 
+```{r}
+tally(~ Plan + Sex, margin = TRUE, data = SuperBowl)
+tally(~ Plan | Sex, format = "percent", data = SuperBowl)
+```
+
 #### Example 3.4: Looking for Associations Between Variables: Still Watching the Super Bowl
+
+```{r}
+barplot(tally(~ Plan | Sex, format = "percent", data = SuperBowl), beside = TRUE)
+```
 
 #### Examining Contingency Tables
 
+```{r}
+FishDiet <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fish_diet.csv", skip = 1)
+tally(~ `Diet:Counts` + `Cancer:Counts`, data = FishDiet)
+```
+
 #### Random Matters
+
+```{r}
+
+```
+
