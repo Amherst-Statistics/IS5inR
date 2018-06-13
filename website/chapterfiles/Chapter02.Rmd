@@ -75,9 +75,9 @@ gf_histogram(~Primary_Magnitude, data = Earthquakes, bins = 12, ylab = "Earthqua
 See examples in textbook.
 
 ```{r}
-#Pulse_rates <- read_delim("http://nhorton.people.amherst.edu/sdm4/data/Pulse_rates.txt",
-#  delim = "\t")
-#with(Pulse_rates, stem(Pulse))
+Pulse_rates <- read_csv("http://nhorton.people.amherst.edu/is5/data/Pulse_rates.csv")
+gf_histogram(~ Pulse, data = Pulse_rates, bins = 7)
+with(Pulse_rates, stem(Pulse))
 ```
 
 #### Dotplot
