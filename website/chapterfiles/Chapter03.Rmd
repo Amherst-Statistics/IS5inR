@@ -101,6 +101,53 @@ tally(~ `Diet:Counts` + `Cancer:Counts`, data = FishDiet)
 #### Random Matters
 
 ```{r}
-
+Nightmares <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nightmares.csv", skip = 1)
+Nightmares$Dream <- ifelse(Nightmares$Dream == "N", "Nightmare", "SweetDreams") 
+#notation can be improved, but renaming seems necessary
+tally(~ Side + Dream, data = Nightmares)
 ```
 
+### Section 3.3: Displaying Contingency Tables
+
+```{r}
+tally(~ Class + Survived, format = "count", data = Titanic)
+tally(~ Class + Survived, format = "percent", data = Titanic)
+barplot(tally(~ Survived | Class, format = "percent", data = Titanic), beside = TRUE)
+barplot(tally(~ Class | Survived, format = "percent", data = Titanic))
+```
+
+```{r}
+vcd::mosaic(tally(~ Survived + Class, data = Titanic), 
+           main = "Mosaic plot of Class by Survival",
+           shade = TRUE)
+```
+
+#### Example 3.5: Looking for Associations in Large Data Sets: Text Messages
+
+```{r}
+# Not sure where the data is
+```
+
+#### Example 3.6: Looking for Associations in Large Data Sets: Text Messages Revisited
+
+```{r}
+# Same as above
+```
+
+### Section 3.4: Three Categorical Variables
+
+```{r}
+tally(~ Gender + CatsDogsBoth + `drugsY/N`, format = "percent", data = OKCupid)
+```
+
+#### Example 3.7: Looking for Associations Among Three Variables at Once
+
+```{r}
+vcd::mosaic(tally(~ Sex + Survived + Class, data = Titanic), shade = TRUE)
+```
+
+#### Example 3.8: Simpson's Paradox: Gender Discrimination?
+
+```{r}
+# Not sure where the data is
+```
