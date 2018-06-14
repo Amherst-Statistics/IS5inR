@@ -48,6 +48,7 @@ See displays on page 19-23.
 ```{r message = FALSE}
 library(mosaic)
 library(readr)
+library(janitor) #for column names
 options(digits = 3)
 Titanic <- read_csv("http://nhorton.people.amherst.edu/is5/data/Titanic.csv")
 tally(~ Class, data = Titanic)
@@ -100,18 +101,20 @@ See displays on pages 28-29.
 #### Consumer Price Index
 
 ```{r}
-CPI <- read_csv("http://nhorton.people.amherst.edu/is5/data/CPI_Worldwide.csv")
-gf_histogram(~ `Consumer.Price.Index`, data = CPI, ylab = "# of Cities", 
+CPI <- read_csv("http://nhorton.people.amherst.edu/is5/data/CPI_Worldwide.csv") %>%
+  clean_names()
+gf_histogram(~ consumer_price_index, data = CPI, ylab = "# of Cities", 
              xlab = "Consumer Price Index")
 ```
+
+We can use `clean_names()` from the `janitor` package to format the names of the columns when necessary.  
 
 #### Credit Card Expenditures
 
 ```{r}
-CreditCardEx <- read_csv("http://nhorton.people.amherst.edu/is5/data/Credit_card_charges.csv")
-CreditCardEx <- CreditCardEx %>%
-  rename(Charges = 'Charges($)') #The $ was giving me other errors so I renamed it
-gf_histogram(~ Charges, data = CreditCardEx, ylab = "# of Customers", 
+CreditCardEx <- read_csv("http://nhorton.people.amherst.edu/is5/data/Credit_card_charges.csv") %>%
+  clean_names()
+gf_histogram(~ charges, data = CreditCardEx, ylab = "# of Customers", 
              xlab = "Average Monthly Expenditure ($)")
 ```
 
@@ -162,7 +165,8 @@ favstats(~ mpg, data = Nissan)
 ### Random Matters
 
 ```{r}
-Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv")
-gf_histogram(~ `Commute.Time`, data = Commute, binwidth = 10, xlab = "Commute Time (min)", 
+Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv") %>%
+  clean_names()
+gf_histogram(~ commute_time, data = Commute, binwidth = 10, xlab = "Commute Time (min)", 
              ylab = "# of Employees")
 ```

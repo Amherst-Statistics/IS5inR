@@ -44,12 +44,14 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 ### Section 3.1: Contingency Tables
 
 ```{r}
-OKCupid <- read_csv("http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", skip = 1)
+library(janitor)
+OKCupid <- read_csv("http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", skip = 1) %>%
+  clean_names()
 # If you look at the data set, you'll see that the first line is "Col1", "Col2", etc
-tally(~ CatsDogsBoth + Gender, margin = TRUE, data = OKCupid)
-tally(~ CatsDogsBoth + Gender, format = "percent", margin = TRUE, data = OKCupid)
-tally(~ CatsDogsBoth | Gender, format = "percent", margin = TRUE, data = OKCupid)
-tally(~ Gender | CatsDogsBoth, format = "percent", margin = TRUE, data = OKCupid)
+tally(~ cats_dogs_both + gender, margin = TRUE, data = OKCupid)
+tally(~ cats_dogs_both + gender, format = "percent", margin = TRUE, data = OKCupid)
+tally(~ cats_dogs_both | gender, format = "percent", margin = TRUE, data = OKCupid)
+tally(~ gender | cats_dogs_both, format = "percent", margin = TRUE, data = OKCupid)
 ```
 
 #### Example 3.1: Exploring Marginal Distributions
@@ -73,9 +75,9 @@ tally(~ Class | Survived, format = "percent", margin = TRUE, data = Titanic)
 See displays on 68-69.
 
 ```{r}
-barplot(tally(~ CatsDogsBoth + Gender, data = OKCupid), beside = TRUE)
+barplot(tally(~ cats_dogs_both + gender, data = OKCupid), beside = TRUE)
 #There are many who don't own either
-barplot(tally(~ CatsDogsBoth + Gender, data = filter(OKCupid, CatsDogsBoth != "NA")), beside = TRUE)
+barplot(tally(~ cats_dogs_both + gender, data = filter(OKCupid, cats_dogs_both != "NA")), beside = TRUE)
 ```
 
 #### Example 3.3: Finding Conditional Distributions: Watching the Super Bowl
@@ -94,8 +96,9 @@ barplot(tally(~ Plan | Sex, format = "percent", data = SuperBowl), beside = TRUE
 #### Examining Contingency Tables
 
 ```{r}
-FishDiet <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fish_diet.csv", skip = 1)
-tally(~ `Diet:Counts` + `Cancer:Counts`, data = FishDiet)
+FishDiet <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fish_diet.csv", skip = 1) %>%
+  clean_names()
+tally(~ diet_counts + cancer_counts, data = FishDiet)
 ```
 
 #### Random Matters
@@ -137,7 +140,7 @@ vcd::mosaic(tally(~ Survived + Class, data = Titanic),
 ### Section 3.4: Three Categorical Variables
 
 ```{r}
-tally(~ Gender + CatsDogsBoth + `drugsY/N`, format = "percent", data = OKCupid)
+tally(~ gender + cats_dogs_both + drugs_y_n, format = "percent", data = OKCupid)
 ```
 
 #### Example 3.7: Looking for Associations Among Three Variables at Once
