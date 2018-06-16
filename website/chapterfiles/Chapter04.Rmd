@@ -73,16 +73,32 @@ with(NestEgg, stem(nest_egg_index)) # not sure how to group by region
 
 ```{r}
 gf_boxplot(as.factor(month) ~ avg_wind_mph, data = HopkinsForest) %>%
-  gf_refine(coord_flip()) #just lines...
+  gf_refine(coord_flip()) # just lines...
 ```
 
 #### Example 4.2: Comparing Groups with Boxplots
 
 ```{r}
+Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv")
+gf_boxplot(Track ~ Speed, data = Coasters) %>%
+  gf_refine(coord_flip()) # not sure how to make these not lines
+```
+
+#### Step-By-Step Example: Comparing Groups
+
+```{r}
+Cups <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cups.csv")
+favstats(~ Difference | Container, data = Cups)
+gf_boxplot(Container ~ Difference, data = Cups) %>%
+  gf_refine(coord_flip())
+```
+
+#### Just Checking
+
+```{r}
 
 
-
-````
+```
 
 ### Section 4.2: Outliers
 ### Section 4.3: Re-Expressing Data: A First Look
