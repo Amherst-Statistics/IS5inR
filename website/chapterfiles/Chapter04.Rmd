@@ -42,7 +42,48 @@ he *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
 ## Chapter 4: Understanding and Comparing Distributions
 
-### Section 4.1: 
-### Section 4.2: 
-### Section 4.3: 
+```{r}
+HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
+  clean_names()
+gf_histogram(~ avg_wind_mph, data = HopkinsForest)
+favstats(~ avg_wind_mph, data = HopkinsForest)
+```
+
+### Section 4.1: Displays for Comparing Groups
+
+#### Histograms
+
+```{r}
+HopkinsForest <- HopkinsForest %>%
+  mutate(catmonth = ifelse(month <= 9 & month >= 4, "Spring/Summer", "Fall/Winter"))
+gf_histogram(~ avg_wind_mph, data = HopkinsForest) %>%
+  gf_facet_wrap(~ catmonth)
+favstats(~ avg_wind_mph | catmonth, data = HopkinsForest)
+```
+
+#### Example 4.1: Comparing Groups with Stem-And-Leaf
+
+```{r}
+NestEgg <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nest_Egg_Index.csv") %>%
+  clean_names()
+with(NestEgg, stem(nest_egg_index)) # not sure how to group by region
+```
+
+#### Boxplots
+
+```{r}
+gf_boxplot(as.factor(month) ~ avg_wind_mph, data = HopkinsForest) %>%
+  gf_refine(coord_flip()) #just lines...
+```
+
+#### Example 4.2: Comparing Groups with Boxplots
+
+```{r}
+
+
+
+````
+
+### Section 4.2: Outliers
+### Section 4.3: Re-Expressing Data: A First Look
 
