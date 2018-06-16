@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Stats Starts Here (Chapter 4)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "June 10, 2018"
+date: "June 16, 2018"
 output: 
   pdf_document:
     fig_height: 4
@@ -18,7 +18,9 @@ output:
 ```{r, include = FALSE}
 # Don't delete this chunk if you are using the mosaic package
 # This loads the mosaic and dplyr packages
-require(mosaic)
+library(mosaic)
+library(readr)
+library(janitor)
 ```
 
 ```{r, include = FALSE}
@@ -43,6 +45,9 @@ he *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 ## Chapter 4: Understanding and Comparing Distributions
 
 ```{r}
+library(mosaic)
+library(readr)
+library(janitor)
 HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
   clean_names()
 gf_histogram(~ avg_wind_mph, data = HopkinsForest)
@@ -72,8 +77,8 @@ with(NestEgg, stem(nest_egg_index)) # not sure how to group by region
 #### Boxplots
 
 ```{r}
-gf_boxplot(as.factor(month) ~ avg_wind_mph, data = HopkinsForest) %>%
-  gf_refine(coord_flip()) # just lines...
+gf_boxplot(avg_wind_mph ~ as.factor(month), data = HopkinsForest) %>%
+  gf_labs(x = "month", y = "average wind speed (mph)")
 ```
 
 #### Example 4.2: Comparing Groups with Boxplots
@@ -82,6 +87,7 @@ gf_boxplot(as.factor(month) ~ avg_wind_mph, data = HopkinsForest) %>%
 Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv")
 gf_boxplot(Track ~ Speed, data = Coasters) %>%
   gf_refine(coord_flip()) # not sure how to make these not lines
+# XX MC to fix
 ```
 
 #### Step-By-Step Example: Comparing Groups
