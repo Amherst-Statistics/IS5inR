@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Relationships Between Categorical Variables--Contingency Tables (Chapter 3)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "June 10, 2018"
+date: "June 16, 2018"
 output: 
   pdf_document:
     fig_height: 4
@@ -18,7 +18,9 @@ output:
 ```{r, include = FALSE}
 # Don't delete this chunk if you are using the mosaic package
 # This loads the mosaic and dplyr packages
-require(mosaic)
+library(mosaic)
+library(readr)
+library(janitor)
 ```
 
 ```{r, include = FALSE}
@@ -44,6 +46,8 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 ### Section 3.1: Contingency Tables
 
 ```{r}
+library(mosaic)
+library(readr)
 library(janitor)
 OKCupid <- read_csv("http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", skip = 1) %>%
   clean_names()
@@ -106,7 +110,6 @@ tally(~ diet_counts + cancer_counts, data = FishDiet)
 ```{r}
 Nightmares <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nightmares.csv", skip = 1)
 Nightmares$Dream <- ifelse(Nightmares$Dream == "N", "Nightmare", "SweetDreams") 
-#notation can be improved, but renaming seems necessary
 tally(~ Side + Dream, data = Nightmares)
 ```
 
@@ -125,19 +128,9 @@ vcd::mosaic(tally(~ Survived + Class, data = Titanic),
            shade = TRUE)
 ```
 
-#### Example 3.5: Looking for Associations in Large Data Sets: Text Messages
-
-```{r}
-# Not sure where the data is
-```
-
-#### Example 3.6: Looking for Associations in Large Data Sets: Text Messages Revisited
-
-```{r}
-# Same as above
-```
-
 ### Section 3.4: Three Categorical Variables
+
+XX MC please add page refs throughout this document
 
 ```{r}
 tally(~ gender + cats_dogs_both + drugs_y_n, format = "percent", data = OKCupid)
@@ -152,5 +145,5 @@ vcd::mosaic(tally(~ Sex + Survived + Class, data = Titanic), shade = TRUE)
 #### Example 3.8: Simpson's Paradox: Gender Discrimination?
 
 ```{r}
-# Not sure where the data is
+# XX MC data are provided in table on the bottom of page 80: please create this on the fly as done in some of the prior texts
 ```
