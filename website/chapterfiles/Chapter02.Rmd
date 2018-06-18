@@ -68,7 +68,7 @@ gf_histogram(~ Age, data = Titanic, bins = 15, ylab = "# of People")
 
 ```{r}
 Earthquakes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tsunamis_2016.csv")
-gf_histogram(~Primary_Magnitude, data = Earthquakes, bins = 12, ylab = "Earthquakes", xlab = "Magnitude")
+gf_histogram(~ Primary_Magnitude, data = Earthquakes, bins = 12, ylab = "Earthquakes", xlab = "Magnitude")
 ```
 
 #### Stem-and-Leaf Displays

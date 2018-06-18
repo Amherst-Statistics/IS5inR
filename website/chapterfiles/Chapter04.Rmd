@@ -101,9 +101,12 @@ gf_boxplot(Container ~ Difference, data = Cups) %>%
 
 #### Just Checking
 
-```{r}
-
-
+```{r, warning=FALSE}
+Flights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Flights_on_time_2016.csv") %>%
+  clean_names()
+gf_histogram(~ ontime_pct, data = Flights, binwidth = 2, ylab = "# of Months", xlab = "Ontime %")
+gf_boxplot(ontime_pct ~ 1, data = Flights, xlab = "")
+gf_boxplot(month ~ ontime_pct, data = Flights)
 ```
 
 ### Section 4.2: Outliers

@@ -99,6 +99,8 @@ barplot(tally(~ Plan | Sex, format = "percent", data = SuperBowl), beside = TRUE
 
 #### Examining Contingency Tables
 
+See displays on page 72.  
+
 ```{r}
 FishDiet <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fish_diet.csv", skip = 1) %>%
   clean_names()
@@ -106,6 +108,8 @@ tally(~ diet_counts + cancer_counts, data = FishDiet)
 ```
 
 #### Random Matters
+
+Seee display on page 74.
 
 ```{r}
 Nightmares <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nightmares.csv", skip = 1)
@@ -128,9 +132,9 @@ vcd::mosaic(tally(~ Survived + Class, data = Titanic),
            shade = TRUE)
 ```
 
-### Section 3.4: Three Categorical Variables
+See the mosaic plots on page 77.  
 
-XX MC please add page refs throughout this document
+### Section 3.4: Three Categorical Variables
 
 ```{r}
 tally(~ gender + cats_dogs_both + drugs_y_n, format = "percent", data = OKCupid)
@@ -144,6 +148,15 @@ vcd::mosaic(tally(~ Sex + Survived + Class, data = Titanic), shade = TRUE)
 
 #### Example 3.8: Simpson's Paradox: Gender Discrimination?
 
+See tables on page 80.  
+
 ```{r}
-# XX MC data are provided in table on the bottom of page 80: please create this on the fly as done in some of the prior texts
+# Making the data frame
+school <- c("A", "B", "C", "D", "E", "F")
+male_admits <- c(512, 313, 120, 138, 53, 22)
+female_admits <- c(89, 17, 202, 131, 94, 24)
+male_percent <- c(.621, .602, .369, .331, .277, .059)
+female_percent <- c(.824, .680, .341, .349, .239, .070)
+Berk <- data.frame(school, male_admits, female_admits, male_percent, female_percent)
+Berk
 ```
