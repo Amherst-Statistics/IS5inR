@@ -77,6 +77,7 @@ with(NestEgg, stem(nest_egg_index)) # not sure how to group by region
 #### Boxplots
 
 ```{r}
+gf_boxplot(avg_wind_mph ~ 1, data = HopkinsForest, xlab = "")
 gf_boxplot(avg_wind_mph ~ as.factor(month), data = HopkinsForest) %>%
   gf_labs(x = "month", y = "average wind speed (mph)")
 ```
@@ -85,9 +86,7 @@ gf_boxplot(avg_wind_mph ~ as.factor(month), data = HopkinsForest) %>%
 
 ```{r}
 Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv")
-gf_boxplot(Track ~ Speed, data = Coasters) %>%
-  gf_refine(coord_flip()) # not sure how to make these not lines
-# XX MC to fix
+gf_boxplot(Speed ~ Track, data = Coasters)
 ```
 
 #### Step-By-Step Example: Comparing Groups
@@ -95,8 +94,7 @@ gf_boxplot(Track ~ Speed, data = Coasters) %>%
 ```{r}
 Cups <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cups.csv")
 favstats(~ Difference | Container, data = Cups)
-gf_boxplot(Container ~ Difference, data = Cups) %>%
-  gf_refine(coord_flip())
+gf_boxplot(Difference ~ Container, data = Cups) 
 ```
 
 #### Just Checking
@@ -106,9 +104,47 @@ Flights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Flights_on_time_
   clean_names()
 gf_histogram(~ ontime_pct, data = Flights, binwidth = 2, ylab = "# of Months", xlab = "Ontime %")
 gf_boxplot(ontime_pct ~ 1, data = Flights, xlab = "")
-gf_boxplot(month ~ ontime_pct, data = Flights)
+gf_boxplot(ontime_pct ~ month, data = Flights)
 ```
 
+#### Random Matters
+
+```{r}
+CarSpeeds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Car_speeds.csv")
+gf_boxplot(speed ~ direction, data = CarSpeeds)
+```
+
+See histogram on page 103.  
+
 ### Section 4.2: Outliers
+
+```{r}
+gf_boxplot(avg_wind_mph ~ as.factor(month), data = HopkinsForest) %>%
+  gf_labs(x = "Month", y = "Average Wind Speed (mph)")
+```
+
+#### Example 4.3: Checking Out the Outliers
+
+```{r}
+gf_boxplot(Speed ~ Track, data = Coasters)
+```
+
 ### Section 4.3: Re-Expressing Data: A First Look
 
+#### Re-Expressing to Improve Symmetry
+
+```{r}
+CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation_2014.csv") %>%
+  clean_names()
+gf_histogram(~ ceo_compensation_m, xlab = "Compensation (M$)", ylab = "Millions of $", data = CEOComp)
+gf_boxplot(ceo_compensation_m ~ 1, xlab = "Compensation (M$)", ylab = "Millions of $", data = CEOComp)
+gf_histogram(~ log(ceo_compensation_m), xlab = "Log (compensation)", ylab = "# of CEOs", data = CEOComp)
+```
+
+#### Re-Expression to Equalize Spread Across Groups
+
+```{r}
+PassiveSmoke <- read_csv("http://nhorton.people.amherst.edu/is5/data/Passive_smoke.csv")
+gf_boxplot(cotinine ~ smoke_exposure, ylab = "Cotinine (ng/ml)", xlab = "Smoke Exposure", data = PassiveSmoke)
+gf_boxplot(log(cotinine) ~ smoke_exposure, ylab = "Log(cotinine) (ng/ml)", xlab = "Smoke Exposure", data = PassiveSmoke)
+```
