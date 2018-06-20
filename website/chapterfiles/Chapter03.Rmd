@@ -79,10 +79,10 @@ tally(~ Class | Survived, format = "percent", margin = TRUE, data = Titanic)
 See displays on 68-69.
 
 ```{r}
-barplot(tally(~ cats_dogs_both + gender, data = OKCupid), beside = TRUE)
+
+gf_bar(~ cats_dogs_both | gender, data = OKCupid)
 #There are many who don't own either
-barplot(tally(~ cats_dogs_both + gender, data = filter(OKCupid, cats_dogs_both != "NA")), 
-        beside = TRUE)
+gf_bar(~ cats_dogs_both | gender, data = filter(OKCupid, cats_dogs_both != "NA"))
 ```
 
 #### Example 3.3: Finding Conditional Distributions: Watching the Super Bowl
@@ -95,7 +95,7 @@ tally(~ Plan | Sex, format = "percent", data = SuperBowl)
 #### Example 3.4: Looking for Associations Between Variables: Still Watching the Super Bowl
 
 ```{r}
-barplot(tally(~ Plan | Sex, format = "percent", data = SuperBowl), beside = TRUE)
+gf_bar(~ Plan | Sex, format = "percent", data = SuperBowl)
 ```
 
 #### Examining Contingency Tables
@@ -126,6 +126,8 @@ tally(~ Class + Survived, format = "count", data = Titanic)
 tally(~ Class + Survived, format = "percent", data = Titanic)
 barplot(tally(~ Survived | Class, format = "percent", data = Titanic), beside = TRUE)
 barplot(tally(~ Class | Survived, format = "percent", data = Titanic))
+gf_bar(~ Survived | Class, format = "percent", data = Titanic)
+#gf_bar automatically facets
 ```
 
 ```{r}
