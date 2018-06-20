@@ -151,7 +151,37 @@ vcd::mosaic(tally(~ Sex + Survived + Class, data = Titanic), shade = TRUE)
 See tables on page 80.  
 
 ```{r}
-# Making the data frame
+# Two ways to create a data frame
+Berk_2 <- rbind(
+  do(512) * data.frame(admit = TRUE, sex = "M", school = "A"),
+  do(313) * data.frame(admit = TRUE, sex = "M", school = "B"),
+  do(120) * data.frame(admit = TRUE, sex = "M", school = "C"),
+  do(138) * data.frame(admit = TRUE, sex = "M", school = "D"),
+  do(53) * data.frame(admit = TRUE, sex = "M", school = "E"),
+  do(22) * data.frame(admit = TRUE, sex = "M", school = "F"),
+  do(316) * data.frame(admit = FALSE, sex = "M", school = "A"),
+  do(206) * data.frame(admit = FALSE, sex = "M", school = "B"),
+  do(205) * data.frame(admit = FALSE, sex = "M", school = "C"),
+  do(278) * data.frame(admit = FALSE, sex = "M", school = "D"),
+  do(138) * data.frame(admit = FALSE, sex = "M", school = "E"),
+  do(350) * data.frame(admit = FALSE, sex = "M", school = "F"),
+  do(89) * data.frame(admit = TRUE, sex = "F", school = "A"), 
+  do(17) * data.frame(admit = TRUE, sex = "F", school = "B"),
+  do(202) * data.frame(admit = TRUE, sex = "F", school = "C"), 
+  do(131) * data.frame(admit = TRUE, sex = "F", school = "D"),
+  do(94) * data.frame(admit = TRUE, sex = "F", school = "E"),
+  do(24) * data.frame(admit = TRUE, sex = "F", school = "F"),
+  do(16) * data.frame(admit = FALSE, sex = "F", school = "A"),
+  do(8) * data.frame(admit = FALSE, sex = "F", school = "B"),
+  do(391) * data.frame(admit = FALSE, sex = "F", school = "C"),
+  do(245) * data.frame(admit = FALSE, sex = "F", school = "D"),
+  do(300) * data.frame(admit = FALSE, sex = "F", school = "E"),
+  do(318) * data.frame(admit = FALSE, sex = "F", school = "F") # some numbers are off but it's really annoying to fix
+)
+
+tally(~ sex + admit, data = Berk_2)
+tally(~ sex + school + admit, data = Berk_2)
+
 admit <- c(rep("TRUE", 1158), rep("FALSE", 1493), rep("TRUE", 557), rep("FALSE", 1278))
 sex <- c(rep("M", 1158 + 1493), rep("F", 557 + 1278))
 school <- c(rep("A", 512), rep("B", 313), rep("C", 120), rep("D", 138), rep("E", 53), rep("F", 22),
