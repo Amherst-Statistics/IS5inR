@@ -73,7 +73,7 @@ gf_histogram(~ Primary_Magnitude, data = Earthquakes, bins = 12, ylab = "Earthqu
 
 #### Stem-and-Leaf Displays
 
-See examples in textbook.
+See page 26.
 
 ```{r}
 Pulse_rates <- read_csv("http://nhorton.people.amherst.edu/is5/data/Pulse_rates.csv")
@@ -127,6 +127,8 @@ TitanicCrew <- filter(Titanic, Class == "Crew")
 gf_histogram(~ Age, data = TitanicCrew)
 favstats(~ Age, data = TitanicCrew)
 ```
+
+See displays on pages 32 and 33.
 
 ### Section 2.5: Spread
 

@@ -152,11 +152,13 @@ See tables on page 80.
 
 ```{r}
 # Making the data frame
-school <- c("A", "B", "C", "D", "E", "F")
-male_admits <- c(512, 313, 120, 138, 53, 22)
-female_admits <- c(89, 17, 202, 131, 94, 24)
-male_percent <- c(.621, .602, .369, .331, .277, .059)
-female_percent <- c(.824, .680, .341, .349, .239, .070)
-Berk <- data.frame(school, male_admits, female_admits, male_percent, female_percent)
-Berk
+admit <- c(rep("TRUE", 1158), rep("FALSE", 1493), rep("TRUE", 557), rep("FALSE", 1278))
+sex <- c(rep("M", 1158 + 1493), rep("F", 557 + 1278))
+school <- c(rep("A", 512), rep("B", 313), rep("C", 120), rep("D", 138), rep("E", 53), rep("F", 22),
+            rep("A", 512/.621 - 512), rep("B", 313/.602 - 313), rep("C", 120/.369 - 120), rep("D", 138/.331 - 138), rep("E", 53/.277 - 53), rep("F", 22/.059 - 22),
+            rep("A", 89), rep("B", 17), rep("C", 202), rep("D", 131), rep("E", 94), rep("F", 24), 
+            rep("A", 89/.824 - 89 + 1), rep("B", 17/.68 - 17 + 1), rep("C", 202/.341 - 202 + 1), rep("D", 131/.349 - 131 + 1), rep("E", 94/.239 - 94 + 1), rep("F", 24/.07 - 24)) # + 1 because the rows weren't matching up
+Berk <- data.frame(sex, admit, school)
+tally(~ sex + admit, data = Berk)
+tally(~ sex + school + admit, data = Berk)
 ```

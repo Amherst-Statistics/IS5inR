@@ -48,7 +48,41 @@ he *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 library(mosaic)
 library(readr)
 library(janitor)
-#Womens heptathalon 2016
+WomenHeptathlon2016 <- read_csv("http://nhorton.people.amherst.edu/is5/data/Womens_Heptathlon_2016.csv") %>%
+  clean_names()
+favstats(~ long_jump, data = WomenHeptathlon2016)
+favstats(~ x200m, data = WomenHeptathlon2016)
+with(WomenHeptathlon2016, stem(x200m))
+with(WomenHeptathlon2016, stem(long_jump))
 ```
 
 ### Section 5.1: Using the Standard Deviation to Standardize Values
+
+```{r}
+filter(WomenHeptathlon2016, last_name == "Thiam")
+# calculate z-score with mean and sd from favstats
+(6.58 - 6.17)/.247 # long jump
+filter(WomenHeptathlon2016, last_name == "Johnson-Thompson")
+```
+
+### Section 5.2: Shifting and Scaling
+
+```{r}
+MenWeight <- read_csv("http://nhorton.people.amherst.edu/is5/data/Mens_Weights.csv") %>%
+  clean_names()
+gf_histogram(~ weight_in_kg, data = MenWeight, xlab = "Weight (kg)", ylab = "# of Men", binwidth = 10)
+gf_boxplot(weight_in_kg ~ 1, data = MenWeight, xlab = "", ylab = "Weight (kg)") %>%
+  gf_refine(coord_flip())
+```
+
+```{r}
+favstats(~ weight_in_kg, data = MenWeight)
+gf_histogram(~ (weight_in_kg - 74), data = MenWeight, xlab = "Kg Above Recommended Weight", ylab = "# of Men", binwidth = 10)
+
+```
+
+### Section 5.3: Normal Models 
+
+### Section 5.4: Working with Normal Percentiles
+
+### Section 5.5: Normal Probability Plots
