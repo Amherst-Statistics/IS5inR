@@ -105,8 +105,34 @@ See display on page 129.
 
 #### Example 5.4: Using the 68-95-99.7 Rule
 
+```{r}
+BodyFat <- read_csv("http://nhorton.people.amherst.edu/is5/data/Bodyfat.csv")
+gf_histogram(~ Wrist, data = BodyFat, xlab = "Wrist Circ (cm)", ylab = "# of Men", binwidth = .5)
+```
 
+#### Random Matters
+
+Starts on page 133.
+
+```{r}
+Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv") %>%
+  clean_names()
+gf_histogram(~ commute_time, data = Commute, xlab = "Commute Times (min)", ylab = "# of Employees", binwidth = 10)
+set.seed(2143)
+Commute_sample <- do(10000) * mean(sample(Commute$commute_time, 100)) # I forget how to do this without $
+gf_histogram(~ mean, data = Commute_sample, xlab = "Means of Samples of Size 100", ylab = "# of Samples")
+```
 
 ### Section 5.4: Working with Normal Percentiles
 
+```{r}
+xpnorm(1.8, mean = 0, sd = 1)
+```
+
+See examples on pages 136-140.
+
 ### Section 5.5: Normal Probability Plots
+
+```{r}
+
+```
