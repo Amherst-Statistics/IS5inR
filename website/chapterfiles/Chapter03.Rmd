@@ -79,7 +79,6 @@ tally(~ Class | Survived, format = "percent", margin = TRUE, data = Titanic)
 See displays on 68-69.
 
 ```{r}
-
 gf_bar(~ cats_dogs_both | gender, data = OKCupid)
 #There are many who don't own either
 gf_bar(~ cats_dogs_both | gender, data = filter(OKCupid, cats_dogs_both != "NA"))

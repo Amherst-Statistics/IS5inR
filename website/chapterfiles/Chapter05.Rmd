@@ -103,6 +103,12 @@ MenWeight %>%
 
 See display on page 129.  
 
+```{r}
+xpnorm(c(-3, -1.96, -1, 1, 1.96, 3), mean = 0, sd = 1, verbose = FALSE)
+xpnorm(c(-3, -1.96, 1.96, 3), mean = 0, sd = 1, verbose = FALSE)
+xpnorm(c(-3, 3), mean = 0, sd = 1, verbose = FALSE)
+```
+
 #### Example 5.4: Using the 68-95-99.7 Rule
 
 ```{r}
@@ -129,10 +135,24 @@ gf_histogram(~ mean, data = Commute_sample, xlab = "Means of Samples of Size 100
 xpnorm(1.8, mean = 0, sd = 1)
 ```
 
+The `qnorm()` function:  
+
+```{r}
+qnorm(0.964, mean = 500, sd = 100)   # inverse of pnorm()
+qnorm(0.964, mean = 0, sd = 1)   # what is the z-score?
+```
+
 See examples on pages 136-140.
 
 ### Section 5.5: Normal Probability Plots
 
 ```{r}
+Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
+gf_histogram(~ mpg, data = Nissan, binwidth = 1)
+gf_qq(~ mpg, data = Nissan, xlab = "Normal Scores")
+```
 
+```{r}
+gf_histogram(~ weight_in_kg, data = MenWeight, xlab = "Weights", binwidth = 10)
+gf_qq(~ weight_in_kg, data = MenWeight, xlab = "Normal Scores")
 ```
