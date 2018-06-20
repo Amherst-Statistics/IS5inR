@@ -53,7 +53,7 @@ options(digits = 3)
 Titanic <- read_csv("http://nhorton.people.amherst.edu/is5/data/Titanic.csv")
 tally(~ Class, data = Titanic)
 tally(~ Class, format = "percent", data = Titanic)
-barchart(tally(~ Class, data = Titanic))
+gf_bar(~ Class, data = Titanic)
 ```
 
 ### Section 2.2: Displaying a Quantitative Variable
