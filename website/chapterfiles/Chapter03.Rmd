@@ -182,6 +182,33 @@ Berk_2 <- rbind(
   do(300) * data.frame(admit = FALSE, sex = "F", school = "E"),
   do(318) * data.frame(admit = FALSE, sex = "F", school = "F") 
 )  # some numbers are off but it's really annoying to fix
+# Creating a data frame
+Berk <- rbind(
+  do(512) * data.frame(admit = TRUE, sex = "M", school = "A"), # admitted male to school A
+  do(313) * data.frame(admit = TRUE, sex = "M", school = "B"), # admitted male to school B
+  do(120) * data.frame(admit = TRUE, sex = "M", school = "C"), # admitted male to school C
+  do(138) * data.frame(admit = TRUE, sex = "M", school = "D"), # admitted male to school D
+  do(53) * data.frame(admit = TRUE, sex = "M", school = "E"), # admitted male to school E
+  do(22) * data.frame(admit = TRUE, sex = "M", school = "F"), # admitted male to school F
+  do(313) * data.frame(admit = FALSE, sex = "M", school = "A"), # rejected male from school A
+  do(206) * data.frame(admit = FALSE, sex = "M", school = "B"), # rejected male from school B
+  do(205) * data.frame(admit = FALSE, sex = "M", school = "C"), # rejected male from school C
+  do(278) * data.frame(admit = FALSE, sex = "M", school = "D"), # rejected male from school D
+  do(138) * data.frame(admit = FALSE, sex = "M", school = "E"), # rejected male from school E
+  do(350) * data.frame(admit = FALSE, sex = "M", school = "F"), # rejected male from school F
+  do(89) * data.frame(admit = TRUE, sex = "F", school = "A"),  # admitted female to school A
+  do(17) * data.frame(admit = TRUE, sex = "F", school = "B"), # admitted female to school B
+  do(202) * data.frame(admit = TRUE, sex = "F", school = "C"), # admitted female to school C
+  do(131) * data.frame(admit = TRUE, sex = "F", school = "D"), # admitted female to school D
+  do(94) * data.frame(admit = TRUE, sex = "F", school = "E"), # admitted female to school E
+  do(24) * data.frame(admit = TRUE, sex = "F", school = "F"), # admitted female to school F
+  do(19) * data.frame(admit = FALSE, sex = "F", school = "A"), # rejected female from school A
+  do(8) * data.frame(admit = FALSE, sex = "F", school = "B"), # rejected female from school B
+  do(391) * data.frame(admit = FALSE, sex = "F", school = "C"), # rejected female from school C
+  do(245) * data.frame(admit = FALSE, sex = "F", school = "D"), # rejected female from school D
+  do(300) * data.frame(admit = FALSE, sex = "F", school = "E"), # rejected female from school E
+  do(318) * data.frame(admit = FALSE, sex = "F", school = "F")  # rejected female from school F
+) 
 
 tally(~ sex + admit, data = Berk_2)
 tally(admit ~ sex, format = "percent", data = filter(Berk_2, school == "A"))
@@ -192,19 +219,8 @@ tally(admit ~ sex, format = "percent", data = filter(Berk_2, school == "E"))
 tally(admit ~ sex, format = "percent", data = filter(Berk_2, school == "F"))
 
 
-admit <- c(rep("TRUE", 1158), rep("FALSE", 1493), rep("TRUE", 557), rep("FALSE", 1278))
-sex <- c(rep("M", 1158 + 1493), rep("F", 557 + 1278))
-school <- c(rep("A", 512), rep("B", 313), rep("C", 120),
-            rep("D", 138), rep("E", 53), rep("F", 22),
-            rep("A", 512/.621 - 512), rep("B", 313/.602 - 313), 
-            rep("C", 120/.369 - 120), rep("D", 138/.331 - 138), 
-            rep("E", 53/.277 - 53), rep("F", 22/.059 - 22),
-            rep("A", 89), rep("B", 17), rep("C", 202),
-            rep("D", 131), rep("E", 94), rep("F", 24), 
-            rep("A", 89/.824 - 89 + 1), rep("B", 17/.68 - 17 + 1), 
-            rep("C", 202/.341 - 202 + 1), rep("D", 131/.349 - 131 + 1), 
-            rep("E", 94/.239 - 94 + 1), rep("F", 24/.07 - 24)) # + 1 because the rows weren't matching up
-Berk <- data.frame(sex, admit, school)
-tally(~ sex + admit, data = Berk)
-tally(~ sex + school + admit, data = Berk)
+UCBAdmissions %>%
+  data.frame() %>%
+  group_by(Gender, Admit) %>%
+  summarise(counts = sum(Freq)) # number of men admitted is incorrect
 ```
