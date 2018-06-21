@@ -54,6 +54,8 @@ gf_point(Error_72h ~ Year, data = Hurricanes, ylab = "Prediction Error")
 
 ### Section 6.1: Scatterplots
 
+See dots on pages 164-165.
+
 #### Example 6.1: Comparing Prices Worldwide
 
 ```{r}
@@ -72,6 +74,20 @@ gf_point(food_costs ~ vacation_days, data = Prices, xlab = "Vacation Days (per y
 ```{r}
 HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
   clean_names()
+gf_point(avg_wind_mph ~ day_of_year, data = HopkinsForest) %>%
+  gf_smooth(se = FALSE, xlab = "Day of Year", ylab = "Average Wind Speed (mph)")
+```
+
+#### Example 6.2: Smoothing Timeplots
+
+```{r, message=FALSE}
+Fitness <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fitness_data.csv") %>%
+  clean_names()
+gf_histogram(~ weight, data = Fitness, binwidth = 1, ylab = "# of Days", xlab = "Weight (lb)")
+gf_point(weight ~ days_since_july_19_2014, data = Fitness) %>%
+  gf_smooth(se = FALSE, xlab = "Days Since July 19, 2014", ylab = "Weight (lb)")
+gf_boxplot(weight ~ as.factor(month), data = Fitness, xlab = "Month", ylab = "Weight (lb)") %>%
+  gf_smooth(se = FALSE) # line not showing up
 ```
 
 ### Section 6.2: Correlation
