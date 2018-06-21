@@ -1,5 +1,5 @@
 ---
-title: "IS5 in R: Stats Starts Here (Chapter 5)"
+title: "IS5 in R: The Standard Deviation as a Ruler and the Normal Model (Chapter 5)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
 date: "June 16, 2018"
 output: 
@@ -45,9 +45,6 @@ he *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 ## Chapter 5: The Standard Deviation as a Ruler and the Normal Model
 
 ```{r}
-library(mosaic)
-library(readr)
-library(janitor)
 WomenHeptathlon2016 <- read_csv("http://nhorton.people.amherst.edu/is5/data/Womens_Heptathlon_2016.csv") %>%
   clean_names()
 favstats(~ long_jump, data = WomenHeptathlon2016)

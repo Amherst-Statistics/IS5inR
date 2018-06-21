@@ -46,9 +46,6 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 ### Section 3.1: Contingency Tables
 
 ```{r}
-library(mosaic)
-library(readr)
-library(janitor)
 # If you look at the data set, you'll see that the first line is "Col1", "Col2", etc
 OKCupid <- read_csv("http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", skip = 1) %>%
   clean_names()

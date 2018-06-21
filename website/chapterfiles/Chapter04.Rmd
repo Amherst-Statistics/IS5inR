@@ -1,5 +1,5 @@
 ---
-title: "IS5 in R: Stats Starts Here (Chapter 4)"
+title: "IS5 in R: Understanding and Comparing Distributions (Chapter 4)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
 date: "June 16, 2018"
 output: 
@@ -45,9 +45,6 @@ he *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 ## Chapter 4: Understanding and Comparing Distributions
 
 ```{r}
-library(mosaic)
-library(readr)
-library(janitor)
 HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
   clean_names()
 gf_histogram(~ avg_wind_mph, data = HopkinsForest)

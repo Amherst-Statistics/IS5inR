@@ -46,7 +46,6 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 See displays on page 19-23.
 
 ```{r message = FALSE}
-library(mosaic)
 library(readr)
 library(janitor) #for column names
 options(digits = 3)
