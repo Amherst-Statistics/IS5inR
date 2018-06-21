@@ -45,6 +45,9 @@ he *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 ## Chapter 4: Understanding and Comparing Distributions
 
 ```{r}
+library(mosaic)
+library(readr)
+library(janitor)
 HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
   clean_names()
 gf_histogram(~ avg_wind_mph, data = HopkinsForest)

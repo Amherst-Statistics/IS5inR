@@ -18,7 +18,9 @@ output:
 ```{r, include = FALSE}
 # Don't delete this chunk if you are using the mosaic package
 # This loads the mosaic and dplyr packages
-require(mosaic)
+library(mosaic)
+library(readr)
+library(janitor)
 ```
 
 ```{r, include = FALSE}
@@ -46,6 +48,7 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 See displays on page 19-23.
 
 ```{r message = FALSE}
+library(mosaic)
 library(readr)
 library(janitor) #for column names
 options(digits = 3)

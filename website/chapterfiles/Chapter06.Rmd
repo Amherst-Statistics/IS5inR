@@ -44,6 +44,12 @@ he *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
 ## Chapter 6: Scatterplots, Association, and Correlation
 
+```{r}
+library(mosaic)
+library(readr)
+library(janitor)
+```
+
 ### Section 6.1: Scatterplots
 
 ### Section 6.2: Correlation
