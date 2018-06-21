@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Relationships Between Categorical Variables--Contingency Tables (Chapter 3)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "June 16, 2018"
+date: "June 21, 2018"
 output: 
   pdf_document:
     fig_height: 4
@@ -154,7 +154,8 @@ vcd::mosaic(tally(~ Sex + Survived + Class, data = Titanic), shade = TRUE)
 See tables on page 80.  
 
 ```{r}
-# Two ways to create a data frame
+# Create a dataframe from the counts
+# http://mathemathinking.blogspot.com/2012/06/simpsons-paradox.html
 Berk_2 <- rbind(
   do(512) * data.frame(admit = TRUE, sex = "M", school = "A"),
   do(313) * data.frame(admit = TRUE, sex = "M", school = "B"),
@@ -162,28 +163,34 @@ Berk_2 <- rbind(
   do(138) * data.frame(admit = TRUE, sex = "M", school = "D"),
   do(53) * data.frame(admit = TRUE, sex = "M", school = "E"),
   do(22) * data.frame(admit = TRUE, sex = "M", school = "F"),
-  do(316) * data.frame(admit = FALSE, sex = "M", school = "A"),
-  do(206) * data.frame(admit = FALSE, sex = "M", school = "B"),
-  do(205) * data.frame(admit = FALSE, sex = "M", school = "C"),
-  do(278) * data.frame(admit = FALSE, sex = "M", school = "D"),
-  do(138) * data.frame(admit = FALSE, sex = "M", school = "E"),
-  do(350) * data.frame(admit = FALSE, sex = "M", school = "F"),
+  do(825 - 512) * data.frame(admit = FALSE, sex = "M", school = "A"),
+  do(560 - 313) * data.frame(admit = FALSE, sex = "M", school = "B"),
+  do(325 - 120) * data.frame(admit = FALSE, sex = "M", school = "C"),
+  do(417 - 138) * data.frame(admit = FALSE, sex = "M", school = "D"),
+  do(191 - 53) * data.frame(admit = FALSE, sex = "M", school = "E"),
+  do(272 - 22) * data.frame(admit = FALSE, sex = "M", school = "F"),
   do(89) * data.frame(admit = TRUE, sex = "F", school = "A"), 
   do(17) * data.frame(admit = TRUE, sex = "F", school = "B"),
   do(202) * data.frame(admit = TRUE, sex = "F", school = "C"), 
-  do(131) * data.frame(admit = TRUE, sex = "F", school = "D"),
+  do(132) * data.frame(admit = TRUE, sex = "F", school = "D"),
   do(94) * data.frame(admit = TRUE, sex = "F", school = "E"),
   do(24) * data.frame(admit = TRUE, sex = "F", school = "F"),
-  do(16) * data.frame(admit = FALSE, sex = "F", school = "A"),
+  do(19) * data.frame(admit = FALSE, sex = "F", school = "A"),
   do(8) * data.frame(admit = FALSE, sex = "F", school = "B"),
-  do(391) * data.frame(admit = FALSE, sex = "F", school = "C"),
-  do(245) * data.frame(admit = FALSE, sex = "F", school = "D"),
+  do(390) * data.frame(admit = FALSE, sex = "F", school = "C"),
+  do(246) * data.frame(admit = FALSE, sex = "F", school = "D"),
   do(300) * data.frame(admit = FALSE, sex = "F", school = "E"),
   do(318) * data.frame(admit = FALSE, sex = "F", school = "F") 
 )  # some numbers are off but it's really annoying to fix
 
 tally(~ sex + admit, data = Berk_2)
-tally(~ sex + school + admit, data = Berk_2)
+tally(admit ~ sex, format = "percent", data = filter(Berk_2, school == "A"))
+tally(admit ~ sex, format = "percent", data = filter(Berk_2, school == "B"))
+tally(admit ~ sex, format = "percent", data = filter(Berk_2, school == "C"))
+tally(admit ~ sex, format = "percent", data = filter(Berk_2, school == "D"))
+tally(admit ~ sex, format = "percent", data = filter(Berk_2, school == "E"))
+tally(admit ~ sex, format = "percent", data = filter(Berk_2, school == "F"))
+
 
 admit <- c(rep("TRUE", 1158), rep("FALSE", 1493), rep("TRUE", 557), rep("FALSE", 1278))
 sex <- c(rep("M", 1158 + 1493), rep("F", 557 + 1278))
