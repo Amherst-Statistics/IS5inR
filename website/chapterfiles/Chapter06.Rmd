@@ -48,9 +48,17 @@ he *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 library(mosaic)
 library(readr)
 library(janitor)
+Hurricanes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tracking_hurricanes_2015.csv")
+gf_point(Error_72h ~ Year, data = Hurricanes, ylab = "Prediction Error")
 ```
 
 ### Section 6.1: Scatterplots
+
+#### Example 6.1: Comparing Prices Worldwide
+
+```{r}
+
+```
 
 ### Section 6.2: Correlation
 
