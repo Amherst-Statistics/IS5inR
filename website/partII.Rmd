@@ -14,4 +14,4 @@ Title  | Links to Rmd and PDF files
 Chapter 06 : Scatterplots, Association, and Correlation | <a href='chapterfiles/Chapter06.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter06.pdf'>(pdf)</a>
 Chapter 07 : Linear Regression | <a href='chapterfiles/Chapter07.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter07.pdf'>(pdf)</a>
 Chapter 08 : Regression Wisdom | <a href='chapterfiles/Chapter08.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter08.pdf'>(pdf)</a>
-Chapter 09 : Re-expressing Data: Get it Straight! | <a href='chapterfiles/Chapter09.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter09.pdf'>(pdf)</a>
+Chapter 09 : Multiple Regression | <a href='chapterfiles/Chapter09.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter09.pdf'>(pdf)</a>

@@ -1,0 +1,15 @@
+<h2>
+#Table of Contents
+</h2>
+
+Chapter Part  | Links to Rmd and PDF Files
+------------- | -------------
+Chapters 01-05 : [Part I Exploring and Understanding Data](https://rstudio.amherst.edu/s/c619dc74daa05ac1ccd02/files/git/SDM4inR/SDM4_Site/_site/partI.html) </br>
+Chapters 06-09 : [Part II Exploring Relationships Between Variables](https://rstudio.amherst.edu/s/c619dc74daa05ac1ccd02/files/git/SDM4inR/SDM4_Site/_site/partII.html)
+</br>
+Chapters 10-11 : [Part III Gathering Data](https://rstudio.amherst.edu/s/c619dc74daa05ac1ccd02/files/git/SDM4inR/SDM4_Site/_site/partIII.html)
+</br>
+Chapters 12-16 : [Part IV From the Data at Hand to the World at Large](https://rstudio.amherst.edu/s/c619dc74daa05ac1ccd02/files/git/SDM4inR/SDM4_Site/_site/partIV.html)
+</br>
+Chapters 17-20 : [Part V Inference for Relationships](https://rstudio.amherst.edu/s/c619dc74daa05ac1ccd02/files/git/SDM4inR/SDM4_Site/_site/partV.html)
+</br>
