@@ -57,7 +57,21 @@ gf_point(Error_72h ~ Year, data = Hurricanes, ylab = "Prediction Error")
 #### Example 6.1: Comparing Prices Worldwide
 
 ```{r}
+Prices <- read_csv("http://nhorton.people.amherst.edu/is5/data/Prices_and_Earnings.csv") %>%
+  clean_names()
+gf_point(food_costs ~ womens_clothing, data = Prices, xlab = "Cost of Women's Clothes", ylab = "Food Costs ($)")
+gf_point(i_phone_4s_hr ~ wage_gross, data = Prices, xlab = "Average Hourly Wage", ylab = "Hours to Earn an iPhone 4S")
+gf_point(clothing_index ~ hours_worked, data = Prices, xlab = "Working Hours", ylab = "Clothes Index")
+gf_point(food_costs ~ vacation_days, data = Prices, xlab = "Vacation Days (per year)", ylab = "Food Costs ($)")
+```
 
+#### Roles for Variables
+
+#### Smoothing Scatterplots
+
+```{r}
+HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
+  clean_names()
 ```
 
 ### Section 6.2: Correlation
