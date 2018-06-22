@@ -1,6 +1,6 @@
-name: "SDM4-in-R"
+name: "IS5 in R"
 navbar:
-  title: "Stats Data & Models (version 4) in R"
+  title: "Intro Stats (5th edition) in R"
   type: inverse
   left:
 
