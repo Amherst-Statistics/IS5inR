@@ -72,21 +72,21 @@ filter(WomenHeptathlon2016, last_name == "Johnson-Thompson")
 ```{r}
 MenWeight <- read_csv("http://nhorton.people.amherst.edu/is5/data/Mens_Weights.csv") %>%
   clean_names()
-gf_histogram(~ weight_in_kg, data = MenWeight, xlab = "Weight (kg)", ylab = "# of Men", binwidth = 10)
+gf_histogram(~ weight_in_kg, data = MenWeight, xlab = "Weight (kg)", ylab = "# of Men",
+             binwidth = 10)
 gf_boxplot(weight_in_kg ~ 1, data = MenWeight, xlab = "", ylab = "Weight (kg)") %>%
   gf_refine(coord_flip())
 ```
 
 ```{r}
 favstats(~ weight_in_kg, data = MenWeight)
-gf_histogram(~ (weight_in_kg - 74), data = MenWeight, xlab = "Kg Above Recommended Weight", ylab = "# of Men", binwidth = 10)
+gf_histogram(~ (weight_in_kg - 74), data = MenWeight, xlab = "Kg Above Recommended Weight", 
+             ylab = "# of Men", binwidth = 10)
 ```
 
 #### Rescaling to Adjust the Scale
 
 ```{r}
-gf_histogram(~ weight_in_kg, data = MenWeight, xlab = "Kilograms", ylab = "# of Men", binwidth = 10)
-gf_histogram(~ weight_in_pounds, data = MenWeight, xlab = "Pounds", ylab = "# of Men", binwidth = 20)
 favstats(~ weight_in_kg, data = MenWeight)
 favstats(~ weight_in_pounds, data = MenWeight)
 library(tidyr) # for gather() function
@@ -123,9 +123,10 @@ Starts on page 133.
 ```{r}
 Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv") %>%
   clean_names()
-gf_histogram(~ commute_time, data = Commute, xlab = "Commute Times (min)", ylab = "# of Employees", binwidth = 10)
+gf_histogram(~ commute_time, data = Commute, xlab = "Commute Times (min)", ylab = "# of Employees", 
+             binwidth = 10)
 set.seed(2143)
-Commute_sample <- do(10000) * mean(sample(Commute$commute_time, 100)) # I forget how to do this without $
+Commute_sample <- do(10000) * mean(sample(Commute$commute_time, 100)) 
 gf_histogram(~ mean, data = Commute_sample, xlab = "Means of Samples of Size 100", ylab = "# of Samples")
 ```
 
