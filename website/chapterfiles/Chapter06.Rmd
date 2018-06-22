@@ -86,8 +86,7 @@ Fitness <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fitness_data.csv
 gf_histogram(~ weight, data = Fitness, binwidth = 1, ylab = "# of Days", xlab = "Weight (lb)")
 gf_point(weight ~ days_since_july_19_2014, data = Fitness) %>%
   gf_smooth(se = FALSE, xlab = "Days Since July 19, 2014", ylab = "Weight (lb)")
-gf_boxplot(weight ~ as.factor(month), data = Fitness, xlab = "Month", ylab = "Weight (lb)") %>%
-  gf_smooth(se = FALSE) # line not showing up
+gf_boxplot(weight ~ as.factor(month), data = Fitness, xlab = "Month", ylab = "Weight (lb)")
 ```
 
 ### Section 6.2: Correlation
