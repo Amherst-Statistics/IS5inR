@@ -55,9 +55,43 @@ gf_point(fat_g ~ protein_g, data = BurgerKing, xlab = "Protein (g)", ylab = "Fat
 
 ### Section 7.1: Least Squares: The Line of "Best Fit"
 
+See display on page 197.
+
 ### Section 7.2: The Linear Model
 
+#### Example 7.1: A Linear Model for Hurricanes
+
+```{r}
+Hurricanes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hurricanes_2015.csv") %>%
+  clean_names()
+gf_point(max_wind_speed_kts ~ central_pressure_mb, data = Hurricanes, xlab = "Central Pressure (mb)", ylab = "Max Wind Speed (kts)") %>%
+  gf_lm()
+```
+
 ### Section 7.3: Finding the Least Squares Line
+
+#### Example 7.2: Finding the Regression Equation
+
+```{r}
+favstats(~ protein_g, data = BurgerKing)
+favstats(~ fat_g, data = BurgerKing)
+```
+
+#### Step-by-Step Example: Calculating a Regression Equation
+
+```{r}
+TompkinsBridges <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tompkins_county_bridges_2016.csv") %>%
+  clean_names()
+gf_point(condition ~ age_at_inspection, data = TompkinsBridges, xlab = "Age at Inspection", ylab = "Condition")
+```
+
+See calculations on page 203.
+
+#### Random Matters
+
+```{r}
+
+```
 
 ### Section 7.4: Regression to the Mean
 
