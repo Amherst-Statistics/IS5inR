@@ -136,15 +136,20 @@ gf_boxplot(Speed ~ Track, data = Coasters)
 ```{r}
 CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation_2014.csv") %>%
   clean_names()
-gf_histogram(~ ceo_compensation_m, xlab = "Compensation (M$)", ylab = "Millions of $", data = CEOComp)
-gf_boxplot(ceo_compensation_m ~ 1, xlab = "Compensation (M$)", ylab = "Millions of $", data = CEOComp)
-gf_histogram(~ log(ceo_compensation_m), xlab = "Log (compensation)", ylab = "# of CEOs", data = CEOComp)
+gf_histogram(~ ceo_compensation_m, xlab = "Compensation (M$)", ylab = "Millions of $", 
+             data = CEOComp)
+gf_boxplot(ceo_compensation_m ~ 1, xlab = "Compensation (M$)", ylab = "Millions of $", 
+           data = CEOComp)
+gf_histogram(~ log(ceo_compensation_m), xlab = "Log (compensation)", ylab = "# of CEOs", 
+             data = CEOComp)
 ```
 
 #### Re-Expression to Equalize Spread Across Groups
 
 ```{r}
 PassiveSmoke <- read_csv("http://nhorton.people.amherst.edu/is5/data/Passive_smoke.csv")
-gf_boxplot(cotinine ~ smoke_exposure, ylab = "Cotinine (ng/ml)", xlab = "Smoke Exposure", data = PassiveSmoke)
-gf_boxplot(log(cotinine) ~ smoke_exposure, ylab = "Log(cotinine)", xlab = "Smoke Exposure", data = PassiveSmoke)
+gf_boxplot(cotinine ~ smoke_exposure, ylab = "Cotinine (ng/ml)", xlab = "Smoke Exposure", 
+           data = PassiveSmoke)
+gf_boxplot(log(cotinine) ~ smoke_exposure, ylab = "Log(cotinine)", xlab = "Smoke Exposure", 
+           data = PassiveSmoke)
 ```
