@@ -54,6 +54,8 @@ gf_point(Error_72h ~ Year, data = Hurricanes, ylab = "Prediction Error")
 
 ### Section 6.1: Scatterplots
 
+See dots on pages 164-165.
+
 #### Example 6.1: Comparing Prices Worldwide
 
 ```{r}
@@ -72,10 +74,85 @@ gf_point(food_costs ~ vacation_days, data = Prices, xlab = "Vacation Days (per y
 ```{r}
 HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
   clean_names()
+gf_point(avg_wind_mph ~ day_of_year, data = HopkinsForest) %>%
+  gf_smooth(se = FALSE, xlab = "Day of Year", ylab = "Average Wind Speed (mph)")
+```
+
+#### Example 6.2: Smoothing Timeplots
+
+```{r, message=FALSE}
+Fitness <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fitness_data.csv") %>%
+  clean_names()
+gf_histogram(~ weight, data = Fitness, binwidth = 1, ylab = "# of Days", xlab = "Weight (lb)")
+gf_point(weight ~ days_since_july_19_2014, data = Fitness) %>%
+  gf_smooth(se = FALSE, xlab = "Days Since July 19, 2014", ylab = "Weight (lb)")
+gf_boxplot(weight ~ as.factor(month), data = Fitness, xlab = "Month", ylab = "Weight (lb)")
 ```
 
 ### Section 6.2: Correlation
 
+```{r}
+HeightsWeights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Heights_and_weights.csv")
+gf_point(Weight ~ Height, data = HeightsWeights, xlab = "Height (in.)", ylab = "Weight (lb)")
+cor(Weight ~ Height, data = HeightsWeights)
+```
+
+See displays on pages 170 - 171.
+
+#### Step-by-Step Example: Looking at Association
+
+```{r}
+Framingham <- read_csv("http://nhorton.people.amherst.edu/is5/data/Framingham.csv")
+gf_point(SBP ~ DBP, data = Framingham, xlab = "Diastolic BP (mm Hg)", ylab = "Systolic BP (mm Hg)")
+cor(SBP ~ DBP, data = Framingham)
+```
+
+#### Random Matters: Correlations Vary
+
+```{r}
+LiveBirths <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") %>%
+  clean_names()
+set.seed(14513)
+gf_point(mom_age ~ dad_age, data = sample(filter(LiveBirths, dad_age != "NA"), 50))
+# Graph will look different for different samples
+cor(mom_age ~ dad_age, data = filter(LiveBirths, dad_age != "NA"))
+LiveCorr <- do(10000) * cor(mom_age ~ dad_age, data = sample(filter(LiveBirths, dad_age != "NA"), 50))
+gf_histogram(~ LiveCorr, xlab = "Correlation of Mother's Age and Father's Age in Samples of Size 50", ylab = "# of Samples")
+```
+
 ### Section 6.3: Warning: Correlation $\neq$ Causation
 
+```{r}
+Storks <- read_csv("http://nhorton.people.amherst.edu/is5/data/Storks.csv")
+gf_point(Population ~ Storks, data = Storks, xlab = "# of Storks", ylab = "Human Population")
+```
+
+#### Correlation Tables
+
+```{r}
+Companies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Companies.csv") %>%
+  clean_names()
+Companies %>%
+  select(assets, sales, market_value, profits, cash_flow, employees) %>%
+  cor()
+```
+
 ### Section 6.4: Straightening Scatterplots
+
+```{r}
+FStops <- read_csv("http://nhorton.people.amherst.edu/is5/data/F-stops.csv") %>%
+  clean_names()
+gf_point(f_stop ~ shutter_speed, data = FStops, xlab = "Shutter Speed (sec)", ylab = "f/stop")
+cor(f_stop ~ shutter_speed, data = FStops)
+```
+
+#### The Ladder of Powers
+
+#### f/Stops Again
+
+```{r}
+gf_point(log(f_stop) ~ shutter_speed, data = FStops, xlab = "Shutter Speed (sec)", ylab = "Log (f/stop)")
+gf_point((f_stop)^2 ~ shutter_speed, data = FStops, xlab = "Shutter Speed (sec)", ylab = "f/stop squared")
+```
+
+See displays in "What Can Go Wrong?" on pages 181-183.
