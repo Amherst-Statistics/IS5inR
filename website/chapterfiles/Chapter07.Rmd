@@ -57,7 +57,21 @@ gf_point(fat_g ~ protein_g, data = BurgerKing, xlab = "Protein (g)", ylab = "Fat
 
 See display on page 197.
 
+We can calculate the residual for a particular value with 31 grams of protein.  
+
+```{r}
+burgerlm <- lm(fat_g ~ protein_g, data = BurgerKing)
+burgerfun <- makeFun(burgerlm)
+burgerfun(31)
+```
+
 ### Section 7.2: The Linear Model
+
+```{r}
+coef(burgerlm)
+burgerfun(0)
+burgerfun(32) - burgerfun(31)
+```
 
 #### Example 7.1: A Linear Model for Hurricanes
 
@@ -75,6 +89,14 @@ gf_point(max_wind_speed_kts ~ central_pressure_mb, data = Hurricanes, xlab = "Ce
 ```{r}
 favstats(~ protein_g, data = BurgerKing)
 favstats(~ fat_g, data = BurgerKing)
+sx <- sd(~ protein_g, data = BurgerKing)
+sx
+sy <- sd(~ fat_g, data = BurgerKing)
+sy
+r <- cor(protein_g ~ fat_g, data = BurgerKing)
+r   # same as cor(fat_g ~ protein_g)!
+r*sy/sx
+coef(burgerlm)[2]
 ```
 
 #### Step-by-Step Example: Calculating a Regression Equation
@@ -87,16 +109,22 @@ gf_point(condition ~ age_at_inspection, data = TompkinsBridges, xlab = "Age at I
 
 See calculations on page 203.
 
-#### Random Matters
-
-```{r}
-
-```
-
 ### Section 7.4: Regression to the Mean
+
+See display on page 205.
 
 ### Section 7.5: Examining the Residuals
 
+```{r}
+msummary(burgerlm)
+gf_point(resid(burgerlm) ~ protein_g, data = BurgerKing) %>%
+  gf_lm()
+```
+
 ### Section 7.6: $R^2$--The Variation Accounted For by the Model
+
+```{r}
+rsquared(burgerlm)
+```
 
 ### Section 7.7: Regression Assumptions and Conditions
