@@ -125,8 +125,11 @@ tally(~ Class + Survived, format = "count", data = Titanic)
 tally(~ Class + Survived, format = "percent", data = Titanic)
 barplot(tally(~ Survived | Class, format = "percent", data = Titanic), beside = TRUE)
 barplot(tally(~ Class | Survived, format = "percent", data = Titanic))
-gf_bar(~ Survived | Class, format = "percent", data = Titanic)
-#gf_bar automatically facets
+gf_bar(~ Survived, fill = ~ Class, stat = "percent", position = "dodge", data = Titanic)
+gf_bar(~ Survived, fill = ~ Class, data = Titanic)
+# position_dodge()
+gf_bar(~ Survived | Class, data = Titanic)
+# gf_bar automatically facets
 ```
 
 ```{r}
