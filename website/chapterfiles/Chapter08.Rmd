@@ -225,5 +225,20 @@ Mutating with a log:
 gf_point(log(dive_heart_rate) ~ duration_min, data = Penguins) %>%
   gf_labs(x = "Duration", y = "Log (DHR)")
 penguinlm2 <- lm(log(dive_heart_rate) ~ duration_min, data = Penguins)
-gf_point()
+gf_point(resid(penguinlm2) ~ fitted (penguinlm2)) %>%
+  gf_labs(x = "Predicted Values", y = "Residuals")
+gf_histogram(~ resid(penguinlm2), bins = 10, xlab = "Residuals", ylab = "# of Residuals")
 ```
+
+Mutating with a (negative) reciprocal:  
+
+```{r}
+gf_point(-1/(dive_heart_rate) ~ duration_min, data = Penguins) %>%
+  gf_labs(x = "Duration", y = "-1/DHR")
+penguinlm3 <- lm(-1/(dive_heart_rate) ~ duration_min, data = Penguins)
+gf_point(resid(penguinlm3) ~ fitted(penguinlm3)) %>%
+  gf_labs(x = "Predicted Values", y = "Residuals")
+gf_histogram(~ resid(penguinlm3), bins = 10, xlab = "Residuals", ylab = "# of Residuals")
+```
+
+$-1/\sqrt{DHR}$ follows the same process on pages 253-254.
