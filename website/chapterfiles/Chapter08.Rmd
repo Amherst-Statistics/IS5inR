@@ -48,20 +48,182 @@ he *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 library(mosaic)
 library(readr)
 library(janitor)
-# <- read_csv("http://nhorton.people.amherst.edu/is5/data/Burger_King_items.csv") %>%
-  clean_names()
 ```
 
 ### Section 8.1: Examining Residuals
 
+#### Getting the "Bends": When the Residuals Aren't Straight
+
+```{r}
+Penguins <- read_csv("http://nhorton.people.amherst.edu/is5/data/Penguins.csv") %>%
+  clean_names()
+gf_point(dive_heart_rate ~ duration_min, data = Penguins, xlab = "Duration (min)", ylab = "Dive Heart Rate (bpm)")
+penguinlm <- lm(dive_heart_rate ~ duration_min, data = Penguins)
+gf_point(resid(penguinlm) ~ duration_min, data = Penguins, xlab = "Duration (min)", ylab = "Residuals")
+```
+
+#### Sifting Residuals for Groups
+
+```{r}
+Cereal <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cereals.csv")
+cereallm <- lm (calories ~ sugars, data = Cereal)
+gf_histogram(~ resid(cereallm), bins = 12) %>%
+  gf_labs(x = "Residuals (calories)", y = "# of Cereals")
+gf_point(jitter(resid(cereallm)) ~ jitter(fitted(cereallm)))
+```
+
+Jitter adds some random noise to allow easier observation of values that are shared by more than one cereal.  
+
+```{r}
+tally(~ shelf, data = Cereal)
+Cereal <- mutate(Cereal, shelfgroup = 
+                    recode(shelf,
+                           `1` = "Bottom Shelf",
+                           `2` = "Middle Shelf",
+                           `3` = "Top Shelf")
+                    )
+tally(~ shelfgroup, data = Cereal)
+gf_point(jitter(calories) ~ sugars, color = ~ shelfgroup, data = Cereals) %>%
+  gf_lm() %>%
+  gf_labs(x = "Sugar (g)", y = "Calories")
+```
+
 ### Section 8.2: Extrapolation: Reaching Beyond the Data
+
+See displays on page 237 and 238.  
+
+#### Example 8.1: Extrapolation: Reaching Beyond the Data
+
+```{r}
+MarriageAge <- read_csv("http://nhorton.people.amherst.edu/is5/data/Marriage_age_2015.csv")
+gf_point(Men ~ Year, data = MarriageAge, ylab = "Men's Age at First Marriage")
+```
 
 ### Section 8.3: Outliers, Leverage, and Influence
 
+```{r}
+Election2000 <- read_csv("http://nhorton.people.amherst.edu/is5/data/Election_2000.csv")
+gf_point(Buchanan ~ Nader, data = Election2000) %>%
+  gf_lm() %>%
+  gf_labs(x = "Nader (votes)", y = "Buchanan (votes)")
+
+Election2000 %>%
+  filter(Buchanan <= 3000) %>%
+  gf_point(Buchanan ~ Nader) %>%
+  gf_lm()
+
+withlm <- lm(Buchanan ~ Nader, data = Election2000)
+msummary(withlm)
+withoutlm <- lm(Buchanan ~ Nader, data = filter(Election2000, Buchanan <= 3000))
+msummary(withoutlm)
+```
+
+See page 242 for example of high-leverage point.  
+
 ### Section 8.4: Lurking Variables with Causation
+
+```{r}
+Doctors <- read_csv("http://nhorton.people.amherst.edu/is5/data/Doctors_and_life_expectancy.csv") %>%
+  clean_names()
+gf_point(life_exp ~ sqrt_doctors_person, data = Doctors) %>%
+  gf_labs(x = "Sqrt Doctors/Person", y = "Life Expectancy (yr)")
+gf_point(life_exp ~ sqrt_tv_person, data = Doctors) %>%
+  gf_labs(x = "Sqrt TVs/Person", y = "Live Expectancy (yr)")
+```
+
+#### Example 8.2: Using Several of These Methods Together
+
+```{r}
+DirtBikes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Dirt_bikes_2014.csv")
+gf_point(MSRP ~ Displacement, data = DirtBikes)
+bikeslm <- lm(MSRP ~ Displacement, data = DirtBikes)
+gf_point(resid(bikeslm) ~ fitted(bikeslm)) %>%
+  gf_labs(x = "Predicted Values", y = "Residuals")
+DirtBikes %>%
+  filter(Cooling != "NA") %>%
+  mutate(Cooling = ifelse(Cooling == "Air-Cooled", "Air-Cooled", "LiquidCooled")) %>%
+  gf_point(MSRP ~ (Displacement)^(1/3), color = ~ Cooling) %>%
+  gf_lm()
+```
 
 ### Section 8.5: Working with Summary Values
 
+```{r}
+HeightsWeights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Heights_and_weights.csv")
+gf_point(Weight ~ Height, data = HeightsWeights) %>%
+  gf_lm()
+HeightsWeights %>%
+  group_by(Height) %>%
+  summarise(MeanWeight = mean(Weight)) %>%
+  gf_point(MeanWeight ~ Height) %>%
+  gf_lm()
+```
+
 ### Section 8.6: Straightening Scatterplots--The Three Goals
 
+```{r}
+FuelEfficiency <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fuel_efficiency.csv") %>%
+  clean_names()
+gf_point(city_mpg ~ weight, data = filter(FuelEfficiency, city_mpg <= 40)) %>%
+  gf_labs(x = "Weight (lb)", y = "Fuel Efficiency (mpg)")
+fuellm <- lm(city_mpg ~ weight, data = filter(FuelEfficiency, city_mpg <= 40))
+gf_point(resid(fuellm) ~ fitted(fuellm)) %>%
+  gf_labs(x = "Predicted (mpg)", y = "Residuals (mpg)")
+```
+
+```{r}
+FuelEfficiency <- FuelEfficiency %>%
+  mutate(fuel_consumption = 1/city_mpg)
+gf_point(fuel_consumption ~ weight, data = FuelEfficiency) %>%
+  gf_labs(x = "Weight (lb)", y = "Fuel Consumption (gal/100 mi)")
+fuellm2 <- lm(fuel_consumption ~ weight, data = FuelEfficiency)
+gf_point(resid(fuellm2) ~ fitted(fuellm2)) %>%
+  gf_labs(x = "Predicted (gal/100 mi)", y = "Residuals (gal/100 mi)")
+```
+
+#### Goals of Re-Expression for Regression
+
+```{r}
+HandDexterity <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hand_dexterity.csv") %>%
+  clean_names() %>%
+  mutate(dominant = as.factor(dominant))
+gf_point(time_sec ~ age_yr, color = ~ dominant, data = HandDexterity) %>%
+  gf_labs(x = "Age (yr)", y = "Time (sec)")
+HandDexterity <- HandDexterity %>%
+  mutate(speed = 1/time_sec)
+gf_point(speed ~ age_yr, color = ~ dominant, data = HandDexterity) %>%
+  gf_lm() %>%
+  gf_labs(x = "Age (yr)", y = "Speed")
+handlm <- lm(speed ~ age_yr, data = HandDexterity)
+gf_histogram(~ resid(handlm), bins = 7) %>%
+  gf_labs(x = "Residuals", y = "")
+```
+
 ### Section 8.7: Finding a Good Re-expression
+
+See table and Figure 8.23 on page 250.  
+
+#### Step-By-Step Example: Re-Expressing to Straighten a Scatterplot
+
+```{r}
+gf_point(dive_heart_rate ~ duration_min, data = Penguins, xlab = "Duration", ylab = "DHR")
+gf_point(resid(penguinlm) ~ fitted(penguinlm), data = Penguins, xlab = "Predicted Values", ylab = "Residuals")
+gf_histogram(~ resid(penguinlm), bins = 9) %>%
+  gf_labs(x = "Residuals", y = "")
+```
+
+Mutating with the square root:  
+
+```{r}
+gf_point((dive_heart_rate)^(1/2) ~ duration_min, data = Penguins) %>%
+  gf_labs(x = "Duration", y = "sqrt(DHR)")
+```
+
+Mutating with a log:  
+
+```{r}
+gf_point(log(dive_heart_rate) ~ duration_min, data = Penguins) %>%
+  gf_labs(x = "Duration", y = "Log (DHR)")
+penguinlm2 <- lm(log(dive_heart_rate) ~ duration_min, data = Penguins)
+gf_point()
+```

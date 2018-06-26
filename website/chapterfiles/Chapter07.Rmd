@@ -118,7 +118,10 @@ See display on page 205.
 ```{r}
 msummary(burgerlm)
 gf_point(resid(burgerlm) ~ protein_g, data = BurgerKing) %>%
-  gf_lm()
+  gf_lm() %>%
+  gf_labs(x = "Protein (g)", y = "Residuals (g fat)")
+gf_histogram(~ resid(burgerlm), bins = 8) %>%
+  gf_labs(x = "Residuals (g fat)", y = "# of Residuals")
 ```
 
 ### Section 7.6: $R^2$--The Variation Accounted For by the Model
