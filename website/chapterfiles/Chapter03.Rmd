@@ -125,7 +125,7 @@ tally(~ Class + Survived, format = "count", data = Titanic)
 tally(~ Class + Survived, format = "percent", data = Titanic)
 barplot(tally(~ Class | Survived, format = "percent", data = Titanic))
 gf_percents(~ Class, fill = ~ Survived, position = position_dodge(), data = Titanic)
-gf_percents(~ Survived, fill = ~ Class, data = Titanic)
+gf_percents(~ Survived, fill = ~ Class, position = "fill", data = Titanic)
 ```
 
 ```{r}
