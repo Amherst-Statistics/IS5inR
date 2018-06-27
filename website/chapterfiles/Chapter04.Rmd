@@ -53,6 +53,8 @@ gf_histogram(~ avg_wind_mph, data = HopkinsForest)
 favstats(~ avg_wind_mph, data = HopkinsForest)
 ```
 
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+
 ### Section 4.1: Displays for Comparing Groups
 
 #### Histograms

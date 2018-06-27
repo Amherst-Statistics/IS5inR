@@ -52,11 +52,16 @@ library(janitor)
 # If you look at the data set, you'll see that the first line is "Col1", "Col2", etc
 OKCupid <- read_csv("http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", skip = 1) %>%
   clean_names()
+names(OKCupid)
 tally(~ cats_dogs_both + gender, margin = TRUE, data = OKCupid)
 tally(~ cats_dogs_both + gender, format = "percent", margin = TRUE, data = OKCupid)
 tally(~ cats_dogs_both | gender, format = "percent", margin = TRUE, data = OKCupid)
 tally(~ gender | cats_dogs_both, format = "percent", margin = TRUE, data = OKCupid)
 ```
+
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+
+We can use `clean_names()` from the `janitor` package to format the names of the columns when necessary.  
 
 #### Example 3.1: Exploring Marginal Distributions
 
@@ -80,7 +85,9 @@ See displays on 68-69.
 
 ```{r}
 gf_bar(~ cats_dogs_both | gender, data = OKCupid)
-#There are many who don't own either
+# There are many who don't own either
+
+# Figure 3.2, page 69
 gf_bar(~ cats_dogs_both | gender, fill = ~ cats_dogs_both,
   data = filter(OKCupid, cats_dogs_both != "NA"))
 ```
@@ -124,11 +131,14 @@ tally(~ Side + Dream, data = Nightmares)
 ```{r}
 tally(~ Class + Survived, format = "count", data = Titanic)
 tally(~ Class + Survived, format = "percent", data = Titanic)
+# Figure 3.4, page 75
 gf_percents(~ Class, fill = ~ Survived, position = position_dodge(), data = Titanic)
+# Figure 3.5
 gf_percents(~ Survived, fill = ~ Class, position = "fill", data = Titanic)
 ```
 
 ```{r}
+# Figure 3.6, page 76
 vcd::mosaic(tally(~ Survived + Class, data = Titanic), 
            main = "Mosaic plot of Class by Survival",
            shade = TRUE)
@@ -161,9 +171,11 @@ Berk <- rbind(
   do(89) * data.frame(admit = TRUE, sex = "F", school = "A"), 
   do(19) * data.frame(admit = FALSE, sex = "F", school = "A")
 )  
+class(Berk)
 
 tally(~ sex + admit, data = Berk)
 tally(~ admit | sex, format = "percent", data = Berk)
 ```
 
+We use `data.frame()` to make `Berk` a data frame. This can be checked with the `class()` function.  
 

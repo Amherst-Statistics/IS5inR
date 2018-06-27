@@ -58,15 +58,18 @@ tally(~ Class, format = "percent", data = Titanic)
 gf_bar(~ Class, data = Titanic)
 ```
 
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+
 ### Section 2.2: Displaying a Quantitative Variable
 
 #### Ages of Those Aboard the Titanic
 
 ```{r}
+# Figure 2.7, page 24
 gf_histogram(~ Age, data = Titanic, bins = 15, ylab = "# of People")
 ```
 
-The function generates a warning because three of the ages are missing: this output can be suppressed by adding `warning=FALSE` as an option in this code chunk.
+The function generates a warning because three of the ages are missing: this output can be suppressed by adding `warning = FALSE` as an option in this code chunk.
 
 #### Earthquakes and Tsunamis
 
@@ -81,6 +84,7 @@ gf_histogram(~ Primary_Magnitude, data = Earthquakes, bins = 12,
 See page 26.
 
 ```{r}
+# Figure 2.8, page 26
 Pulse_rates <- read_csv("http://nhorton.people.amherst.edu/is5/data/Pulse_rates.csv")
 gf_histogram(~ Pulse, data = Pulse_rates, bins = 7)
 with(Pulse_rates, stem(Pulse))
@@ -89,6 +93,7 @@ with(Pulse_rates, stem(Pulse))
 #### Dotplot
 
 ```{r}
+# Figure 2.9, page 27
 Derby <- read_csv("http://nhorton.people.amherst.edu/is5/data/Kentucky_Derby_2016.csv")
 gf_dotplot(~ Time_Sec, data = Derby, binwidth = 1)
 ```
@@ -96,6 +101,7 @@ gf_dotplot(~ Time_Sec, data = Derby, binwidth = 1)
 #### Density Plots
 
 ```{r}
+# Figure 2.10, page 27
 gf_dens(~ Age, data = Titanic, ylab = "Density")
 ```
 
@@ -108,6 +114,7 @@ See displays on pages 28-29.
 ```{r}
 CPI <- read_csv("http://nhorton.people.amherst.edu/is5/data/CPI_Worldwide.csv") %>%
   clean_names()
+names(CPI)
 gf_histogram(~ consumer_price_index, data = CPI, ylab = "# of Cities", 
              xlab = "Consumer Price Index")
 ```
@@ -129,7 +136,8 @@ gf_histogram(~ charges, data = CreditCardEx, ylab = "# of Customers",
 
 ```{r}
 TitanicCrew <- filter(Titanic, Class == "Crew")
-gf_histogram(~ Age, data = TitanicCrew)
+# Figure 2.16, page 33
+gf_histogram(~ Age, data = TitanicCrew, bins = 11)
 favstats(~ Age, data = TitanicCrew)
 ```
 
