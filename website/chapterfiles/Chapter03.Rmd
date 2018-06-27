@@ -123,10 +123,8 @@ tally(~ Side + Dream, data = Nightmares)
 ```{r}
 tally(~ Class + Survived, format = "count", data = Titanic)
 tally(~ Class + Survived, format = "percent", data = Titanic)
-barplot(tally(~ Survived | Class, format = "percent", data = Titanic), beside = TRUE)
-barplot(tally(~ Class | Survived, format = "percent", data = Titanic))
-gf_bar(~ Survived | Class, format = "percent", data = Titanic)
-#gf_bar automatically facets
+gf_percents(~ Class, fill = ~ Survived, position = position_dodge(), data = Titanic)
+gf_percents(~ Survived, fill = ~ Class, position = "fill", data = Titanic)
 ```
 
 ```{r}
