@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Relationships Between Categorical Variables--Contingency Tables (Chapter 3)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "June 21, 2018"
+date: "June 27, 2018"
 output: 
   pdf_document:
     fig_height: 4
@@ -81,7 +81,8 @@ See displays on 68-69.
 ```{r}
 gf_bar(~ cats_dogs_both | gender, data = OKCupid)
 #There are many who don't own either
-gf_bar(~ cats_dogs_both | gender, data = filter(OKCupid, cats_dogs_both != "NA"))
+gf_bar(~ cats_dogs_both | gender, fill = ~ cats_dogs_both,
+  data = filter(OKCupid, cats_dogs_both != "NA"))
 ```
 
 #### Example 3.3: Finding Conditional Distributions: Watching the Super Bowl
@@ -94,7 +95,7 @@ tally(~ Plan | Sex, format = "percent", data = SuperBowl)
 #### Example 3.4: Looking for Associations Between Variables: Still Watching the Super Bowl
 
 ```{r}
-gf_bar(~ Plan | Sex, format = "percent", data = SuperBowl)
+gf_bar(~ Plan | Sex, fill = ~ Plan, format = "percent", data = SuperBowl)
 ```
 
 #### Examining Contingency Tables
@@ -109,7 +110,7 @@ tally(~ diet_counts + cancer_counts, data = FishDiet)
 
 #### Random Matters
 
-Seee display on page 74.
+See display on page 74.
 
 ```{r}
 Nightmares <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nightmares.csv", skip = 1)
@@ -162,4 +163,7 @@ Berk <- rbind(
 )  
 
 tally(~ sex + admit, data = Berk)
+tally(~ admit | sex, format = "percent", data = Berk)
 ```
+
+

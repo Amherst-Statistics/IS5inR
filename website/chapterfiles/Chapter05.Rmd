@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: The Standard Deviation as a Ruler and the Normal Model (Chapter 5)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "June 16, 2018"
+date: "June 27, 2018"
 output: 
   pdf_document:
     fig_height: 4
@@ -47,7 +47,8 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 library(mosaic)
 library(readr)
 library(janitor)
-WomenHeptathlon2016 <- read_csv("http://nhorton.people.amherst.edu/is5/data/Womens_Heptathlon_2016.csv") %>%
+WomenHeptathlon2016 <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Womens_Heptathlon_2016.csv") %>%
   clean_names()
 favstats(~ long_jump, data = WomenHeptathlon2016)
 favstats(~ x200m, data = WomenHeptathlon2016)
@@ -58,10 +59,12 @@ with(WomenHeptathlon2016, stem(long_jump))
 ### Section 5.1: Using the Standard Deviation to Standardize Values
 
 ```{r}
-filter(WomenHeptathlon2016, last_name == "Thiam")
+filter(WomenHeptathlon2016, last_name == "Thiam") %>%
+  data.frame()
 # calculate z-score with mean and sd from favstats
 (6.58 - 6.17)/.247 # long jump
-filter(WomenHeptathlon2016, last_name == "Johnson-Thompson")
+filter(WomenHeptathlon2016, last_name == "Johnson-Thompson") %>%
+  data.frame()
 ```
 
 ### Section 5.2: Shifting and Scaling
@@ -73,8 +76,7 @@ MenWeight <- read_csv("http://nhorton.people.amherst.edu/is5/data/Mens_Weights.c
   clean_names()
 gf_histogram(~ weight_in_kg, data = MenWeight, xlab = "Weight (kg)", ylab = "# of Men",
              binwidth = 10)
-gf_boxplot(weight_in_kg ~ 1, data = MenWeight, xlab = "", ylab = "Weight (kg)") %>%
-  gf_refine(coord_flip())
+gf_boxplot(~ weight_in_kg, data = MenWeight, xlab = "Weight (kg)") 
 ```
 
 ```{r}
@@ -85,7 +87,7 @@ gf_histogram(~ (weight_in_kg - 74), data = MenWeight, xlab = "Kg Above Recommend
 
 #### Rescaling to Adjust the Scale
 
-```{r}
+```{r message=FALSE}
 favstats(~ weight_in_kg, data = MenWeight)
 favstats(~ weight_in_pounds, data = MenWeight)
 library(tidyr) # for gather() function
@@ -93,6 +95,8 @@ MenWeight %>%
   gather(key = weighttype, value = weight, weight_in_kg, weight_in_pounds) %>%
   gf_boxplot(weight ~ weighttype, ylab = "", xlab = "Weight Type")
 ```
+
+Here we use the `gather()` function to transform the dataset into the needed format.
 
 #### Shifting, Scaling, and the *z*-Scores
 

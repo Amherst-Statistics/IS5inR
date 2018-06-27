@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Understanding and Comparing Distributions (Chapter 4)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "June 16, 2018"
+date: "June 27, 2018"
 output: 
   pdf_document:
     fig_height: 4
@@ -76,10 +76,21 @@ with(NestEgg, stem(nest_egg_index)) # not sure how to group by region
 #### Boxplots
 
 ```{r}
-gf_boxplot(avg_wind_mph ~ 1, data = HopkinsForest, xlab = "")
+gf_boxplot(~ avg_wind_mph, data = HopkinsForest)  # or gf_boxplot(X ~ 1)
+```
+
+As noted in the book, boxplots are most useful to compare distributions.  Here we replicate the single boxplot 
+from page 98 but don't recommend the use of single boxplots.
+
+```{r}
 gf_boxplot(avg_wind_mph ~ as.factor(month), data = HopkinsForest) %>%
   gf_labs(x = "month", y = "average wind speed (mph)")
 ```
+
+Here we replicate the results from Figure 4.3 (page 99).
+
+
+
 
 #### Example 4.2: Comparing Groups with Boxplots
 
@@ -102,7 +113,7 @@ gf_boxplot(Difference ~ Container, data = Cups)
 Flights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Flights_on_time_2016.csv") %>%
   clean_names()
 gf_histogram(~ ontime_pct, data = Flights, binwidth = 2, ylab = "# of Months", xlab = "Ontime %")
-gf_boxplot(ontime_pct ~ 1, data = Flights, xlab = "")
+gf_boxplot(~ ontime_pct, data = Flights)
 gf_boxplot(ontime_pct ~ month, data = Flights)
 ```
 
@@ -137,7 +148,7 @@ CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation
   clean_names()
 gf_histogram(~ ceo_compensation_m, xlab = "Compensation (M$)", ylab = "Millions of $", 
              data = CEOComp)
-gf_boxplot(ceo_compensation_m ~ 1, xlab = "Compensation (M$)", ylab = "Millions of $", 
+gf_boxplot(~ ceo_compensation_m, xlab = "Compensation (M$)", ylab = "Millions of $", 
            data = CEOComp)
 gf_histogram(~ log(ceo_compensation_m), xlab = "Log (compensation)", ylab = "# of CEOs", 
              data = CEOComp)

@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Displaying and Describing Data (Chapter 2)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "June 10, 2018"
+date: "June 27, 2018"
 output: 
   pdf_document:
     fig_height: 4
@@ -60,11 +60,13 @@ gf_bar(~ Class, data = Titanic)
 
 ### Section 2.2: Displaying a Quantitative Variable
 
-#### Ages of Those Aboard the the Titanic
+#### Ages of Those Aboard the Titanic
 
 ```{r}
 gf_histogram(~ Age, data = Titanic, bins = 15, ylab = "# of People")
 ```
+
+The function generates a warning because three of the ages are missing: this output can be suppressed by adding `warning=FALSE` as an option in this code chunk.
 
 #### Earthquakes and Tsunamis
 

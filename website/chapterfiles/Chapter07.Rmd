@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Linear Regression (Chapter 7)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "June 16, 2018"
+date: "June 27, 2018"
 output: 
   pdf_document:
     fig_height: 4
@@ -56,12 +56,13 @@ gf_point(fat_g ~ protein_g, data = BurgerKing, xlab = "Protein (g)", ylab = "Fat
 
 See display on page 197.
 
-We can calculate the residual for a particular value with 31 grams of protein.  
+We can calculate the residual for a particular value with 31 grams of protein by creating an function called `burgerfun` using the 
+`makeFun()` function.  
 
 ```{r}
 burgerlm <- lm(fat_g ~ protein_g, data = BurgerKing)
 burgerfun <- makeFun(burgerlm)
-burgerfun(31)
+burgerfun(protein_g = 31)
 ```
 
 ### Section 7.2: The Linear Model
@@ -80,6 +81,8 @@ Hurricanes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hurricanes_20
 gf_point(max_wind_speed_kts ~ central_pressure_mb, data = Hurricanes, xlab = "Central Pressure (mb)", ylab = "Max Wind Speed (kts)") %>%
   gf_lm()
 ```
+
+The function generates a warning because some of the data are missing: this output can be suppressed by adding `warning=FALSE` as an option in this code chunk.
 
 ### Section 7.3: Finding the Least Squares Line
 
@@ -101,16 +104,18 @@ coef(burgerlm)[2]
 #### Step-by-Step Example: Calculating a Regression Equation
 
 ```{r}
-TompkinsBridges <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tompkins_county_bridges_2016.csv") %>%
+TompkinsBridges <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Tompkins_county_bridges_2016.csv") %>%
   clean_names()
-gf_point(condition ~ age_at_inspection, data = TompkinsBridges, xlab = "Age at Inspection", ylab = "Condition")
+gf_point(condition ~ age_at_inspection, data = TompkinsBridges, 
+  xlab = "Age at Inspection", ylab = "Condition")
 ```
 
 See calculations on page 203.
 
 ### Section 7.4: Regression to the Mean
 
-See display on page 205.
+See display on page 205.   XX MC??
 
 ### Section 7.5: Examining the Residuals
 
@@ -123,7 +128,7 @@ gf_histogram(~ resid(burgerlm), bins = 8) %>%
   gf_labs(x = "Residuals (g fat)", y = "# of Residuals")
 ```
 
-### Section 7.6: $R^2$--The Variation Accounted For by the Model
+### Section 7.6: $R^2$--The Proportion of Variation Accounted for by the Model
 
 ```{r}
 rsquared(burgerlm)
