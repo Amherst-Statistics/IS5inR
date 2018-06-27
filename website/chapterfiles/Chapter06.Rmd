@@ -48,8 +48,11 @@ library(mosaic)
 library(readr)
 library(janitor)
 Hurricanes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tracking_hurricanes_2015.csv")
+# Figure 6.1, page 164
 gf_point(Error_72h ~ Year, data = Hurricanes, ylab = "Prediction Error")
 ```
+
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
 
 ### Section 6.1: Scatterplots
 
@@ -73,6 +76,7 @@ gf_point(food_costs ~ vacation_days, data = Prices, xlab = "Vacation Days (per y
 ```{r}
 HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
   clean_names()
+# Figure 6.2, page 168
 gf_point(avg_wind_mph ~ day_of_year, data = HopkinsForest) %>%
   gf_smooth(se = FALSE, xlab = "Day of Year", ylab = "Average Wind Speed (mph)")
 ```
@@ -88,10 +92,14 @@ gf_point(weight ~ days_since_july_19_2014, data = Fitness) %>%
 gf_boxplot(weight ~ as.factor(month), data = Fitness, xlab = "Month", ylab = "Weight (lb)")
 ```
 
+Warnings can be suppressed with the `warnings=FALSE` chunk option.  
+
 ### Section 6.2: Correlation
 
 ```{r}
 HeightsWeights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Heights_and_weights.csv")
+
+# Figure 6.3, page 170
 gf_point(Weight ~ Height, data = HeightsWeights, xlab = "Height (in.)", ylab = "Weight (lb)")
 cor(Weight ~ Height, data = HeightsWeights)
 ```
@@ -123,6 +131,7 @@ gf_histogram(~ LiveCorr, xlab = "Correlation of Mother's Age and Father's Age in
 
 ```{r}
 Storks <- read_csv("http://nhorton.people.amherst.edu/is5/data/Storks.csv")
+# Figure 6.9
 gf_point(Population ~ Storks, data = Storks, xlab = "# of Storks", ylab = "Human Population")
 ```
 
@@ -141,6 +150,7 @@ Companies %>%
 ```{r}
 FStops <- read_csv("http://nhorton.people.amherst.edu/is5/data/F-stops.csv") %>%
   clean_names()
+# Figure 6.10, page 179
 gf_point(f_stop ~ shutter_speed, data = FStops, xlab = "Shutter Speed (sec)", ylab = "f/stop")
 cor(f_stop ~ shutter_speed, data = FStops)
 ```
@@ -150,7 +160,9 @@ cor(f_stop ~ shutter_speed, data = FStops)
 #### f/Stops Again
 
 ```{r}
+# Figure 6.11, page 181
 gf_point(log(f_stop) ~ shutter_speed, data = FStops, xlab = "Shutter Speed (sec)", ylab = "Log (f/stop)")
+# Figure 6.12
 gf_point((f_stop)^2 ~ shutter_speed, data = FStops, xlab = "Shutter Speed (sec)", ylab = "f/stop squared")
 ```
 

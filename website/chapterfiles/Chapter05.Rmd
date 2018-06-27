@@ -56,6 +56,8 @@ with(WomenHeptathlon2016, stem(x200m))
 with(WomenHeptathlon2016, stem(long_jump))
 ```
 
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+
 ### Section 5.1: Using the Standard Deviation to Standardize Values
 
 ```{r}
@@ -74,6 +76,7 @@ filter(WomenHeptathlon2016, last_name == "Johnson-Thompson") %>%
 ```{r}
 MenWeight <- read_csv("http://nhorton.people.amherst.edu/is5/data/Mens_Weights.csv") %>%
   clean_names()
+# Figure 5.2, page 125
 gf_histogram(~ weight_in_kg, data = MenWeight, xlab = "Weight (kg)", ylab = "# of Men",
              binwidth = 10)
 gf_boxplot(~ weight_in_kg, data = MenWeight, xlab = "Weight (kg)") 
@@ -81,6 +84,7 @@ gf_boxplot(~ weight_in_kg, data = MenWeight, xlab = "Weight (kg)")
 
 ```{r}
 favstats(~ weight_in_kg, data = MenWeight)
+# Figure 5.3
 gf_histogram(~ (weight_in_kg - 74), data = MenWeight, xlab = "Kg Above Recommended Weight", 
              ylab = "# of Men", binwidth = 10)
 ```
@@ -91,6 +95,9 @@ gf_histogram(~ (weight_in_kg - 74), data = MenWeight, xlab = "Kg Above Recommend
 favstats(~ weight_in_kg, data = MenWeight)
 favstats(~ weight_in_pounds, data = MenWeight)
 library(tidyr) # for gather() function
+MenWeight %>%
+  gather(key = weighttype, value = weight, weight_in_kg, weight_in_pounds) %>%
+  head() # a data set with two variables
 MenWeight %>%
   gather(key = weighttype, value = weight, weight_in_kg, weight_in_pounds) %>%
   gf_boxplot(weight ~ weighttype, ylab = "", xlab = "Weight Type")
@@ -152,11 +159,13 @@ See examples on pages 136-140.
 
 ```{r}
 Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
+# Figure 5.10, page 141
 gf_histogram(~ mpg, data = Nissan, binwidth = 1)
 gf_qq(~ mpg, data = Nissan, xlab = "Normal Scores")
 ```
 
 ```{r}
+# Figure 5.11
 gf_histogram(~ weight_in_kg, data = MenWeight, xlab = "Weights", binwidth = 10)
 gf_qq(~ weight_in_kg, data = MenWeight, xlab = "Normal Scores")
 ```

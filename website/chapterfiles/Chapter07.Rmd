@@ -47,10 +47,13 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 library(mosaic)
 library(readr)
 library(janitor)
+# Figure 7.1
 BurgerKing <- read_csv("http://nhorton.people.amherst.edu/is5/data/Burger_King_items.csv") %>%
   clean_names()
 gf_point(fat_g ~ protein_g, data = BurgerKing, xlab = "Protein (g)", ylab = "Fat (g)")
 ```
+
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
 
 ### Section 7.1: Least Squares: The Line of "Best Fit"
 
@@ -121,10 +124,12 @@ See display on page 205.   XX MC??
 
 ```{r}
 msummary(burgerlm)
+#Figure 7.5 , page 207
 gf_point(resid(burgerlm) ~ protein_g, data = BurgerKing) %>%
   gf_lm() %>%
   gf_labs(x = "Protein (g)", y = "Residuals (g fat)")
-gf_histogram(~ resid(burgerlm), bins = 8) %>%
+# Figure 7.6
+gf_histogram(~ resid(burgerlm), bins = 8, center = 0) %>%
   gf_labs(x = "Residuals (g fat)", y = "# of Residuals")
 ```
 

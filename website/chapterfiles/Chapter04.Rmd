@@ -49,6 +49,7 @@ library(readr)
 library(janitor)
 HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
   clean_names()
+names(HopkinsForest)
 gf_histogram(~ avg_wind_mph, data = HopkinsForest)
 favstats(~ avg_wind_mph, data = HopkinsForest)
 ```
@@ -72,7 +73,7 @@ favstats(~ avg_wind_mph | catmonth, data = HopkinsForest)
 ```{r}
 NestEgg <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nest_Egg_Index.csv") %>%
   clean_names()
-with(NestEgg, stem(nest_egg_index)) # not sure how to group by region
+with(NestEgg, stem(nest_egg_index))
 ```
 
 #### Boxplots
@@ -91,7 +92,7 @@ gf_boxplot(avg_wind_mph ~ as.factor(month), data = HopkinsForest) %>%
 
 Here we replicate the results from Figure 4.3 (page 99).
 
-
+We use `as.factor()` to convert a variable into a factor.  
 
 
 #### Example 4.2: Comparing Groups with Boxplots
@@ -148,10 +149,13 @@ gf_boxplot(Speed ~ Track, data = Coasters)
 ```{r}
 CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation_2014.csv") %>%
   clean_names()
+# Figure 4.6, page 105
 gf_histogram(~ ceo_compensation_m, xlab = "Compensation (M$)", ylab = "Millions of $", 
              data = CEOComp)
 gf_boxplot(~ ceo_compensation_m, xlab = "Compensation (M$)", ylab = "Millions of $", 
            data = CEOComp)
+
+# Figure 4.7, page 106
 gf_histogram(~ log(ceo_compensation_m), xlab = "Log (compensation)", ylab = "# of CEOs", 
              data = CEOComp)
 ```

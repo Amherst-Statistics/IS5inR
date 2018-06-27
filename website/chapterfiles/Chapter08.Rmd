@@ -61,14 +61,23 @@ penguinlm <- lm(dive_heart_rate ~ duration_min, data = Penguins)
 gf_point(resid(penguinlm) ~ duration_min, data = Penguins, xlab = "Duration (min)", ylab = "Residuals")
 ```
 
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+
 #### Sifting Residuals for Groups
 
 ```{r}
 Cereal <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cereals.csv")
-cereallm <- lm (calories ~ sugars, data = Cereal)
-gf_histogram(~ resid(cereallm), bins = 12) %>%
+cereallm <- lm(calories ~ sugars, data = Cereal)
+# Figure 8.3, page 235
+gf_histogram(~ resid(cereallm), bins = 12, center = 0) %>%
   gf_labs(x = "Residuals (calories)", y = "# of Cereals")
-gf_point(jitter(resid(cereallm)) ~ jitter(fitted(cereallm)))
+
+Cereal <- Cereal %>%
+  mutate(residuals = resid(cereallm),
+         fitted = fitted(cereallm)) %>%
+  mutate(resid_cat = ifelse(residuals >= -30 & residuals <= 25, "mid", ifelse(residuals > 25, "high", "low"))) # there must be a better way to do this!
+# Figure 8.4
+gf_point(jitter(residuals) ~ jitter(fitted), color = ~ resid_cat, data = Cereal)
 ```
 
 Jitter adds some random noise to allow easier observation of values that are shared by more than one cereal.  
@@ -82,6 +91,7 @@ Cereal <- mutate(Cereal, shelfgroup =
                            `3` = "Top Shelf")
                     )
 tally(~ shelfgroup, data = Cereal)
+# Figure 8.5
 gf_point(jitter(calories) ~ sugars, color = ~ shelfgroup, data = Cereal) %>%
   gf_lm() %>%
   gf_labs(x = "Sugar (g)", y = "Calories")
@@ -95,26 +105,24 @@ See displays on page 237 and 238.
 
 ```{r}
 MarriageAge <- read_csv("http://nhorton.people.amherst.edu/is5/data/Marriage_age_2015.csv")
-gf_point(Men ~ Year, data = MarriageAge, ylab = "Men's Age at First Marriage")
+MarriageAge <- MarriageAge %>%
+  mutate(timeperiod = ifelse(Year <= 1940, "Section1", ifelse(Year >= 1980, "Section3", "Section2")))
+gf_point(Men ~ Year, color = ~ timeperiod, data = MarriageAge, ylab = "Men's Age at First Marriage")
 ```
 
 ### Section 8.3: Outliers, Leverage, and Influence
 
 ```{r}
 Election2000 <- read_csv("http://nhorton.people.amherst.edu/is5/data/Election_2000.csv")
-gf_point(Buchanan ~ Nader, data = Election2000) %>%
-  gf_lm() %>%
-  gf_labs(x = "Nader (votes)", y = "Buchanan (votes)")
-
-Election2000 %>%
-  filter(Buchanan <= 3000) %>%
-  gf_point(Buchanan ~ Nader) %>%
-  gf_lm()
-
 withlm <- lm(Buchanan ~ Nader, data = Election2000)
 msummary(withlm)
 withoutlm <- lm(Buchanan ~ Nader, data = filter(Election2000, Buchanan <= 3000))
 msummary(withoutlm)
+# Figure 8.10, page 241
+gf_point(Buchanan ~ Nader, data = Election2000) %>%
+  gf_lm() %>%
+  gf_labs(x = "Nader (votes)", y = "Buchanan (votes)") %>%
+  gf_fun(withoutlm)
 ```
 
 See page 242 for example of high-leverage point.  
@@ -124,8 +132,10 @@ See page 242 for example of high-leverage point.
 ```{r}
 Doctors <- read_csv("http://nhorton.people.amherst.edu/is5/data/Doctors_and_life_expectancy.csv") %>%
   clean_names()
+# Figure 8.13, page 243
 gf_point(life_exp ~ sqrt_doctors_person, data = Doctors) %>%
   gf_labs(x = "Sqrt Doctors/Person", y = "Life Expectancy (yr)")
+# Figure 8.14
 gf_point(life_exp ~ sqrt_tv_person, data = Doctors) %>%
   gf_labs(x = "Sqrt TVs/Person", y = "Live Expectancy (yr)")
 ```
@@ -149,8 +159,11 @@ DirtBikes %>%
 
 ```{r}
 HeightsWeights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Heights_and_weights.csv")
+# Figure 8.15, page 246
 gf_point(Weight ~ Height, data = HeightsWeights) %>%
   gf_lm()
+
+# Figure 8.16
 HeightsWeights %>%
   group_by(Height) %>%
   summarise(MeanWeight = mean(Weight)) %>%
@@ -158,11 +171,14 @@ HeightsWeights %>%
   gf_lm()
 ```
 
+We can use `group_by()` and `summarise()` together to find summary values.  
+
 ### Section 8.6: Straightening Scatterplots--The Three Goals
 
 ```{r}
 FuelEfficiency <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fuel_efficiency.csv") %>%
   clean_names()
+# Figure 8.17
 gf_point(city_mpg ~ weight, data = filter(FuelEfficiency, city_mpg <= 40)) %>%
   gf_labs(x = "Weight (lb)", y = "Fuel Efficiency (mpg)")
 fuellm <- lm(city_mpg ~ weight, data = filter(FuelEfficiency, city_mpg <= 40))
@@ -173,6 +189,7 @@ gf_point(resid(fuellm) ~ fitted(fuellm)) %>%
 ```{r}
 FuelEfficiency <- FuelEfficiency %>%
   mutate(fuel_consumption = 1/city_mpg)
+# Figure 8.19
 gf_point(fuel_consumption ~ weight, data = FuelEfficiency) %>%
   gf_labs(x = "Weight (lb)", y = "Fuel Consumption (gal/100 mi)")
 fuellm2 <- lm(fuel_consumption ~ weight, data = FuelEfficiency)
@@ -186,14 +203,17 @@ gf_point(resid(fuellm2) ~ fitted(fuellm2)) %>%
 HandDexterity <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hand_dexterity.csv") %>%
   clean_names() %>%
   mutate(dominant = as.factor(dominant))
+# Figure 8.20, page 248
 gf_point(time_sec ~ age_yr, color = ~ dominant, data = HandDexterity) %>%
   gf_labs(x = "Age (yr)", y = "Time (sec)")
 HandDexterity <- HandDexterity %>%
   mutate(speed = 1/time_sec)
+# Figure 8.21
 gf_point(speed ~ age_yr, color = ~ dominant, data = HandDexterity) %>%
   gf_lm() %>%
   gf_labs(x = "Age (yr)", y = "Speed")
 handlm <- lm(speed ~ age_yr, data = HandDexterity)
+# Figure 8.22
 gf_histogram(~ resid(handlm), bins = 7) %>%
   gf_labs(x = "Residuals", y = "")
 ```
