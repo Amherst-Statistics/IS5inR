@@ -69,6 +69,12 @@ favstats(~ means, data = WeightMeans)
 
 ### Section 14.1: The Central Limit Theorem
 
+```{r}
+CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation_2014.csv") %>%
+  clean_names()
+# Figure 14.3
+```
+
 ### Section 14.2: A Confidence Interval for the Mean
 
 ### Section 14.3: Interpreting Confidence Intervals
