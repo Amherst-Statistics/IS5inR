@@ -73,6 +73,14 @@ favstats(~ means, data = WeightMeans)
 CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation_2014.csv") %>%
   clean_names()
 # Figure 14.3
+gf_histogram(~ ceo_compensation_m, data = CEOComp, binwidth = 10) %>%
+  gf_labs(x = "CEO Compensation in $1,000,000", y = "Frequency")
+# Figure 14.4
+CEOMeans <- do(1000) * mean(sample(CEOComp, 10)$ceo_compensation_m) %>%
+  data.frame() %>%
+  rename(means = ".")
+gf_histogram(~ means, data = CEOMeans) %>%
+  gf_labs(x = "Mean", y = "Frequency")
 ```
 
 ### Section 14.2: A Confidence Interval for the Mean
