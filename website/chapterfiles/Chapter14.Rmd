@@ -53,33 +53,39 @@ Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv")
 
 By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
 
-```{r}
+```{r, cache=TRUE}
 # Figure 14.1, page 441
 gf_histogram(~ weight, data = Babies, binwidth = 125) %>%
   gf_labs(x = "Birthweight (g)", y = "# of Babies")
 
 # Figure 14.2
 set.seed(12346)
-WeightMeans <- do(10000) * mean(sample(Babies, 100)$weight) %>%
-  data.frame() %>%
-  rename(means = ".")
-gf_histogram(~ means, data = WeightMeans, binwidth = 10)
-favstats(~ means, data = WeightMeans)
+numsim <- 10000
+WeightMeans <- do(numsim) * mean(~ weight, data = sample(Babies, 100)) 
+gf_histogram(~ mean, data = WeightMeans, binwidth = 10)
+favstats(~ mean, data = WeightMeans)
 ```
 
 ### Section 14.1: The Central Limit Theorem
 
-```{r}
+```{r, cache=TRUE}
 CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation_2014.csv") %>%
   clean_names()
 # Figure 14.3
 gf_histogram(~ ceo_compensation_m, data = CEOComp, binwidth = 10) %>%
   gf_labs(x = "CEO Compensation in $1,000,000", y = "Frequency")
 # Figure 14.4
-CEOMeans <- do(1000) * mean(sample(CEOComp, 10)$ceo_compensation_m) %>%
-  data.frame() %>%
-  rename(means = ".")
-gf_histogram(~ means, data = CEOMeans) %>%
+numsim <- 1000
+CEOMeans <- do(numsim) * mean(~ ceo_compensation_m, data = sample(CEOComp, 10))
+gf_histogram(~ mean, data = CEOMeans) %>%
+  gf_labs(x = "Mean", y = "Frequency")
+# Figure 14.5
+CEOMeans2 <- do(numsim) * mean(~ ceo_compensation_m, data = sample(CEOComp, 50))
+gf_histogram(~ mean, data = CEOMeans2) %>%
+  gf_labs(x = "Mean", y = "Frequency")
+# Figure 14.7 (skipped 14.6 because it's similar)
+CEOMeans3 <- do(numsim) * mean(~ ceo_compensation_m, data = sample(CEOComp, 200))
+gf_histogram(~ mean, data = CEOMeans3) %>%
   gf_labs(x = "Mean", y = "Frequency")
 ```
 
@@ -87,6 +93,6 @@ gf_histogram(~ means, data = CEOMeans) %>%
 
 ### Section 14.3: Interpreting Confidence Intervals
 
-### Section 14.4: Picking Our Interval up by Out Bootstraps
+### Section 14.4: Picking Our Interval up by Our Bootstraps
 
 ### Section 14.5: Thoughts About Confidence Intervals

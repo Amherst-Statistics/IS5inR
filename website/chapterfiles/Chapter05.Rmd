@@ -136,7 +136,8 @@ Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commu
 gf_histogram(~ commute_time, data = Commute, xlab = "Commute Times (min)", ylab = "# of Employees", 
              binwidth = 10)
 set.seed(2143)
-Commute_sample <- do(10000) * mean(sample(Commute$commute_time, 100)) 
+numsim <- 10000
+Commute_sample <- do(numsim) * mean(~ commute_time, data =  sample(Commute, 100)) 
 gf_histogram(~ mean, data = Commute_sample, xlab = "Means of Samples of Size 100", ylab = "# of Samples")
 ```
 

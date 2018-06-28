@@ -52,7 +52,7 @@ Hurricanes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tracking_hurr
 gf_point(Error_72h ~ Year, data = Hurricanes, ylab = "Prediction Error")
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
 ### Section 6.1: Scatterplots
 
@@ -116,14 +116,17 @@ cor(SBP ~ DBP, data = Framingham)
 
 #### Random Matters: Correlations Vary
 
-```{r}
+```{r, cache=TRUE}
 LiveBirths <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") %>%
   clean_names()
+LiveBirths <- LiveBirths %>%
+  filter(dad_age != "NA")
 set.seed(14513)
-gf_point(mom_age ~ dad_age, data = sample(filter(LiveBirths, dad_age != "NA"), 50))
+gf_point(mom_age ~ dad_age, data = sample(LiveBirths, 50))
 # Graph will look different for different samples
 cor(mom_age ~ dad_age, data = filter(LiveBirths, dad_age != "NA"))
-LiveCorr <- do(10000) * cor(mom_age ~ dad_age, data = sample(filter(LiveBirths, dad_age != "NA"), 50))
+numsim <- 10000
+LiveCorr <- do(numsim) * cor(mom_age ~ dad_age, data = sample(LiveBirths, 50))
 gf_histogram(~ LiveCorr, xlab = "Correlation of Mother's Age and Father's Age in Samples of Size 50", ylab = "# of Samples")
 ```
 
