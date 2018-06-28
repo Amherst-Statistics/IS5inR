@@ -103,7 +103,7 @@ MenWeight %>%
   gf_boxplot(weight ~ weighttype, ylab = "", xlab = "Weight Type")
 ```
 
-Here we use the `gather()` function to transform the dataset into the needed format.
+Here we use the `gather()` function to transform the dataset into the needed format, which can be seen with the `head()` function.
 
 #### Shifting, Scaling, and the *z*-Scores
 

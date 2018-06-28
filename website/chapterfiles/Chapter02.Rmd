@@ -58,7 +58,7 @@ tally(~ Class, format = "percent", data = Titanic)
 gf_bar(~ Class, data = Titanic)
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
 ### Section 2.2: Displaying a Quantitative Variable
 
@@ -69,7 +69,7 @@ By default, `read_csv()` prints the variable names. These messages can be suppre
 gf_histogram(~ Age, data = Titanic, bins = 15, ylab = "# of People")
 ```
 
-The function generates a warning because three of the ages are missing: this output can be suppressed by adding `warning = FALSE` as an option in this code chunk.
+The function generates a warning because three of the ages are missing: this output can be suppressed by adding `warning=FALSE` as an option in this code chunk.
 
 #### Earthquakes and Tsunamis
 

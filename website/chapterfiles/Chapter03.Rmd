@@ -59,7 +59,7 @@ tally(~ cats_dogs_both | gender, format = "percent", margin = TRUE, data = OKCup
 tally(~ gender | cats_dogs_both, format = "percent", margin = TRUE, data = OKCupid)
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
 We can use `clean_names()` from the `janitor` package to format the names of the columns when necessary.  
 
