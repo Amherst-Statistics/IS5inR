@@ -49,6 +49,7 @@ library(readr)
 library(janitor)
 BodyFat <- read_csv("http://nhorton.people.amherst.edu/is5/data/Bodyfat.csv") %>%
   clean_names()
+# Figure 9.1, page 276
 gf_point(pct_bf ~ waist, data = BodyFat) %>%
   gf_labs(x = "Waist", y = "% Body Fat")
 ```
@@ -57,13 +58,46 @@ By default, `read_csv()` prints the variable names. These messages can be suppre
 
 ### Section 9.1: What is Multiple Regression?
 
+#### Example 9.1: Modeling Home Prices
+
 ```{r}
-RealEstate
+RealEstate <- read_csv("http://nhorton.people.amherst.edu/is5/data/Real_Estate.csv") %>%
+  clean_names()
+msummary(lm(price ~ living_area + bedrooms, data = RealEstate))
 ```
+
+The coefficients for the model can be seen in the `Estimate` column.  
 
 ### Section 9.2: Interpreting Multiple Regression Coefficients
 
-### Section 9.3: The Multiple Regression Modell--Assumptions and Conditions
+```{r}
+# Figure 9.2, page 279
+gf_point(pct_bf ~ height, data = BodyFat) %>%
+  gf_labs(x = "Height (in)", y = "% Body Fat")
+# Figure 9.3
+BodyFat %>%
+  filter(waist >= 36 & waist <= 38) %>%
+  gf_point(pct_bf ~ height) %>%
+  gf_labs(x = "Height (in)", y = "% Body Fat") %>%
+  gf_lm()
+```
+
+### Section 9.3: The Multiple Regression Model--Assumptions and Conditions
+
+#### Linearity Assumption
+
+#### Equal Variance Assumption
+
+```{r}
+bodyfatlm <- lm(pct_bf ~ waist + height, data = BodyFat)
+# Figure 9.4, page 282
+gf_point(resid(bodyfatlm) ~ fitted(bodyfatlm)) %>%
+  gf_labs(x = "Predicted", y = "Residuals")
+```
+
+#### Check the Residuals
+
+
 
 ### Section 9.4: Partial Regression Plots
 

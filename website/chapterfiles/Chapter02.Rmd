@@ -168,7 +168,7 @@ sd(~ Age, data = TitanicCrew)
 var(~ Age, data = TitanicCrew)
 ```
 
-### Summarizing a Distribution
+#### Summarizing a Distribution
 
 ```{r}
 Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
@@ -177,7 +177,7 @@ gf_histogram(~ mpg, data = Nissan, bins = 18, xlab = "Fuel Efficiency (mpg)",
 favstats(~ mpg, data = Nissan)
 ```
 
-### Random Matters
+#### Random Matters
 
 ```{r}
 Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv") %>%
