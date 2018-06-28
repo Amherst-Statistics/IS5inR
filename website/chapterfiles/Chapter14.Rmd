@@ -91,6 +91,10 @@ gf_histogram(~ mean, data = CEOMeans3) %>%
 
 ### Section 14.2: A Confidence Interval for the Mean
 
+```{r}
+
+```
+
 ### Section 14.3: Interpreting Confidence Intervals
 
 ### Section 14.4: Picking Our Interval up by Our Bootstraps
