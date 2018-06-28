@@ -177,5 +177,5 @@ tally(~ sex + admit, data = Berk)
 tally(~ admit | sex, format = "percent", data = Berk)
 ```
 
-We use `data.frame()` to make `Berk` a data frame. This can be checked with the `class()` function.  
+In this case, `do(n)` creates `n` number of observations with the properties in `data.frame()`. We use `data.frame()` to make `Berk` a data frame. This can be checked with the `class()` function.  `rbind()` is used to combine the data frames into one.  
 
