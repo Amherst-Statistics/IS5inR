@@ -54,7 +54,8 @@ gf_histogram(~ avg_wind_mph, data = HopkinsForest, binwidth = 0.5, center = 0.25
 favstats(~ avg_wind_mph, data = HopkinsForest)
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.   
+Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace). You can use the `names()` function to check the cleaned names.     
 
 ### Section 4.1: Displays for Comparing Groups
 

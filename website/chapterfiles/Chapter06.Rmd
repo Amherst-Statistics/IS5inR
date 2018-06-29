@@ -69,6 +69,8 @@ gf_point(clothing_index ~ hours_worked, data = Prices, xlab = "Working Hours", y
 gf_point(food_costs ~ vacation_days, data = Prices, xlab = "Vacation Days (per year)", ylab = "Food Costs ($)")
 ```
 
+Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
+
 #### Roles for Variables
 
 #### Smoothing Scatterplots

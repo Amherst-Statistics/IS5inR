@@ -119,7 +119,7 @@ gf_histogram(~ consumer_price_index, data = CPI, ylab = "# of Cities",
              xlab = "Consumer Price Index", binwidth = 5, center = 5/2)
 ```
 
-We can use `clean_names()` from the `janitor` package to format the names of the columns when necessary.  
+We can use `clean_names()` from the `janitor` package to format the names of the columns when necessary. You can use the `names()` function to check the reformatted names.    
 
 #### Credit Card Expenditures
 

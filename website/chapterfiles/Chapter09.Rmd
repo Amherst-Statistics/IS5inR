@@ -55,6 +55,7 @@ gf_point(pct_bf ~ waist, data = BodyFat) %>%
 ```
 
 By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
 
 ### Section 9.1: What is Multiple Regression?
 
