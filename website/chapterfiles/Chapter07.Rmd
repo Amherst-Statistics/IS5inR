@@ -129,7 +129,7 @@ gf_point(resid(burgerlm) ~ protein_g, data = BurgerKing) %>%
   gf_lm() %>%
   gf_labs(x = "Protein (g)", y = "Residuals (g fat)")
 # Figure 7.6
-gf_histogram(~ resid(burgerlm), bins = 8, center = 0) %>%
+gf_histogram(~ resid(burgerlm), binwidth = 10, center = 5) %>%
   gf_labs(x = "Residuals (g fat)", y = "# of Residuals")
 ```
 

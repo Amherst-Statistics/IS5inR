@@ -78,7 +78,7 @@ MenWeight <- read_csv("http://nhorton.people.amherst.edu/is5/data/Mens_Weights.c
   clean_names()
 # Figure 5.2, page 125
 gf_histogram(~ weight_in_kg, data = MenWeight, xlab = "Weight (kg)", ylab = "# of Men",
-             binwidth = 10)
+             binwidth = 10, center = 5)
 gf_boxplot(~ weight_in_kg, data = MenWeight, xlab = "Weight (kg)") 
 ```
 
@@ -123,7 +123,8 @@ xpnorm(c(-3, 3), mean = 0, sd = 1, verbose = FALSE)
 
 ```{r}
 BodyFat <- read_csv("http://nhorton.people.amherst.edu/is5/data/Bodyfat.csv")
-gf_histogram(~ Wrist, data = BodyFat, xlab = "Wrist Circ (cm)", ylab = "# of Men", binwidth = .5)
+gf_histogram(~ Wrist, data = BodyFat, xlab = "Wrist Circ (cm)", ylab = "# of Men", binwidth = .5,
+             center = -.25)
 ```
 
 #### Random Matters
@@ -134,7 +135,7 @@ Starts on page 133.
 Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv") %>%
   clean_names()
 gf_histogram(~ commute_time, data = Commute, xlab = "Commute Times (min)", ylab = "# of Employees", 
-             binwidth = 10)
+             binwidth = 10, center = 5)
 set.seed(2143)
 numsim <- 10000
 Commute_sample <- do(numsim) * mean(~ commute_time, data =  sample(Commute, 100)) 
@@ -161,12 +162,12 @@ See examples on pages 136-140.
 ```{r}
 Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
 # Figure 5.10, page 141
-gf_histogram(~ mpg, data = Nissan, binwidth = 1)
+gf_histogram(~ mpg, data = Nissan, binwidth = 1, center = .5)
 gf_qq(~ mpg, data = Nissan, xlab = "Normal Scores")
 ```
 
 ```{r}
 # Figure 5.11
-gf_histogram(~ weight_in_kg, data = MenWeight, xlab = "Weights", binwidth = 10)
+gf_histogram(~ weight_in_kg, data = MenWeight, xlab = "Weights", binwidth = 10, center = 5)
 gf_qq(~ weight_in_kg, data = MenWeight, xlab = "Normal Scores")
 ```

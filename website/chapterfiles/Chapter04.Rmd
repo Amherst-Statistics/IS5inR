@@ -50,7 +50,7 @@ library(janitor)
 HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
   clean_names()
 names(HopkinsForest)
-gf_histogram(~ avg_wind_mph, data = HopkinsForest)
+gf_histogram(~ avg_wind_mph, data = HopkinsForest, binwidth = 0.5, center = 0.25)
 favstats(~ avg_wind_mph, data = HopkinsForest)
 ```
 
@@ -63,7 +63,7 @@ By default, `read_csv()` prints the variable names. These messages can be suppre
 ```{r}
 HopkinsForest <- HopkinsForest %>%
   mutate(catmonth = ifelse(month <= 9 & month >= 4, "Spring/Summer", "Fall/Winter"))
-gf_histogram(~ avg_wind_mph, data = HopkinsForest) %>%
+gf_histogram(~ avg_wind_mph, data = HopkinsForest, binwidth = 0.5, center = 0.25) %>%
   gf_facet_wrap(~ catmonth)
 favstats(~ avg_wind_mph | catmonth, data = HopkinsForest)
 ```
@@ -115,7 +115,8 @@ gf_boxplot(Difference ~ Container, data = Cups)
 ```{r, warning=FALSE}
 Flights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Flights_on_time_2016.csv") %>%
   clean_names()
-gf_histogram(~ ontime_pct, data = Flights, binwidth = 2, ylab = "# of Months", xlab = "Ontime %")
+gf_histogram(~ ontime_pct, data = Flights, binwidth = 2, ylab = "# of Months", xlab = "Ontime %", 
+             center = 1)
 gf_boxplot(~ ontime_pct, data = Flights)
 gf_boxplot(ontime_pct ~ month, data = Flights)
 ```
@@ -151,13 +152,13 @@ CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation
   clean_names()
 # Figure 4.6, page 105
 gf_histogram(~ ceo_compensation_m, xlab = "Compensation (M$)", ylab = "Millions of $", 
-             data = CEOComp)
+             data = CEOComp, binwidth = 2.5, center = 2.5/2)
 gf_boxplot(~ ceo_compensation_m, xlab = "Compensation (M$)", ylab = "Millions of $", 
            data = CEOComp)
 
 # Figure 4.7, page 106
 gf_histogram(~ log(ceo_compensation_m), xlab = "Log (compensation)", ylab = "# of CEOs", 
-             data = CEOComp)
+             data = CEOComp, binwidth = .224, center = .112)
 ```
 
 #### Re-Expression to Equalize Spread Across Groups

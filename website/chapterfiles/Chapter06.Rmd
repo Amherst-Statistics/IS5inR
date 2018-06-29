@@ -86,7 +86,8 @@ gf_point(avg_wind_mph ~ day_of_year, data = HopkinsForest) %>%
 ```{r, message=FALSE}
 Fitness <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fitness_data.csv") %>%
   clean_names()
-gf_histogram(~ weight, data = Fitness, binwidth = 1, ylab = "# of Days", xlab = "Weight (lb)")
+gf_histogram(~ weight, data = Fitness, binwidth = 1, ylab = "# of Days", xlab = "Weight (lb)",
+             center = .5)
 gf_point(weight ~ days_since_july_19_2014, data = Fitness) %>%
   gf_smooth(se = FALSE, xlab = "Days Since July 19, 2014", ylab = "Weight (lb)")
 gf_boxplot(weight ~ as.factor(month), data = Fitness, xlab = "Month", ylab = "Weight (lb)")
@@ -127,7 +128,8 @@ gf_point(mom_age ~ dad_age, data = sample(LiveBirths, 50))
 cor(mom_age ~ dad_age, data = filter(LiveBirths, dad_age != "NA"))
 numsim <- 10000
 LiveCorr <- do(numsim) * cor(mom_age ~ dad_age, data = sample(LiveBirths, 50))
-gf_histogram(~ LiveCorr, xlab = "Correlation of Mother's Age and Father's Age in Samples of Size 50", ylab = "# of Samples")
+gf_histogram(~ LiveCorr, xlab = "Correlation of Mother's Age and Father's Age in Samples of Size 50", 
+             ylab = "# of Samples")
 ```
 
 ### Section 6.3: Warning: Correlation $\neq$ Causation

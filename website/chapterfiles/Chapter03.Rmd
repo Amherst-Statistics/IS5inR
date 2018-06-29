@@ -166,10 +166,10 @@ Here we demonstrate how to generate one of the tables on page 80.
 # Create a dataframe from the counts
 # http://mathemathinking.blogspot.com/2012/06/simpsons-paradox.html
 Berk <- rbind(
-  do(512) * data.frame(admit = TRUE, sex = "M", school = "A"),
+  do(512) *       data.frame(admit = TRUE,  sex = "M", school = "A"),
   do(825 - 512) * data.frame(admit = FALSE, sex = "M", school = "A"),
-  do(89) * data.frame(admit = TRUE, sex = "F", school = "A"), 
-  do(19) * data.frame(admit = FALSE, sex = "F", school = "A")
+  do(89) *        data.frame(admit = TRUE,  sex = "F", school = "A"), 
+  do(19) *        data.frame(admit = FALSE, sex = "F", school = "A")
 )  
 class(Berk)
 
