@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Relationships Between Categorical Variables--Contingency Tables (Chapter 3)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "June 27, 2018"
+date: "June 29, 2018"
 output: 
   pdf_document:
     fig_height: 4
@@ -49,19 +49,21 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 library(mosaic)
 library(readr)
 library(janitor)
-# If you look at the data set, you'll see that the first line is "Col1", "Col2", etc
 OKCupid <- read_csv("http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", skip = 1) %>%
   clean_names()
 names(OKCupid)
+```
+
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
+Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).
+
+```{r}
 tally(~ cats_dogs_both + gender, margin = TRUE, data = OKCupid)
 tally(~ cats_dogs_both + gender, format = "percent", margin = TRUE, data = OKCupid)
 tally(~ cats_dogs_both | gender, format = "percent", margin = TRUE, data = OKCupid)
 tally(~ gender | cats_dogs_both, format = "percent", margin = TRUE, data = OKCupid)
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
-
-We can use `clean_names()` from the `janitor` package to format the names of the columns when necessary.  
 
 #### Example 3.1: Exploring Marginal Distributions
 
