@@ -220,6 +220,8 @@ diamondpredict <- makeFun(diamondlm)
 #  gf_labs(x = "Carat Size", y = "sqrt(Price)") +
 #  ylim(30, 100)
 
+# Parallel slopes currently not working
+
 #evals %>%
 #  mutate(gender = forcats::fct_relevel(gender, "male")) %>%
 #  gf_point(score ~ bty_avg, data = ., color = ~ gender, xlab = "Avg Beauty Score", ylab = "Avg Professor Evaluation Score") %>% 
