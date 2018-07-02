@@ -98,7 +98,9 @@ gf_point(resid(bodyfatlm) ~ fitted(bodyfatlm)) %>%
 
 #### Check the Residuals
 
+```{r}
 
+```
 
 ### Section 9.4: Partial Regression Plots
 

@@ -146,9 +146,14 @@ gf_histogram(~ mean, data = WeightMeans, binwidth = 10)
 # Figure 14.10, page 454
 set.seed(1243536)
 numsim <- 10000
-bootstrapmeans <- do(numsim) * mean(~ weight, data = resample(Babies, 100)) # not working
+bootstrapmeans <- do(numsim) * mean(~ weight, data = mosaic::resample(Babies, 100)) 
+gf_histogram(~ mean, data = bootstrapmeans) %>%
+  gf_labs(x = "Bootstrap Means", y = "")
 # Figure 14.11
-# Add the confint
+bootstraplm <- lm(mean ~ 1, data = bootstrapmeans)
+confint(bootstraplm) # this seems wrong....?
+gf_histogram(~ mean, data = bootstrapmeans) %>%
+  gf_labs(x = "Bootstrap Means", y = "# of Bootstrap Means")
 ```
 
 #### Step-By-Step Example: A Bootstrap Confidence Interval for the Mean
@@ -159,7 +164,13 @@ Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commu
 set.seed(134)
 commutesample <- sample(Commute, 100)
 gf_histogram(~ commute_time, data = commutesample, binwidth = 10, center = 5)
-# bootstrap
+# Bootstrap
+numsim <- 10000
+commutebootstrap <- do(numsim) * mean(~ commute_time, data = mosaic::resample(Commute, 100))
+gf_histogram(~ mean, data = commutebootstrap, title = "Time Bootstrap Set Means") %>%
+  gf_labs(x = "", y = "")
+cbootlm <- lm(mean ~ 1, data = commutebootstrap)
+confint(cbootlm)
 ```
 
 ### Section 14.5: Thoughts About Confidence Intervals
