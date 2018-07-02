@@ -146,6 +146,92 @@ msummary(hurricanelm)
 ### Section 9.5: Indicator Variables
 
 ```{r}
-# Rollercoasters
+Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv")
+# Table 9.2, page 288
+head(Coasters)
+# Figure 9.7
+# Coasters[72, ], Tower of Terror isn't included by the book
+Coasters <- Coasters %>%
+  filter(Name != "Tower of Terror")
+gf_point(Duration ~ Drop, data = Coasters) %>%
+  gf_lm()
+coasterlm <- lm(Duration ~ Drop, data = Coasters)
+gf_point(resid(coasterlm) ~ fitted(coasterlm)) %>%
+  gf_labs(x = "Predicted", y = "Residuals")
+msummary(coasterlm)
+# Figure 9.8
+gf_point(Duration ~ Drop, color = ~ as.factor(Inversions), data = Coasters) %>%
+  gf_lm() %>%
+  gf_labs(color = "Inversions") 
+coasterlm2 <- lm(Duration ~ Drop + as.factor(Inversions), data = Coasters)
+msummary(coasterlm2)
+gf_point(resid(coasterlm2) ~ fitted(coasterlm2)) %>%
+  gf_labs(x = "Predicted", y = "Residuals") # not sure how to add Inversions
+```
 
+#### Example 9.3: Using Indicator Variables
+
+```{r}
+DirtBikes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Dirt_bikes_2014.csv")
+DirtBikes <- DirtBikes %>%
+  filter(Cooling != "NA") %>%
+  mutate(Cooling = ifelse(Cooling == "Air-Cooled", "Air-Cooled", "LiquidCooled"))
+gf_point(MSRP ~ (Displacement)^(1/3), color = ~ Cooling, data = DirtBikes) %>%
+  gf_lm()
+bikeslm <- lm(MSRP ~ Displacement^(1/3) + Cooling, data = DirtBikes) # not sure why there's an error
+# msummary(bikeslm)
+```
+
+#### Adjusting for Different Slopes
+
+```{r}
+BurgerKing <- read_csv("http://nhorton.people.amherst.edu/is5/data/Burger_King_items.csv") %>%
+  clean_names()
+# Figure 9.9, page 292
+gf_point(calories ~ carbs_g, data = BurgerKing) %>%
+  gf_labs(x = "Carbs (g)", y = "Calories")
+# Figure 9.10
+gf_point(calories ~ carbs_g, color = ~ as.factor(meat), data = BurgerKing) %>%
+  gf_labs(x = "Carbs (g)", y = "Calories", color = "Meat")
+msummary(lm(calories ~ carbs_g * as.factor(meat), data = BurgerKing))
+```
+
+#### One, Two, Many
+
+```{r}
+Cereal <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cereals.csv")
+cereallm <- lm(sugars ~ sodium + as.factor(shelf), data = Cereal)
+gf_point(sugars ~ sodium, color = ~ as.factor(shelf), data = Cereal) %>%
+  gf_lm() %>%
+  gf_labs(x = "Sodium", y = "Sugars", color = "Shelf")
+msummary(cereallm)
+```
+
+#### Example 9.4: Indicators for Variables with Several Levels
+
+```{r}
+Diamonds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Diamonds.csv") %>%
+  clean_names()
+diamondlm <- lm(sqrt(price) ~ carat_size + color, data = Diamonds)
+msummary(diamondlm)
+diamondpredict <- makeFun(diamondlm)
+#gf_point(sqrt(price) ~ carat_size, color = ~ color, data = Diamonds) %>%
+#  gf_line(diamondpredict(color = "D")) %>%
+#  gf_labs(x = "Carat Size", y = "sqrt(Price)") +
+#  ylim(30, 100)
+
+#evals %>%
+#  mutate(gender = forcats::fct_relevel(gender, "male")) %>%
+#  gf_point(score ~ bty_avg, data = ., color = ~ gender, xlab = "Avg Beauty Score", ylab = "Avg Professor Evaluation Score") %>% 
+#    gf_line(lin_predict(bty_avg, gender = "female") ~ bty_avg, color = ~ "female") %>%
+#    gf_line(lin_predict(bty_avg, gender = "male") ~ bty_avg, color = ~ "male") 
+
+
+
+diamondlm2 <- lm(sqrt(price) ~ carat_size * color, data = Diamonds)
+msummary(diamondlm2)
+gf_point(sqrt(price) ~ carat_size, color = ~ color, data = Diamonds) %>%
+  gf_lm() %>%
+  gf_labs(x = "Carat Size", y = "sqrt(Price)") +
+  ylim(30, 100)
 ```
