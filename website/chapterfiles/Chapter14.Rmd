@@ -76,6 +76,7 @@ CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation
 gf_histogram(~ ceo_compensation_m, data = CEOComp, binwidth = 10) %>%
   gf_labs(x = "CEO Compensation in $1,000,000", y = "Frequency")
 # Figure 14.4
+set.seed(14354)
 numsim <- 1000
 CEOMeans <- do(numsim) * mean(~ ceo_compensation_m, data = sample(CEOComp, 10))
 gf_histogram(~ mean, data = CEOMeans) %>%
@@ -93,11 +94,72 @@ gf_histogram(~ mean, data = CEOMeans3) %>%
 ### Section 14.2: A Confidence Interval for the Mean
 
 ```{r}
+# Figure 14.9, page 446
+gf_dist(dist = "norm", linetype = 2, lwd = 1.5) %>%
+  gf_labs(x = "", y = "") %>%
+  gf_dist(dist = "t", df = 2, lwd = 1.25) +
+  xlim(-4, 4) 
+```
 
+#### Example 14.1: A One-Sample *t*-Interval for the Mean
+
+```{r}
+Salmon <- read_csv("http://nhorton.people.amherst.edu/is5/data/Farmed_salmon.csv") %>%
+  clean_names()
+Salmon <- Salmon %>%
+  filter(mirex != "NA")
+favstats(~ mirex, data = Salmon)
+salmonlm <- lm(mirex ~ 1, data = Salmon)
+confint(salmonlm, data = Salmon)
+```
+
+`confint()` requires the use of an object, such as a linear model.  
+
+#### Example 14.2: Checking Assumptions and Conditions for Student's *t*
+
+```{r}
+gf_histogram(~ mirex, data = Salmon, binwidth = 0.04, center = 0.02) %>%
+  gf_labs(x = "Mirex (ppm)", y = "# of Salmon")
+```
+
+#### Step-By-Step Example: A One-Sample *t*-Interval for the Mean
+
+```{r}
+set.seed(34)
+BabiesSample <- sample(Babies, 30)
+gf_histogram(~ weight, data = BabiesSample, binwidth = 200, center = 100) %>%
+  gf_labs(x = "Birthweights", y = "# of Babies")
+favstats(~ weight, data = BabiesSample)
+babieslm <- lm(weight ~ 1, data = BabiesSample)
+confint(babieslm, level = 0.90)
 ```
 
 ### Section 14.3: Interpreting Confidence Intervals
 
 ### Section 14.4: Picking Our Interval up by Our Bootstraps
+
+```{r}
+gf_histogram(~ mean, data = WeightMeans, binwidth = 10)
+```
+
+```{r}
+# Figure 14.10, page 454
+set.seed(1243536)
+numsim <- 10000
+bootstrapmeans <- do(numsim) * mean(~ weight, data = resample(Babies, 100)) # not working
+# Figure 14.11
+# Add the confint
+```
+
+#### Step-By-Step Example: A Bootstrap Confidence Interval for the Mean
+
+```{r}
+Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv") %>%
+  clean_names()
+set.seed(134)
+commutesample <- sample(Commute, 100)
+gf_histogram(~ commute_time, data = commutesample, binwidth = 10, center = 5)
+# bootstrap
+```
 
 ### Section 14.5: Thoughts About Confidence Intervals
