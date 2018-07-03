@@ -98,6 +98,8 @@ gf_point(jitter(calories) ~ sugars, color = ~ shelfgroup, data = Cereal) %>%
   gf_labs(x = "Sugar (g)", y = "Calories")
 ```
 
+The `recode()` function allows for efficient mutation of levels.  
+
 ### Section 8.2: Extrapolation: Reaching Beyond the Data
 
 See displays on page 237 and 238.  
@@ -110,6 +112,8 @@ MarriageAge <- MarriageAge %>%
   mutate(timeperiod = ifelse(Year <= 1940, "Section1", ifelse(Year >= 1980, "Section3", "Section2")))
 gf_point(Men ~ Year, color = ~ timeperiod, data = MarriageAge, ylab = "Men's Age at First Marriage")
 ```
+
+`ifelse()` works similarly to `recode()`.  
 
 ### Section 8.3: Outliers, Leverage, and Influence
 

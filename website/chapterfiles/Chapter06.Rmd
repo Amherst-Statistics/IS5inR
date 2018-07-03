@@ -124,7 +124,7 @@ LiveBirths <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.c
   clean_names()
 LiveBirths <- LiveBirths %>%
   filter(dad_age != "NA")
-set.seed(14513)
+set.seed(14513) # For reproducibility
 gf_point(mom_age ~ dad_age, data = sample(LiveBirths, 50))
 # Graph will look different for different samples
 cor(mom_age ~ dad_age, data = filter(LiveBirths, dad_age != "NA"))
@@ -133,6 +133,8 @@ LiveCorr <- do(numsim) * cor(mom_age ~ dad_age, data = sample(LiveBirths, 50))
 gf_histogram(~ LiveCorr, xlab = "Correlation of Mother's Age and Father's Age in Samples of Size 50", 
              ylab = "# of Samples")
 ```
+
+The `do()` function runs the correlation and sampling functions 10,000 times.  
 
 ### Section 6.3: Warning: Correlation $\neq$ Causation
 

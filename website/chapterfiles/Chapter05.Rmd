@@ -139,13 +139,13 @@ Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commu
   clean_names()
 gf_histogram(~ commute_time, data = Commute, xlab = "Commute Times (min)", ylab = "# of Employees", 
              binwidth = 10, center = 5)
-set.seed(2143)
+set.seed(2143) # For reproducibility
 numsim <- 10000
 Commute_sample <- do(numsim) * mean(~ commute_time, data = sample(Commute, 100)) 
 gf_histogram(~ mean, data = Commute_sample, xlab = "Means of Samples of Size 100", ylab = "# of Samples")
 ```
 
-The `do()`
+The `do()` function runs the mean and the sampling command 10,000 times.  
 
 ### Section 5.4: Working with Normal Percentiles
 
