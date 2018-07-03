@@ -11,7 +11,7 @@
 
 Title  | Links to Rmd and PDF files
 ------------- | -------------
-Chapter 12 : From Randomness to Probability | There was not a significant use of R in chapter 13
+Chapter 12 : From Randomness to Probability | There was not a significant use of R in chapter 12
 Chapter 13 : Sampling Distribution Models and Confidence Intervals for Proportions | <a href='chapterfiles/Chapter13.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter13.pdf'>(pdf)</a>
 Chapter 14 : Confidence Intervals for Means | <a href='chapterfiles/Chapter14.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter14.pdf'>(pdf)</a>
 Chapter 15 : Testing Hypotheses | <a href='chapterfiles/Chapter15.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter15.pdf'>(pdf)</a>
