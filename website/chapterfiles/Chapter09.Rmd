@@ -130,8 +130,10 @@ msummary(housinglm2)
 
 ```{r}
 # Figure 9.6
-tempplm <- lm(pct_bf ~ height, data = BodyFat) # or do i use remef?
-# gf_point(resid(housinglm) ~ )
+justheightlm <- lm(pct_bf ~ height, data = BodyFat)
+# multiplelm <- lm(pct_bf ~ waist + height, data = BodyFat)
+gf_point(resid(multiplelm) ~ resid(justheightlm))
+# Not sure what the multiple regression is for predicting % Body Fat (currently using the one I made before with waist and height, but it doesn't match the one in the book)
 ```
 
 #### Just Checking
@@ -178,9 +180,11 @@ DirtBikes <- DirtBikes %>%
   mutate(Cooling = ifelse(Cooling == "Air-Cooled", "Air-Cooled", "LiquidCooled"))
 gf_point(MSRP ~ (Displacement)^(1/3), color = ~ Cooling, data = DirtBikes) %>%
   gf_lm()
-bikeslm <- lm(MSRP ~ Displacement^(1/3) + Cooling, data = DirtBikes) # not sure why there's an error
-# msummary(bikeslm)
+bikeslm <- lm(MSRP ~ I(Displacement^(1/3)) + Cooling, data = DirtBikes)
+msummary(bikeslm)
 ```
+
+`I()`  
 
 #### Adjusting for Different Slopes
 

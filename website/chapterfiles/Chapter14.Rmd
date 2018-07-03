@@ -151,7 +151,7 @@ gf_histogram(~ mean, data = bootstrapmeans) %>%
   gf_labs(x = "Bootstrap Means", y = "")
 # Figure 14.11
 bootstraplm <- lm(mean ~ 1, data = bootstrapmeans)
-confint(bootstraplm) # this seems wrong....?
+confint(bootstraplm) 
 gf_histogram(~ mean, data = bootstrapmeans) %>%
   gf_labs(x = "Bootstrap Means", y = "# of Bootstrap Means")
 ```
@@ -171,6 +171,7 @@ gf_histogram(~ mean, data = commutebootstrap, title = "Time Bootstrap Set Means"
   gf_labs(x = "", y = "")
 cbootlm <- lm(mean ~ 1, data = commutebootstrap)
 confint(cbootlm)
+t.test(commutebootstrap$mean, conf.level = 0.95)
 ```
 
 ### Section 14.5: Thoughts About Confidence Intervals
