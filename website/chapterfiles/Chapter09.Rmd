@@ -129,11 +129,10 @@ msummary(housinglm2)
 ### Section 9.4: Partial Regression Plots
 
 ```{r}
-# Figure 9.6
+# Figure 9.6 (instructions on 287) - go step by step
 justheightlm <- lm(pct_bf ~ height, data = BodyFat)
-# multiplelm <- lm(pct_bf ~ waist + height, data = BodyFat)
+multiplelm <- lm(pct_bf ~ waist + height, data = BodyFat)
 gf_point(resid(multiplelm) ~ resid(justheightlm))
-# Not sure what the multiple regression is for predicting % Body Fat (currently using the one I made before with waist and height, but it doesn't match the one in the book)
 ```
 
 #### Just Checking

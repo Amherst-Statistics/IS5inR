@@ -159,17 +159,15 @@ gf_histogram(~ mean, data = bootstrapmeans) %>%
 #### Step-By-Step Example: A Bootstrap Confidence Interval for the Mean
 
 ```{r}
-Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv") %>%
-  clean_names()
-set.seed(134)
-commutesample <- sample(Commute, 100)
-gf_histogram(~ commute_time, data = commutesample, binwidth = 10, center = 5)
+CommuteSample <- read_csv("http://nhorton.people.amherst.edu/is5/data/Commuter_sample.csv")
+gf_histogram(~ time, data = CommuteSample, binwidth = 10, center = 5)
 # Bootstrap
+set.seed(134)
 numsim <- 10000
-commutebootstrap <- do(numsim) * mean(~ commute_time, data = mosaic::resample(Commute, 100))
+commutebootstrap <- do(numsim) * mean(~ time, data = mosaic::resample(CommuteSample))
 gf_histogram(~ mean, data = commutebootstrap, title = "Time Bootstrap Set Means") %>%
   gf_labs(x = "", y = "")
-cbootlm <- lm(mean ~ 1, data = commutebootstrap)
+cbootlm <- lm(mean ~ 1, data = commutebootstrap) # grab the percentiles with qdata
 confint(cbootlm)
 t.test(commutebootstrap$mean, conf.level = 0.95)
 ```

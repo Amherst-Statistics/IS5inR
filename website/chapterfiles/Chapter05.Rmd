@@ -70,6 +70,8 @@ filter(WomenHeptathlon2016, last_name == "Johnson-Thompson") %>%
   data.frame()
 ```
 
+`data.frame()` converts an object into a data frame.  
+
 ### Section 5.2: Shifting and Scaling
 
 #### Shifting to Adjust the Center
@@ -139,9 +141,11 @@ gf_histogram(~ commute_time, data = Commute, xlab = "Commute Times (min)", ylab 
              binwidth = 10, center = 5)
 set.seed(2143)
 numsim <- 10000
-Commute_sample <- do(numsim) * mean(~ commute_time, data =  sample(Commute, 100)) 
+Commute_sample <- do(numsim) * mean(~ commute_time, data = sample(Commute, 100)) 
 gf_histogram(~ mean, data = Commute_sample, xlab = "Means of Samples of Size 100", ylab = "# of Samples")
 ```
+
+The `do()`
 
 ### Section 5.4: Working with Normal Percentiles
 
