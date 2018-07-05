@@ -129,10 +129,17 @@ msummary(housinglm2)
 ### Section 9.4: Partial Regression Plots
 
 ```{r}
-# Figure 9.6 (instructions on 287) - go step by step
-justheightlm <- lm(pct_bf ~ height, data = BodyFat)
-multiplelm <- lm(pct_bf ~ waist + height, data = BodyFat)
-gf_point(resid(multiplelm) ~ resid(justheightlm))
+# Figure 9.6 (instructions on 287)
+# Step 1
+otherthanheightlm <- lm(pct_bf ~ waist, data = BodyFat)
+# Step 2
+residualsoflm <- resid(otherthanheightlm)
+# Step 3
+yheightlm <- lm(height ~ waist, data = BodyFat)
+# Step 4
+residualsoflm2 <- resid(yheightlm)
+# Step 5  
+gf_point(residualsoflm ~ residualsoflm2)
 ```
 
 #### Just Checking
