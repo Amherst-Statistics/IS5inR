@@ -47,20 +47,58 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 library(mosaic)
 library(readr)
 library(janitor)
-Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv")
-gf_histogram(~ gestation, data = Babies, binwidth = 1, center = .5, fill = )
+Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") %>%
+  clean_names()
 ```
 
 By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
 
+```{r}
+gf_histogram(~ gestation, binwidth = 1, center = .5, fill = ~ preemie, data = Babies) %>%
+  gf_labs(x = "Gestation Time (weeks)", y = "Births")
+```
+
 ### Section 13.1: The Sampling Distribution Model for a Proportion
 
+#### Random Matters: A Sampling Distribution for a Proportion
+
+```{r}
+# XX NH need baby sample data?
+```
+
+#### The Normal Model
+
 ### Section 13.2: When Does the Normal Model Work? Assumptions and Conditions
+
+#### Random Matters: Does the Normal Model Always Work? Sampling Distributions for Other Statistics
+
+```{r}
+BodyFat <- read_csv("http://nhorton.people.amherst.edu/is5/data/Bodyfat.csv") %>%
+  clean_names()
+set.seed(3245) # For reproducibility
+numsim <- 1000  # Number of samples
+bodyfatsamples <- do(numsim) * favstats(~ weight, data = sample(BodyFat, 10))
+bodyfatsamples <- bodyfatsamples %>%
+  clean_names()
+names(bodyfatsamples)
+gf_histogram(~ median, data = bodyfatsamples, binwidth = 3, center = 1.5) %>%
+  gf_labs(x = "Medians", y = "# of Samples")
+gf_histogram(~ sd^2, data = bodyfatsamples) %>%
+  gf_labs(x = "Variance", y = "# of Samples")
+gf_histogram(~ min, data = bodyfatsamples, binwidth = 3, center = 1.5) %>%
+  gf_labs(x = "Minimums", y = "# of Samples")
+```
+
+Here, the `do()` function finds the `favstats()` of a sample of 10 `BodyFat` weights 1,000 times. 
 
 ### Section 13.3: A Confidence Interval for a Proportion
 
 ### Section 13.4: Interpreting Confidence Intervals: What Does 95% Confidence Really Mean?
+
+```{r}
+
+```
 
 ### Section 13.5: Margin of Error: Certainty vs. Precision
 
