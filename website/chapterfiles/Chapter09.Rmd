@@ -162,13 +162,15 @@ msummary(hurricanelm)
 ### Section 9.5: Indicator Variables
 
 ```{r}
+library(broom) # We'll use this for augment() later
 Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv")
 # Table 9.2, page 288
 head(Coasters)
 # Figure 9.7
 # Coasters[72, ], Tower of Terror isn't included by the book
 Coasters <- Coasters %>%
-  filter(Name != "Tower of Terror")
+  filter(Name != "Tower of Terror") %>%
+  mutate(Inversions = as.factor(Inversions))
 gf_point(Duration ~ Drop, data = Coasters) %>%
   gf_lm()
 coasterlm <- lm(Duration ~ Drop, data = Coasters)
@@ -176,14 +178,19 @@ gf_point(resid(coasterlm) ~ fitted(coasterlm)) %>%
   gf_labs(x = "Predicted", y = "Residuals")
 msummary(coasterlm)
 # Figure 9.8
-gf_point(Duration ~ Drop, color = ~ as.factor(Inversions), data = Coasters) %>%
+gf_point(Duration ~ Drop, color = ~ Inversions, data = Coasters) %>%
   gf_lm() %>%
   gf_labs(color = "Inversions") 
-coasterlm2 <- lm(Duration ~ Drop + as.factor(Inversions), data = Coasters)
+coasterlm2 <- lm(Duration ~ Drop + Inversions, data = Coasters)
 msummary(coasterlm2)
-gf_point(resid(coasterlm2) ~ fitted(coasterlm2)) %>%
-  gf_labs(x = "Predicted", y = "Residuals") # not sure how to add Inversions
+coasterlm2asdata <- augment(coasterlm2) %>% 
+  clean_names()
+names(coasterlm2asdata)
+glance(coasterlm2asdata)
+gf_point(resid ~ fitted, color = ~ inversions, data = coasterlm2asdata)
 ```
+
+The `augment()` function creates a data frame from a linear model that includes a column for residuals, fitted values, etc. Here we use `names()` to check out the column names and `glance()` to view the structure of the data set.  
 
 #### Example 9.3: Using Indicator Variables
 
@@ -198,7 +205,7 @@ bikeslm <- lm(MSRP ~ I(Displacement^(1/3)) + Cooling, data = DirtBikes)
 msummary(bikeslm)
 ```
 
-`I()`  
+The `I()` function keeps the class of an object the same. Here we use it to keep the variable `Displacement` "as is" to prevent an error.  
 
 #### Adjusting for Different Slopes
 
@@ -230,13 +237,19 @@ msummary(cereallm)
 ```{r}
 Diamonds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Diamonds.csv") %>%
   clean_names()
+
+# Parallel Slopes
 diamondlm <- lm(sqrt(price) ~ carat_size + color, data = Diamonds)
 msummary(diamondlm)
 diamondpredict <- makeFun(diamondlm)
-#gf_point(sqrt(price) ~ carat_size, color = ~ color, data = Diamonds) %>%
-#  gf_line(diamondpredict(color = "D")) %>%
-#  gf_labs(x = "Carat Size", y = "sqrt(Price)") +
-#  ylim(30, 100)
+
+tempdata <- augment(diamondlm) %>%
+  clean_names()
+str(tempdata)
+gf_point(sqrt_price ~ carat_size, color = ~ color, data = tempdata) %>%
+  gf_lm(sqrt_price ~ carat_size, color = ~ color) %>%
+  gf_labs(x = "Carat Size", y = "sqrt(Price)") +
+  ylim(30, 100)
 
 # Parallel slopes currently not working
 
@@ -246,8 +259,7 @@ diamondpredict <- makeFun(diamondlm)
 #    gf_line(lin_predict(bty_avg, gender = "female") ~ bty_avg, color = ~ "female") %>%
 #    gf_line(lin_predict(bty_avg, gender = "male") ~ bty_avg, color = ~ "male") 
 
-
-
+# With interaction
 diamondlm2 <- lm(sqrt(price) ~ carat_size * color, data = Diamonds)
 msummary(diamondlm2)
 gf_point(sqrt(price) ~ carat_size, color = ~ color, data = Diamonds) %>%
@@ -255,3 +267,4 @@ gf_point(sqrt(price) ~ carat_size, color = ~ color, data = Diamonds) %>%
   gf_labs(x = "Carat Size", y = "sqrt(Price)") +
   ylim(30, 100)
 ```
+
