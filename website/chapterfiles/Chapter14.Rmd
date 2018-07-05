@@ -117,7 +117,7 @@ salmonlm <- lm(mirex ~ 1, data = Salmon)
 confint(salmonlm, data = Salmon)
 ```
 
-The `confint()` requires function takes as argument a linear model object.  
+The `confint()` function takes as argument a linear model object.  
 
 #### Example 14.2: Checking Assumptions and Conditions for Student's *t*
 
