@@ -243,21 +243,13 @@ diamondlm <- lm(sqrt(price) ~ carat_size + color, data = Diamonds)
 msummary(diamondlm)
 diamondpredict <- makeFun(diamondlm)
 
-tempdata <- augment(diamondlm) %>%
-  clean_names()
-str(tempdata)
-gf_point(sqrt_price ~ carat_size, color = ~ color, data = tempdata) %>%
-  gf_lm(sqrt_price ~ carat_size, color = ~ color) %>%
+diamonddata <- augment(diamondlm) %>% # To get fitted values
+  clean_names() 
+str(diamonddata)
+gf_point(sqrt_price ~ carat_size, color = ~ color, data = diamonddata) %>%
+  gf_line(fitted ~ carat_size) %>%
   gf_labs(x = "Carat Size", y = "sqrt(Price)") +
   ylim(30, 100)
-
-# Parallel slopes currently not working
-
-#evals %>%
-#  mutate(gender = forcats::fct_relevel(gender, "male")) %>%
-#  gf_point(score ~ bty_avg, data = ., color = ~ gender, xlab = "Avg Beauty Score", ylab = "Avg Professor Evaluation Score") %>% 
-#    gf_line(lin_predict(bty_avg, gender = "female") ~ bty_avg, color = ~ "female") %>%
-#    gf_line(lin_predict(bty_avg, gender = "male") ~ bty_avg, color = ~ "male") 
 
 # With interaction
 diamondlm2 <- lm(sqrt(price) ~ carat_size * color, data = Diamonds)

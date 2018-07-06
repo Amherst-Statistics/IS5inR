@@ -61,12 +61,6 @@ gf_histogram(~ gestation, binwidth = 1, center = .5, fill = ~ preemie, data = Ba
 
 ### Section 13.1: The Sampling Distribution Model for a Proportion
 
-#### Random Matters: A Sampling Distribution for a Proportion
-
-```{r}
-# XX NH need baby sample data?
-```
-
 #### The Normal Model
 
 ### Section 13.2: When Does the Normal Model Work? Assumptions and Conditions
@@ -90,7 +84,7 @@ gf_histogram(~ min, data = bodyfatsamples, binwidth = 3, center = 1.5) %>%
   gf_labs(x = "Minimums", y = "# of Samples")
 ```
 
-Here, the `do()` function finds the `favstats()` of a sample of 10 `BodyFat` weights 1,000 times. 
+Here, the `do()` function finds, 1,000 times, the `favstats()` of a random sample of 10 `BodyFat` weights. 
 
 ### Section 13.3: A Confidence Interval for a Proportion
 
