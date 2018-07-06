@@ -72,7 +72,20 @@ BodyFat <- read_csv("http://nhorton.people.amherst.edu/is5/data/Bodyfat.csv") %>
   clean_names()
 set.seed(3245) # For reproducibility
 numsim <- 1000  # Number of samples
+
+# What does do() do?
+favstats(~ weight, data = sample(BodyFat, 10)) # favstats of one random sample of 10
+favstats(~ weight, data = sample(BodyFat, 10)) # favstats of another random sample
+
+do(2) * favstats(~ weight, data = sample(BodyFat, 10)) # finds favstats twice
+
+# For the visualization, we need 1,000 favstats
 bodyfatsamples <- do(numsim) * favstats(~ weight, data = sample(BodyFat, 10))
+```
+
+Here, the `do()` function finds, 1,000 times, the `favstats()` of a random sample of 10 `BodyFat` weights. 
+
+```{r}
 bodyfatsamples <- bodyfatsamples %>%
   clean_names()
 names(bodyfatsamples)
@@ -83,8 +96,6 @@ gf_histogram(~ sd^2, data = bodyfatsamples) %>%
 gf_histogram(~ min, data = bodyfatsamples, binwidth = 3, center = 1.5) %>%
   gf_labs(x = "Minimums", y = "# of Samples")
 ```
-
-Here, the `do()` function finds, 1,000 times, the `favstats()` of a random sample of 10 `BodyFat` weights. 
 
 ### Section 13.3: A Confidence Interval for a Proportion
 

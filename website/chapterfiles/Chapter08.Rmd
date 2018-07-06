@@ -76,7 +76,7 @@ gf_histogram(~ resid(cereallm), binwidth = 7.5, center = 7.5/2) %>%
 Cereal <- Cereal %>%
   mutate(residuals = resid(cereallm),
          fitted = fitted(cereallm)) %>%
-  mutate(resid_cat = ifelse(residuals >= -30 & residuals <= 25, "mid", ifelse(residuals > 25, "high", "low"))) # there must be a better way to do this!
+  mutate(resid_cat = ifelse(residuals >= -30 & residuals <= 25, "mid", ifelse(residuals > 25, "high", "low"))) # For color categories
 # Figure 8.4
 gf_point(jitter(residuals) ~ jitter(fitted), color = ~ resid_cat, data = Cereal)
 ```
