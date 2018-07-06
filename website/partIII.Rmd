@@ -11,6 +11,6 @@
 
 Title  | Links to Rmd and PDF files
 ------------- | -------------
-Chapter 10 : Sample Surveys | There was not a significant use of R in chapter 10
+Chapter 10 : Sample Surveys | <a href='chapterfiles/Chapter10.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter10.pdf'>(pdf)</a>
 Chapter 11 : Experiments and Observational Studies | There was not a significant use of R in chapter 11
 
