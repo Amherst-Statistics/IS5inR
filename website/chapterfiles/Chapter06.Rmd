@@ -143,8 +143,9 @@ LiveCorr <- do(numsim) * cor(mom_age ~ dad_age, data = sample(LiveBirths, 50))
 The `do()` function runs, 10,000 times, the correlation and sampling functions on a random sample of 50.  
 
 ```{r}
-gf_histogram(~ LiveCorr, xlab = "Correlation of Mother's Age and Father's Age in Samples of Size 50", 
-             ylab = "# of Samples")
+gf_histogram(~ cor, data = LiveCorr, 
+  xlab = "Correlation of Mother's Age and Father's Age in Samples of Size 50", 
+  ylab = "# of Samples")
 ```
 
 ### Section 6.3: Warning: Correlation $\neq$ Causation
