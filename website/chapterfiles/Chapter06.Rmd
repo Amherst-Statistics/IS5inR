@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Scatterplots, Association, and Correlation (Chapter 6)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "June 16, 2018"
+date: "July 7, 2018"
 output: 
   pdf_document:
     fig_height: 4
@@ -48,11 +48,15 @@ library(mosaic)
 library(readr)
 library(janitor)
 Hurricanes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tracking_hurricanes_2015.csv")
+```
+
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
+
+```{r}
 # Figure 6.1, page 164
 gf_point(Error_72h ~ Year, data = Hurricanes, ylab = "Prediction Error")
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
 ### Section 6.1: Scatterplots
 
@@ -63,13 +67,18 @@ See dots on pages 164-165.
 ```{r}
 Prices <- read_csv("http://nhorton.people.amherst.edu/is5/data/Prices_and_Earnings.csv") %>%
   clean_names()
+names(Prices)
+```
+
+Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
+
+```{r}
 gf_point(food_costs ~ womens_clothing, data = Prices, xlab = "Cost of Women's Clothes", ylab = "Food Costs ($)")
 gf_point(i_phone_4s_hr ~ wage_gross, data = Prices, xlab = "Average Hourly Wage", ylab = "Hours to Earn an iPhone 4S")
 gf_point(clothing_index ~ hours_worked, data = Prices, xlab = "Working Hours", ylab = "Clothes Index")
 gf_point(food_costs ~ vacation_days, data = Prices, xlab = "Vacation Days (per year)", ylab = "Food Costs ($)")
 ```
 
-Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
 
 #### Roles for Variables
 
