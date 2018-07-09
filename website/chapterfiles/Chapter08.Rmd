@@ -56,13 +56,16 @@ library(janitor)
 ```{r}
 Penguins <- read_csv("http://nhorton.people.amherst.edu/is5/data/Penguins.csv") %>%
   clean_names()
-gf_point(dive_heart_rate ~ duration_min, data = Penguins, xlab = "Duration (min)", ylab = "Dive Heart Rate (bpm)")
-penguinlm <- lm(dive_heart_rate ~ duration_min, data = Penguins)
-gf_point(resid(penguinlm) ~ duration_min, data = Penguins, xlab = "Duration (min)", ylab = "Residuals")
 ```
 
 By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
+
+```{r}
+gf_point(dive_heart_rate ~ duration_min, data = Penguins, xlab = "Duration (min)", ylab = "Dive Heart Rate (bpm)")
+penguinlm <- lm(dive_heart_rate ~ duration_min, data = Penguins)
+gf_point(resid(penguinlm) ~ duration_min, data = Penguins, xlab = "Duration (min)", ylab = "Residuals")
+```
 
 #### Sifting Residuals for Groups
 

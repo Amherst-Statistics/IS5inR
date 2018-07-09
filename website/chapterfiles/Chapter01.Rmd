@@ -53,14 +53,17 @@ library(readr)
 options(digits = 3)
 Tour <- 
   read_csv("http://nhorton.people.amherst.edu/is5/data/Tour_de_France_2016.csv")
+```
+
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability. 
+
+```{r}
 names(Tour)
 glimpse(Tour)
 head(Tour, 3)
 tail(Tour, 8) %>%
   select(Winner, Year, Country)
 ```
-
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
 #### Let's find who was the winner in 1998
 

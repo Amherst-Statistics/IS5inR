@@ -50,14 +50,17 @@ library(janitor)
 WomenHeptathlon2016 <- 
   read_csv("http://nhorton.people.amherst.edu/is5/data/Womens_Heptathlon_2016.csv") %>%
   clean_names()
+```
+
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.   
+Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
+
+```{r}
 favstats(~ long_jump, data = WomenHeptathlon2016)
 favstats(~ x200m, data = WomenHeptathlon2016)
 with(WomenHeptathlon2016, stem(x200m))
 with(WomenHeptathlon2016, stem(long_jump))
 ```
-
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.   
-Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
 
 ### Section 5.1: Using the Standard Deviation to Standardize Values
 

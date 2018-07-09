@@ -169,7 +169,7 @@ commutebootstrap <- do(numsim) * mean(~ time, data = resample(CommuteSample))
 qdata(~ mean, p = c(.025, .975), data = commutebootstrap) # grab the percentiles with qdata
 confint(commutebootstrap, method = "quantile") # confint of data frame
 commutebootstrap <- commutebootstrap %>%
-  mutate(interval = ifelse(mean > 39.28 & mean < 50.98, "Within 95% Confidence", "Outside 95% Confidence"))
+  mutate(interval = ifelse(mean > 39.28 & mean < 50.98, "Within 95% Confidence", "Outside 95% Confidence")) # for fill
 gf_histogram(~ mean, fill = ~ interval, data = commutebootstrap, title = "Time Bootstrap Set Means") %>%
   gf_labs(x = "", y = "", fill = "")
 ```

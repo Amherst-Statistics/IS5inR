@@ -53,12 +53,15 @@ library(readr)
 library(janitor) #for variable names
 options(digits = 3)
 Titanic <- read_csv("http://nhorton.people.amherst.edu/is5/data/Titanic.csv")
+```
+
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
+
+```{r}
 tally(~ Class, data = Titanic)
 tally(~ Class, format = "percent", data = Titanic)
 gf_bar(~ Class, data = Titanic)
 ```
-
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
 ### Section 2.2: Displaying a Quantitative Variable
 
