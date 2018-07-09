@@ -52,7 +52,7 @@ BurgerKing <- read_csv("http://nhorton.people.amherst.edu/is5/data/Burger_King_i
   clean_names()
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).  
 
 ```{r}
@@ -85,7 +85,8 @@ burgerfun(32) - burgerfun(31)
 ```{r}
 Hurricanes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hurricanes_2015.csv") %>%
   clean_names()
-gf_point(max_wind_speed_kts ~ central_pressure_mb, data = Hurricanes, xlab = "Central Pressure (mb)", ylab = "Max Wind Speed (kts)") %>%
+gf_point(max_wind_speed_kts ~ central_pressure_mb, data = Hurricanes, xlab = "Central Pressure (mb)", 
+         ylab = "Max Wind Speed (kts)") %>%
   gf_lm()
 ```
 
@@ -122,7 +123,7 @@ See calculations on page 203.
 
 ### Section 7.4: Regression to the Mean
 
-See display on page 205.   XX MC??
+See Figure 7.4 on page 205 to visualize standard deviations.  
 
 ### Section 7.5: Examining the Residuals
 
