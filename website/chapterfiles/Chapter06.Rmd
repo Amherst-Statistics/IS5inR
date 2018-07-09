@@ -73,10 +73,14 @@ names(Prices)
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
 
 ```{r}
-gf_point(food_costs ~ womens_clothing, data = Prices, xlab = "Cost of Women's Clothes", ylab = "Food Costs ($)")
-gf_point(i_phone_4s_hr ~ wage_gross, data = Prices, xlab = "Average Hourly Wage", ylab = "Hours to Earn an iPhone 4S")
-gf_point(clothing_index ~ hours_worked, data = Prices, xlab = "Working Hours", ylab = "Clothes Index")
-gf_point(food_costs ~ vacation_days, data = Prices, xlab = "Vacation Days (per year)", ylab = "Food Costs ($)")
+gf_point(food_costs ~ womens_clothing, data = Prices, xlab = "Cost of Women's Clothes", 
+         ylab = "Food Costs ($)")
+gf_point(i_phone_4s_hr ~ wage_gross, data = Prices, xlab = "Average Hourly Wage", 
+         ylab = "Hours to Earn an iPhone 4S")
+gf_point(clothing_index ~ hours_worked, data = Prices, xlab = "Working Hours", 
+         ylab = "Clothes Index")
+gf_point(food_costs ~ vacation_days, data = Prices, xlab = "Vacation Days (per year)", 
+         ylab = "Food Costs ($)")
 ```
 
 
@@ -191,9 +195,11 @@ cor(f_stop ~ shutter_speed, data = FStops)
 
 ```{r}
 # Figure 6.11, page 181
-gf_point(log(f_stop) ~ shutter_speed, data = FStops, xlab = "Shutter Speed (sec)", ylab = "Log (f/stop)")
+gf_point(log(f_stop) ~ shutter_speed, data = FStops, xlab = "Shutter Speed (sec)", 
+         ylab = "Log (f/stop)")
 # Figure 6.12
-gf_point((f_stop)^2 ~ shutter_speed, data = FStops, xlab = "Shutter Speed (sec)", ylab = "f/stop squared")
+gf_point((f_stop)^2 ~ shutter_speed, data = FStops, xlab = "Shutter Speed (sec)", 
+         ylab = "f/stop squared")
 ```
 
 See displays in "What Can Go Wrong?" on pages 181-183.
