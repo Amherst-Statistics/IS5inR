@@ -1,0 +1,124 @@
+---
+title: "IS5 in R: Testing Hypotheses (Chapter 15)"
+author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
+date: "July 10, 2018"
+output: 
+  pdf_document:
+    fig_height: 4
+    fig_width: 6
+  html_document:
+    fig_height: 3
+    fig_width: 5
+  word_document:
+    fig_height: 4
+    fig_width: 6
+---
+
+
+```{r, include = FALSE}
+# Don't delete this chunk if you are using the mosaic package
+# This loads the mosaic and dplyr packages
+library(mosaic)
+library(readr)
+library(janitor)
+```
+
+```{r, include = FALSE}
+# knitr settings to control how R chunks work.
+require(knitr)
+opts_chunk$set(
+  tidy = FALSE,     # display code as typed
+  size = "small"    # slightly smaller font for code
+)
+```
+
+## Introduction and background 
+
+This document is intended to help describe how to undertake analyses introduced 
+as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
+More information about the book can be found at http://wps.aw.com/aw_deveaux_stats_series.  This
+file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
+
+This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum. In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses. A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (http://cran.r-project.org/web/packages/mosaic).  A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
+
+## Chapter 15: Testing Hypotheses
+
+```{r}
+library(mosaic)
+library(readr)
+library(janitor)
+```   
+
+### Section 15.1: Hypotheses
+
+### Section 15.2: P-Values
+
+### Section 15.3: The Reasoning of Hypothesis Testing
+
+#### Example 15.5: Finding A P-Value
+
+```{r}
+n <- 90
+x <- 61
+p <- .8
+phat <- x/n
+sdphat <- ((p * (1 - p))/n)^.5
+z <- (phat - p)/sdphat
+pnorm(z)
+# Or, without calculating the z-score:
+pnorm(q = phat, mean = p, sd = sdphat)
+```
+
+### Section 15.4: A Hypothesis Test for the Mean
+
+```{r}
+GestationTime <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nashville.csv")
+```
+
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+
+```{r}
+# 2. Model (page 482)
+gf_histogram(~ Gestation, data = GestationTime, binwidth = 7.5, center = 3.75) %>%
+  gf_labs(x = "Gestation Time (days)", y = "# of Births")
+# 3. Mechanics
+gf_dist(dist = "t", df = 69) %>%
+  gf_vline(xintercept = -3.118) %>%
+    gf_vline(xintercept = 3.118) %>%
+  gf_labs(x = "", y = "") + 
+  xlim(-3.347, 3.347)
+```
+
+#### Step-By-Step Example: A One-Sample *t*-Test for the Mean
+
+```{r}
+Sleep <- read_csv("http://nhorton.people.amherst.edu/is5/data/Sleep.csv")
+# Plan
+gf_histogram(~ Sleep, data = Sleep, binwidth = 1) %>%
+  gf_labs(x = "Hours of Sleep", y = "")
+gf_dist(dist = "t", df = 24) %>%
+  gf_vline(xintercept = -1.67) %>%
+  gf_labs(x = "", y = "") + 
+  xlim(-3, 3)
+# Mechanics
+n <- 25
+mean <- 7.0
+df <- 24
+y <- 6.64
+s <- 1.075
+sey <- s/(n^.5)
+t <- (y - mean)/sey # t-statistic
+pt(q = t, df = df) # p-value
+```
+
+### Section 15.5: Intervals and Tests
+
+XX NH Can't find temperature data (page 487) - data should be from an exercise (Chapter 14, Exercise 29)
+
+#### Step-By-Step Example: Tests and Intervals
+
+```{r}
+# XX NH There's a baseball 2016 csv, but it doesn't seem to have a variable about home vs away (page 489)
+```
+
+### Section 15.6: P-Values and Decisions: What to Tell About a Hypothesis Test
