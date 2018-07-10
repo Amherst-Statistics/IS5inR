@@ -106,13 +106,24 @@ gf_histogram(~ mean, data = CEOMeans3) %>%
 
 Here, in each example, the `do()` function calculates the mean of random samples of 10, 50, and 200 CEO compensations.
 
+```{r}
+# Samples as overlaid density plots
+gf_density(~ mean, data = CEOMeans, fill = 6) %>%
+  gf_density(~ mean, data = CEOMeans2, fill = 4) %>%
+  gf_density(~ mean, data = CEOMeans3, fill = 5) %>%
+  gf_labs(y = "Density", x = "Means") +
+  xlim(7, 25)
+```
+
 ### Section 14.2: A Confidence Interval for the Mean
 
 ```{r}
 # Figure 14.9, page 446
 gf_dist(dist = "norm", linetype = 2, lwd = 1.5) %>%
+  gf_refine(annotate(geom = "text", x = 1.75, y = .35, label = "Normal Distribution")) %>%
   gf_labs(x = "", y = "") %>%
-  gf_dist(dist = "t", df = 2, lwd = 1.25) +
+  gf_dist(dist = "t", df = 2, lwd = 1.25) %>%
+  gf_refine(annotate(geom = "text", x = 3.25, y = .05, label = "T Distribution")) +
   xlim(-4, 4) 
 ```
 
@@ -124,9 +135,13 @@ Salmon <- read_csv("http://nhorton.people.amherst.edu/is5/data/Farmed_salmon.csv
 Salmon <- Salmon %>%
   filter(mirex != "NA")
 favstats(~ mirex, data = Salmon)
+t.test(~ mirex, data = Salmon)
 salmonlm <- lm(mirex ~ 1, data = Salmon)  # equiv to t.test(~ mirex)
 # replication of interval from page 448
 confint(salmonlm, data = Salmon)
+tstats <- xqt(df = 149, p = c(.025, .975), plot = FALSE) # t statistics
+sey <- sd(~ mirex, data = Salmon)/(150^(1/2)) # standard error
+mean(~ mirex, data = Salmon) + sey * tstats # calculations match those from confint
 ```
 
 The `confint()` function takes an object, in this case a linear regression model, as an argument.  
@@ -134,9 +149,11 @@ The `confint()` function takes an object, in this case a linear regression model
 #### Example 14.2: Checking Assumptions and Conditions for Student's *t*
 
 ```{r}
-# replicate figure in Example 14.2 (page 450)
-gf_histogram(~ mirex, data = Salmon, binwidth = 0.04, center = 0.02) %>%
-  gf_labs(x = "Mirex (ppm)", y = "# of Salmon")
+# replicate figure in Example 14.2 with a normal distribution (page 450)
+gf_dhistogram(~ mirex, data = Salmon, binwidth = 0.04, center = 0.02) %>%
+  gf_dist(dist = "norm", mean = mean(~ mirex, data = Salmon), sd = sd(~ mirex, data = Salmon)) %>%
+  gf_labs(x = "Mirex (ppm)", y = "Density of Salmon") +
+  xlim(0, .2)
 ```
 
 #### Step-By-Step Example: A One-Sample *t*-Interval for the Mean
@@ -168,6 +185,11 @@ gf_histogram(~ time, data = CommuteSample, binwidth = 10, center = 5)
 set.seed(134) # For reproducibility
 numsim <- 10000
 commutebootstrap <- do(numsim) * mean(~ time, data = resample(CommuteSample))
+```
+
+The `resample()` function samples of that data set size with replacement.  
+
+```{r}
 qdata(~ mean, p = c(.025, .975), data = commutebootstrap) # grab the percentiles with qdata
 confint(commutebootstrap, method = "quantile") # an equivalent quantile approach
 commutebootstrap <- commutebootstrap %>%
