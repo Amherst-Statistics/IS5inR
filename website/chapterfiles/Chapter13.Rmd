@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Sampling Distribution Models and Confidence Intervals for Proportions (Chapter 13)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "June 27, 2018"
+date: "July 10, 2018"
 output: 
   pdf_document:
     fig_height: 4
@@ -102,7 +102,7 @@ gf_histogram(~ min, data = bodyfatsamples, binwidth = 3, center = 1.5) %>%
 ### Section 13.4: Interpreting Confidence Intervals: What Does 95% Confidence Really Mean?
 
 ```{r}
-
+do(20) * confint(~ preemie, data = sample(Babies, size = 100))
 ```
 
 ### Section 13.5: Margin of Error: Certainty vs. Precision

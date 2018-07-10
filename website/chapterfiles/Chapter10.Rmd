@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Sample Surveys (Chapter 10)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "June 27, 2018"
+date: "July 10, 2018"
 output: 
   pdf_document:
     fig_height: 4
@@ -47,12 +47,7 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 library(mosaic)
 library(readr)
 library(janitor)
-#Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") %>%
-#  clean_names()
 ```
-
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
-Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
 
 ### Section 10.1: The Three Big Ideas of Sampling
 
@@ -63,7 +58,7 @@ Here we use the `clean_names()` function from the `janitor` package to sanitize 
 #### Random Matters
 
 ```{r}
-Births <- read_csv("website/data/AllBirths1998.csv") # link needs to be updated?
+Births <- read_csv("http://nhorton.people.amherst.edu/is5/data/AllBirths1998.csv")
 ```
 
 By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
