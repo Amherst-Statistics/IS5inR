@@ -124,15 +124,17 @@ Salmon <- read_csv("http://nhorton.people.amherst.edu/is5/data/Farmed_salmon.csv
 Salmon <- Salmon %>%
   filter(mirex != "NA")
 favstats(~ mirex, data = Salmon)
-salmonlm <- lm(mirex ~ 1, data = Salmon)
+salmonlm <- lm(mirex ~ 1, data = Salmon)  # equiv to t.test(~ mirex)
+# replication of interval from page 448
 confint(salmonlm, data = Salmon)
 ```
 
-The `confint()` function takes an object, such as a linear model, as an argument.  
+The `confint()` function takes an object, in this case a linear regression model, as an argument.  
 
 #### Example 14.2: Checking Assumptions and Conditions for Student's *t*
 
 ```{r}
+# replicate figure in Example 14.2 (page 450)
 gf_histogram(~ mirex, data = Salmon, binwidth = 0.04, center = 0.02) %>%
   gf_labs(x = "Mirex (ppm)", y = "# of Salmon")
 ```
@@ -141,9 +143,9 @@ gf_histogram(~ mirex, data = Salmon, binwidth = 0.04, center = 0.02) %>%
 
 ```{r}
 set.seed(34)
-BabiesSample <- sample(Babies, 30)
+BabiesSample <- sample(Babies, size = 30)
 gf_histogram(~ weight, data = BabiesSample, binwidth = 200, center = 100) %>%
-  gf_labs(x = "Birthweights", y = "# of Babies")
+  gf_labs(x = "Sample of 30 Birthweights", y = "# of Babies")
 favstats(~ weight, data = BabiesSample)
 babieslm <- lm(weight ~ 1, data = BabiesSample)
 confint(babieslm, level = 0.90)
@@ -167,13 +169,13 @@ set.seed(134) # For reproducibility
 numsim <- 10000
 commutebootstrap <- do(numsim) * mean(~ time, data = resample(CommuteSample))
 qdata(~ mean, p = c(.025, .975), data = commutebootstrap) # grab the percentiles with qdata
-confint(commutebootstrap, method = "quantile") # confint of data frame
+confint(commutebootstrap, method = "quantile") # an equivalent quantile approach
 commutebootstrap <- commutebootstrap %>%
   mutate(interval = ifelse(mean > 39.28 & mean < 50.98, "Within 95% Confidence", 
                            "Outside 95% Confidence")) # for fill
 gf_histogram(~ mean, fill = ~ interval, data = commutebootstrap, 
-             title = "Time Bootstrap Set Means") %>%
-  gf_labs(x = "", y = "", fill = "")
+             title = "Bootstrap Estimates of Mean Commute Times (minutes)") %>%
+  gf_labs(x = "Commute Time", y = "", fill = "")
 ```
 
 ### Section 14.5: Thoughts About Confidence Intervals
