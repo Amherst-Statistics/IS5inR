@@ -102,7 +102,13 @@ gf_histogram(~ min, data = bodyfatsamples, binwidth = 3, center = 1.5) %>%
 ### Section 13.4: Interpreting Confidence Intervals: What Does 95% Confidence Really Mean?
 
 ```{r}
-do(20) * confint(~ preemie, data = sample(Babies, size = 100))
+# Here is a simulation of Figure 13.9 (page 422)
+set.seed(355)
+CIsim(n = 100, samples = 20) # We expect 19/20 intervals to cover the true mean
+# CIdata <- do(20) * favstats(~ preemie, data = sample(Babies, size = 100))
+# CIdata <- CIdata %>%
+#  mutate(lowerbound = mean - 1.96 * sd, upperbound = mean + 1.96 * sd)
+# CIsim(~ preemie, data = sample(Babies, size = 100), samples = 20)
 ```
 
 ### Section 13.5: Margin of Error: Certainty vs. Precision
