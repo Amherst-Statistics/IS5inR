@@ -72,6 +72,20 @@ BuyingCam <- read_csv("http://nhorton.people.amherst.edu/is5/data/Buy_from_a_fri
 
 By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability. 
 
+```{r}
+library(tidyr) # for gather() function
+BuyingCam <- BuyingCam %>%
+  gather(key = buying_type, value = amount_offered, Friend, Stranger)
+# Model
+gf_boxplot(amount_offered ~ buying_type, fill = ~ buying_type, data = BuyingCam) %>%
+  gf_labs(x = "Buying From", y = "Amount Offered ($)", fill = "")
+gf_histogram(~ amount_offered, binwidth = 25, center = 12.5, data = BuyingCam) %>% # doesn't exactly match
+  gf_facet_wrap(buying_type ~ .) %>%
+  gf_labs(x = "Amount Offered", y = "")
+# Mechanics
+favstats(~ amount_offered | buying_type, data = BuyingCam)
+```
+
 ### Section 17.6: Randomization Tests and Confidence Intervals for Two Means
 
 ### Section 17.7: Pooling
