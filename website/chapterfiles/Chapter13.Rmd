@@ -1,11 +1,11 @@
 ---
 title: "IS5 in R: Sampling Distribution Models and Confidence Intervals for Proportions (Chapter 13)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 10, 2018"
+date: "July 11, 2018"
 output: 
   pdf_document:
-    fig_height: 4
-    fig_width: 6
+    fig_height: 3
+    fig_width: 5
   html_document:
     fig_height: 3
     fig_width: 5
@@ -44,6 +44,7 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 ## Chapter 13: Sampling Distribution Models and Confidence Intervals for Proportions
 
 ```{r}
+# Add page refs
 library(mosaic)
 library(readr)
 library(janitor)
@@ -105,11 +106,16 @@ gf_histogram(~ min, data = bodyfatsamples, binwidth = 3, center = 1.5) %>%
 # Here is a simulation of Figure 13.9 (page 422)
 set.seed(355)
 CIsim(n = 100, samples = 20) # We expect 19/20 intervals to cover the true mean
+```
+
+XX Book gets 18/20
+
+```{r}
 CIdata <- do(20) * favstats(~ preemie, data = sample(Babies, size = 100))
 CIdata <- CIdata %>%
-  mutate(lowerbound = mean - 1.96 * sd/(100^.5), upperbound = mean + 1.96 * sd/(100^.5))
+  mutate(lowerbound = mean - 1.96 * sd/(100^.5), upperbound = mean + 1.96 * sd/(100^.5)) # use t test function
 CIdata %>%
-  select(lowerbound, upperbound)
+  select(lowerbound, upperbound) # make function that returns center, lower, upper, t test, recreating process is a bit harder, but here (line plot, point plot in the middle)
 # CIsim(~ preemie, data = sample(Babies, size = 100), samples = 20)
 ```
 

@@ -4,8 +4,8 @@ author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
 date: "July 10, 2018"
 output: 
   pdf_document:
-    fig_height: 4
-    fig_width: 6
+    fig_height: 3
+    fig_width: 5
   html_document:
     fig_height: 3
     fig_width: 5
@@ -61,56 +61,40 @@ library(janitor)
 Births <- read_csv("http://nhorton.people.amherst.edu/is5/data/AllBirths1998.csv")
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
 ```{r}
+# Histogram of known population
 gf_histogram(~ birthweight, data = Births, binwidth = 125, center = 62.5) %>%
   gf_labs(x = "Weight (g)", y = "Births")
 ```
 
+The histogram shows the distribution of the population of nearly four million births.
+
+Figure 10.2 (page 326):
+
 ```{r}
 # Samples of 100
 set.seed(12452)
-gf_histogram(~ birthweight, data = sample(Births, size = 100), binwidth = 200, center = 100) %>%
-  gf_labs(x = "Weight 1", y = "")
-gf_histogram(~ birthweight, data = sample(Births, size = 100), binwidth = 200, center = 100) %>%
-  gf_labs(x = "Weight 2", y = "")
-gf_histogram(~ birthweight, data = sample(Births, size = 100), binwidth = 200, center = 100) %>%
-  gf_labs(x = "Weight 3", y = "")
-gf_histogram(~ birthweight, data = sample(Births, size = 100), binwidth = 200, center = 100) %>%
-  gf_labs(x = "Weight 4", y = "")
-gf_histogram(~ birthweight, data = sample(Births, size = 100), binwidth = 200, center = 100) %>%
-  gf_labs(x = "Weight 5", y = "")
+gf_histogram(~ birthweight, data = sample(Births, size = 100), binwidth = 200, center = 100, fill = 5) %>%
+  gf_histogram(~ birthweight, data = sample(Births, size = 100), binwidth = 200, center = 100, fill = 4) %>%
+  gf_labs(x = "Birthweights", y = "", title = "Two Samples of Size 100")
 ```
 
 ```{r}
 # Samples of 250
 set.seed(12452)
-gf_histogram(~ birthweight, data = sample(Births, size = 250), binwidth = 125, center = 62.5) %>%
-  gf_labs(x = "Weight 1", y = "")
-gf_histogram(~ birthweight, data = sample(Births, size = 250), binwidth = 125, center = 62.5) %>%
-  gf_labs(x = "Weight 2", y = "")
-gf_histogram(~ birthweight, data = sample(Births, size = 250), binwidth = 125, center = 62.5) %>%
-  gf_labs(x = "Weight 3", y = "")
-gf_histogram(~ birthweight, data = sample(Births, size = 250), binwidth = 125, center = 62.5) %>%
-  gf_labs(x = "Weight 4", y = "")
-gf_histogram(~ birthweight, data = sample(Births, size = 100), binwidth = 125, center = 62.5) %>%
-  gf_labs(x = "Weight 5", y = "")
+gf_histogram(~ birthweight, data = sample(Births, size = 250), binwidth = 125, center = 62.5, fill = 5) %>%
+  gf_histogram(~ birthweight, data = sample(Births, size = 250), binwidth = 125, center = 62.5, fill = 4) %>%
+  gf_labs(x = "Birthweights", y = "", title = "Two Samples of Size 250")
 ```
 
 ```{r}
 # Samples of 1000
 set.seed(12452)
-gf_histogram(~ birthweight, data = sample(Births, size = 1000), binwidth = 200, center = 100) %>%
-  gf_labs(x = "Weight 1", y = "")
-gf_histogram(~ birthweight, data = sample(Births, size = 1000), binwidth = 200, center = 100) %>%
-  gf_labs(x = "Weight 2", y = "")
-gf_histogram(~ birthweight, data = sample(Births, size = 1000), binwidth = 200, center = 100) %>%
-  gf_labs(x = "Weight 3", y = "")
-gf_histogram(~ birthweight, data = sample(Births, size = 1000), binwidth = 200, center = 100) %>%
-  gf_labs(x = "Weight 4", y = "")
-gf_histogram(~ birthweight, data = sample(Births, size = 1000), binwidth = 200, center = 100) %>%
-  gf_labs(x = "Weight 5", y = "")
+gf_histogram(~ birthweight, data = sample(Births, size = 1000), binwidth = 200, center = 100, fill = 5) %>%
+  gf_histogram(~ birthweight, data = sample(Births, size = 1000), binwidth = 200, center = 100, fill = 4) %>%
+  gf_labs(x = "Birthweights", y = "", title = "Two Samples of Size 1000")
 ```
 
 ### Section 10.4: Other Sampling Designs

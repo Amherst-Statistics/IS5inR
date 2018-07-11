@@ -1,11 +1,11 @@
 ---
 title: "IS5 in R: Scatterplots, Association, and Correlation (Chapter 6)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 10, 2018"
+date: "July 11, 2018"
 output: 
   pdf_document:
-    fig_height: 4
-    fig_width: 6
+    fig_height: 3
+    fig_width: 5
   html_document:
     fig_height: 3
     fig_width: 5
