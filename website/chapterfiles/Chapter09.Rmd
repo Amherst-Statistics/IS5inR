@@ -5,7 +5,7 @@ date: "July 11, 2018"
 output: 
   pdf_document:
     fig_height: 3
-    fig_width: 5
+    fig_width: 7
   html_document:
     fig_height: 3
     fig_width: 5
@@ -83,9 +83,12 @@ summary(realestatelm)
 
 # Predicted Values
 realestatefn <- makeFun(realestatelm) # Making a function to find predicted values
-realestatefn(living_area = 2800, bedrooms = 5) # Predicted price for a home with 2800 sq ft living area and 5 bedrooms
-realestatefn(living_area = 2801, bedrooms = 5) # Predicted price for a home with 2801 sq ft living area and 5 bedrooms
-realestatefn(living_area = 2801, bedrooms = 5) - realestatefn(living_area = 2800, bedrooms = 5) # If we subtract predicted values one value apart, we get the slope
+# Predicted price for a home with 2800 sq ft living area and 5 bedrooms
+realestatefn(living_area = 2800, bedrooms = 5) 
+# Predicted price for a home with 2801 sq ft living area and 5 bedrooms
+realestatefn(living_area = 2801, bedrooms = 5) 
+# If we subtract predicted values one value apart, we get the slope
+realestatefn(living_area = 2801, bedrooms = 5) - realestatefn(living_area = 2800, bedrooms = 5) 
 ```
 
 ### Section 9.2: Interpreting Multiple Regression Coefficients
@@ -103,7 +106,8 @@ BodyFat %>%
   gf_lm()
 # Plotting all points
 BodyFat %>%
-  mutate(pointtype = ifelse(waist >= 36 & waist <= 38, "Waist Size Between 36 and 38 inches", "Waist Size Not Between 36 and 38 inches")) %>% # Subsetting
+  mutate(pointtype = ifelse(waist >= 36 & waist <= 38, "Waist Size Between 36 and 38 inches", 
+                            "Waist Size Not Between 36 and 38 inches")) %>% # Subsetting
   gf_point(pct_bf ~ height, shape = ~ pointtype, color = ~ pointtype) %>%
   gf_labs(x = "Height (in)", y = "% Body Fat", shape = "", color = "") %>%
   gf_lm()

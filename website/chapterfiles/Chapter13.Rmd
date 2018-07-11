@@ -57,7 +57,7 @@ Here we use the `clean_names()` function from the `janitor` package to sanitize 
 
 ```{r}
 gf_histogram(~ gestation, binwidth = 1, center = .5, fill = ~ preemie, data = Babies) %>%
-  gf_labs(x = "Gestation Time (weeks)", y = "Births")
+  gf_labs(x = "Gestation Time (weeks)", y = "Births", fill = "")
 ```
 
 ### Section 13.1: The Sampling Distribution Model for a Proportion
