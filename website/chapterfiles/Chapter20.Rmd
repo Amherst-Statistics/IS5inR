@@ -1,5 +1,5 @@
 ---
-title: "IS5 in R: Comparing Groups (Chapter 17)"
+title: "IS5 in R: Inferences for Regression (Chapter 20)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
 date: "July 11, 2018"
 output: 
@@ -41,39 +41,31 @@ file as well as the associated R Markdown reproducible analysis source file used
 
 This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum. In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses. A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (http://cran.r-project.org/web/packages/mosaic).  A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
-## Chapter 17: Comparing Groups
+## Chapter 20: Inferences for Regression
 
 ```{r}
 library(mosaic)
 library(readr)
 library(janitor)
+#Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") %>%
+#  clean_names()
 ```
 
-### Section 17.1: A Confidence Interval for the Difference Between Two Proportions
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
+Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
 
-XX NH need seatbelts data and online profiles data
+### Section 20.1: The Regression Model
 
-### Section 17.2: Assumptions and Conditions for Comparing Proportions
+### Section 20.2: Assumptions and Conditions
 
-### Section 17.3: The Two-Sample *z*-Test: Testing for the Difference Between Proportions
+### Section 20.3: Regression Inference and Intuition
 
-XX NH need sleep data
+### Section 20.4: The Regression Table
 
-### Section 17.4: A Confidence Interval for the Difference Between Two Means
+### Section 20.5: Multiple Regression Inference
 
-### Section 17.5: The Two-Sample *t*-Test: Testing for the Difference Between Two Means
+### Section 20.6: Confidence and Prediction Intervals
 
-#### Step-By-Step Example: A Two-Sample *t*-Test for the Difference Between the Two Means
+### Section 20.7: Logistic Regression
 
-```{r}
-# page 556
-BuyingCam <- read_csv("http://nhorton.people.amherst.edu/is5/data/Buy_from_a_friend.csv")
-```
-
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability. 
-
-### Section 17.6: Randomization Tests and Confidence Intervals for Two Means
-
-### Section 17.7: Pooling
-
-### Section 17.8: The Standard Deviation of a Difference
+### Section 20.8: More About Regression

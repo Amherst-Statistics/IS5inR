@@ -44,7 +44,6 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 ## Chapter 13: Sampling Distribution Models and Confidence Intervals for Proportions
 
 ```{r}
-# Add page refs
 library(mosaic)
 library(readr)
 library(janitor)
