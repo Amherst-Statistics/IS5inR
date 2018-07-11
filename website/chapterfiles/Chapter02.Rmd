@@ -45,8 +45,6 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 
 ### Section 2.1: Summarizing and Displaying a Categorical Variable
 
-See displays on page 19-23.
-
 ```{r message = FALSE}
 library(mosaic)
 library(readr)
@@ -58,9 +56,15 @@ Titanic <- read_csv("http://nhorton.people.amherst.edu/is5/data/Titanic.csv")
 By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
 ```{r}
+#Table 2.2, page 19
 tally(~ Class, data = Titanic)
+
+#Table 2.3
 tally(~ Class, format = "percent", data = Titanic)
-gf_bar(~ Class, data = Titanic)
+
+#Figure 2.2, page 19
+gf_bar(~ Class, data = Titanic) %>%
+  gf_labs(x = "Ticket Class", y = "Number of People")
 ```
 
 ### Section 2.2: Displaying a Quantitative Variable
@@ -77,9 +81,11 @@ The function generates a warning because three of the ages are missing: this out
 #### Earthquakes and Tsunamis
 
 ```{r}
+#Example 2.3, page 25
 Earthquakes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tsunamis_2016.csv")
 gf_histogram(~ Primary_Magnitude, data = Earthquakes, binwidth = 0.5, 
-             ylab = "Earthquakes", xlab = "Magnitude", center = 0.5)
+             ylab = "# of Earthquakes", xlab = "Magnitude", center = 0.25)
+# XX MC Not sure why the bins by the peak are off from textbook
 ```
 
 #### Stem-and-Leaf Displays
@@ -91,6 +97,8 @@ See page 26.
 Pulse_rates <- read_csv("http://nhorton.people.amherst.edu/is5/data/Pulse_rates.csv")
 gf_histogram(~ Pulse, data = Pulse_rates, binwidth = 5, center = 5/2)
 with(Pulse_rates, stem(Pulse))
+
+## MC The distribution looks very different. Seems like the textbook displayed the distributions of the pulse rates  of 24 women, while the `Pulse_rates` has 52 observations.  
 ```
 
 #### Dotplot
@@ -98,7 +106,10 @@ with(Pulse_rates, stem(Pulse))
 ```{r}
 # Figure 2.9, page 27
 Derby <- read_csv("http://nhorton.people.amherst.edu/is5/data/Kentucky_Derby_2016.csv")
-gf_dotplot(~ Time_Sec, data = Derby, binwidth = 1)
+gf_dotplot(~ Time_Sec, data = Derby, binwidth = 1) %>%
+  gf_labs(x = "Winning Time (sec)", y = "# of Races")
+
+# XX MC and NH the y axis not displaying counts seems to be a bug in ggformula that cannot be fixed 
 ```
 
 #### Density Plots
@@ -106,6 +117,8 @@ gf_dotplot(~ Time_Sec, data = Derby, binwidth = 1)
 ```{r}
 # Figure 2.10, page 27
 gf_dens(~ Age, data = Titanic, ylab = "Density")
+
+# XX BL be consistent with labs in ggformula
 ```
 
 ### Section 2.3: Shape
@@ -118,17 +131,19 @@ See displays on pages 28-29.
 CPI <- read_csv("http://nhorton.people.amherst.edu/is5/data/CPI_Worldwide.csv") %>%
   clean_names()
 names(CPI)
+#Example 2.5, page 30
 gf_histogram(~ consumer_price_index, data = CPI, ylab = "# of Cities", 
              xlab = "Consumer Price Index", binwidth = 5, center = 5/2)
 ```
 
-We can use `clean_names()` from the `janitor` package to format the names of the columns when necessary. You can use the `names()` function to check the reformatted names.    
+We can use the `clean_names()` function from the `janitor` package to format the names of the columns when necessary. You can use the `names()` function to check the reformatted names.    
 
 #### Credit Card Expenditures
 
 ```{r}
 CreditCardEx <- read_csv("http://nhorton.people.amherst.edu/is5/data/Credit_card_charges.csv") %>%
   clean_names()
+# Figure 2.6, page 30
 gf_histogram(~ charges, data = CreditCardEx, ylab = "# of Customers", 
              xlab = "Average Monthly Expenditure ($)", binwidth = 400, center = 200)
 ```
@@ -137,14 +152,15 @@ gf_histogram(~ charges, data = CreditCardEx, ylab = "# of Customers",
 
 #### Finding Median and Mean
 
+XX MC Do you want to include Figure 2.15 on page 32 for the 
+coloring effects? That or include Figure 2.17 on page 33? 
+
 ```{r}
 TitanicCrew <- filter(Titanic, Class == "Crew")
 # Figure 2.16, page 33
-gf_histogram(~ Age, data = TitanicCrew, binwidth = 5, center = 5/2)
+gf_histogram(~ Age, data = TitanicCrew, ylab = "# of Crew Members", binwidth = 5, center = 5/2)
 favstats(~ Age, data = TitanicCrew)
 ```
-
-See displays on pages 32 and 33.
 
 ### Section 2.5: Spread
 
@@ -155,6 +171,9 @@ range(~ Age, data = TitanicCrew)
 diff(range(~ Age, data = TitanicCrew))
 ```
 
+The `range()` function returns the maximum and minimum values, so we can use the `diff()`
+function to find the difference between the two values.
+
 #### The Interquartile Range
 
 ```{r}
@@ -162,7 +181,8 @@ favstats(~ Age, data = TitanicCrew)
 IQR(~ Age, data = TitanicCrew)
 ```
 
-We can find IQR by subtracting Q1 from Q3.  
+Using the `IQR()` function allows us to avoid having to manually find the 
+IQR by subtracting Q1 from Q3 from the `favstats()` output.  
 
 #### Standard Deviation  
 
@@ -175,6 +195,7 @@ var(~ Age, data = TitanicCrew)
 
 ```{r}
 Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
+# Step-by-Step Example, page 39
 gf_histogram(~ mpg, data = Nissan, binwidth = 1, xlab = "Fuel Efficiency (mpg)", 
              ylab = "# of Fill-ups", center = 5/2)
 favstats(~ mpg, data = Nissan)
@@ -185,6 +206,7 @@ favstats(~ mpg, data = Nissan)
 ```{r}
 Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv") %>%
   clean_names()
+# Figure 2.19, page 40
 gf_histogram(~ commute_time, data = Commute, binwidth = 10, xlab = "Commute Time (min)", 
              ylab = "# of Employees", center = 5)
 ```
