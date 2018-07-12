@@ -49,6 +49,6 @@ library(mosaic)
 
 ### Section 16.2: Alpha Levels and Critical Values
 
-### Section 16.3: Practical vs. Sstatistical Significance
+### Section 16.3: Practical vs. Statistical Significance
 
 ### Section 16.4: Errors
