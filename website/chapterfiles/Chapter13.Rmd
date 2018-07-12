@@ -115,7 +115,7 @@ To get the actual plot, the code is more complicated.
 
 ```{r}
 findingpoints <- function(sampsize) {
-  CItest <- do(1) * t.test(~ preemie, data = sample(Babies, size = sampsize))
+  CItest <- do(1) * t.test(~ preemie, data = sample(Babies, size = sampsize)) # Using do() so that CItest can run as a data frame
   CItest <- CItest %>%
     select(lower, upper) %>%
     mutate(mean = (upper + lower)/2)
@@ -125,7 +125,9 @@ numsamp <- 20
 ConfData <- do(numsamp) * findingpoints(sampsize = 100)
 
 gf_point(mean ~ (1:20), data = ConfData) %>%
-  gf_segment()
+  gf_segment(upper + lower ~ (1:20) + (1:20), data = ConfData) %>%
+  gf_hline(yintercept = ~ mean(preemie), data = Babies, color = 4) %>%
+  gf_labs(x = "", y = "Proportion")
 ```
 
 ### Section 13.5: Margin of Error: Certainty vs. Precision
