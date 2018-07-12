@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Linear Regression (Chapter 7)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 12, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -56,7 +56,8 @@ By default, `read_csv()` prints the variable names. These messages can be suppre
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).  
 
 ```{r}
-gf_point(fat_g ~ protein_g, data = BurgerKing, xlab = "Protein (g)", ylab = "Fat (g)")
+gf_point(fat_g ~ protein_g, data = BurgerKing) %>%
+  gf_labs(x = "Protein (g)", y = "Fat (g)")
 ```
 
 ### Section 7.1: Least Squares: The Line of "Best Fit"
@@ -85,9 +86,9 @@ burgerfun(32) - burgerfun(31)
 ```{r}
 Hurricanes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hurricanes_2015.csv") %>%
   clean_names()
-gf_point(max_wind_speed_kts ~ central_pressure_mb, data = Hurricanes, xlab = "Central Pressure (mb)", 
-         ylab = "Max Wind Speed (kts)") %>%
-  gf_lm()
+gf_point(max_wind_speed_kts ~ central_pressure_mb, data = Hurricanes) %>%
+  gf_lm() %>%
+  gf_labs(x = "Central Pressure (mb)", y = "Max Wind Speed (kts)")
 ```
 
 The function generates a warning because some of the data are missing: this output can be suppressed by adding `warning=FALSE` as an option in this code chunk.
@@ -115,8 +116,8 @@ coef(burgerlm)[2]
 TompkinsBridges <- 
   read_csv("http://nhorton.people.amherst.edu/is5/data/Tompkins_county_bridges_2016.csv") %>%
   clean_names()
-gf_point(condition ~ age_at_inspection, data = TompkinsBridges, 
-  xlab = "Age at Inspection", ylab = "Condition")
+gf_point(condition ~ age_at_inspection, data = TompkinsBridges) %>%
+  gf_labs(x = "Age at Inspection", y = "Condition")
 ```
 
 See calculations on page 203.
