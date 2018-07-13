@@ -150,6 +150,15 @@ do(2) * mean(~ Temp, data = resample(Temperatures)) # Calculates means of two re
 resampletemps <- do(numsamp) * mean(~ Temp, data = resample(Temperatures))
 gf_histogram(~ mean, data = resampletemps) %>%
   gf_labs(x = "Mean Temperature", y = "# of Samples")
+qdata(~ mean, p = c(.005, .995), data = resampletemps) # reject null hypothesis
+
+# Making a model-centric distribution
+Temperatures2 <- Temperatures %>%
+  mutate(Temp = Temp + .315)
+resampletemps2 <- do(numsamp) * mean(~ Temp, data = resample(Temperatures2))
+gf_histogram(~ mean, data = resampletemps2) %>%
+  gf_vline(xintercept = mean(~ Temp, data = Temperatures)) %>%
+  gf_labs(x = "Mean Temperature Centered at 98.6", y = "# of Samples")
 ```
 
 #### Step-By-Step Example: Tests and Intervals
