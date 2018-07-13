@@ -121,7 +121,41 @@ gf_histogram(~ resid(diamondlm))
 #  gf_labs(y = "% Body Fat", x = "Waist")
 ```
 
+#### Example 20.1: Checking Assumptions and Conditions
+
+```{r}
+Craters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Craters.csv") %>%
+  clean_names() %>%
+  filter(log_age <= 1.5) # Removed points to match the textbook
+gf_point(log_diam ~ log_age, data = Craters) %>%
+  gf_labs(x = "Log(Age)", y = "Log(Diameter)")
+craterlm <- lm(log_diam ~ log_age, data = Craters)
+gf_point(resid(craterlm) ~ fitted(craterlm)) %>%
+  gf_labs(x = "Predicted", y = "Residuals")
+gf_qq(~ resid(craterlm)) %>%
+  gf_labs(x = "Nscores", y = "Residuals")
+gf_histogram(~ resid(craterlm), binwidth = .5/3, center = .5/6) %>%
+  gf_labs(x = "Residuals", y = "# of Years")
+```
+
+#### Step-By-Step Example: Regression Inference
+
+```{r}
+# Scatterplot matches Figure 20.1
+gf_qq(~ resid(bodyfatlm)) %>%
+  gf_labs(x = "Normal Scores", y = "Residuals (% body fat)")
+msummary(bodyfatlm)
+```
+
 ### Section 20.3: Regression Inference and Intuition
+
+See the displays on pages 650 and 651.
+
+#### Example 20.2: Confidence Interval and Hypothesis Test for a Slope
+
+```{r}
+
+```
 
 ### Section 20.4: The Regression Table
 
