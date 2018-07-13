@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Inferences for Regression (Chapter 20)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 13, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -71,17 +71,26 @@ lm(pct_bf ~ waist, data = BodyFat)
 # Figure 20.2
 gf_histogram(~ pct_bf, data = BodyFat, binwidth =  2.5, center = 1.25) %>%
   gf_labs(x = "% Body Fat", y = "# of Men")
+# Figure 20.3 (reinterpreted with points)
+BodyFat <- BodyFat %>%
+  mutate(roundedwaist = cut(waist, breaks = c(0, 30, 35, 40, 45, Inf), labels = c(1:5)))
+gf_point(pct_bf ~ jitter(as.numeric(roundedwaist)), data = BodyFat) %>%
+  gf_lm() %>%
+  gf_labs(y = "% Body Fat", x = "Waist")
 ```
-
-XX NH not sure if I can make Figure 20.3 (page 643)
 
 #### Random Matters: Slopes Vary
 
 ```{r}
-numsamp <- 1000
+numsamp <- 25 # It's too messy to do any more than 25
 slopesdata <- do(numsamp) * lm(pct_bf ~ waist, data = resample(BodyFat))
-gf_point(pct_bf ~ waist, data = BodyFat) #%>%
-  gf_line(slope = ~ waist, intercept = ~ Intercept, slopesdata) 
+slopesdata <- slopesdata %>%
+  mutate(at27 = Intercept + waist * 27, at50 = Intercept + waist * 50, color = as.factor(1:25))
+# Figure 20.4, page 644
+gf_point(pct_bf ~ waist, data = BodyFat) %>%
+  gf_segment(at27 + at50 ~ 27 + 50, data = slopesdata, color = ~ color) %>%
+  gf_labs(color = "Sample", x = "Waist (in.)", y = "Percent Body Fat")
+# Figure 20.5
 gf_histogram(~ waist, data = slopesdata, binwidth = .05, center = .025) %>%
   gf_labs(x = "Slope", y = "# of Trials")
 ```
@@ -104,6 +113,12 @@ diamondlm <- lm(price ~ carat_size, data = Diamonds) # there's no carat weight v
 gf_point(resid(diamondlm) ~ fitted(diamondlm))
 # Figure 20.9
 gf_histogram(~ resid(diamondlm))
+# Figure 20.10 (reinterpreted with points) - will fix once I understand the data
+#BodyFat <- BodyFat %>%
+#  mutate(roundedwaist = cut(waist, breaks = c(0, 30, 35, 40, 45, Inf), labels = c(1:5)))
+#gf_point(pct_bf ~ jitter(as.numeric(roundedwaist)), data = BodyFat) %>%
+#  gf_lm() %>%
+#  gf_labs(y = "% Body Fat", x = "Waist")
 ```
 
 ### Section 20.3: Regression Inference and Intuition
