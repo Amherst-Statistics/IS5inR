@@ -135,6 +135,23 @@ t
 2 * pt(q = t, df = n - 1) # two sided test
 ```
 
+#### Random Matters: Bootstrap Hypothesis Tests and Intervals
+
+```{r}
+numsamp <- 10000 
+
+# What does do() do?
+mean(~ Temp, data = resample(Temperatures)) # Mean of one random resample
+mean(~ Temp, data = resample(Temperatures)) # Mean of another random resample
+
+do(2) * mean(~ Temp, data = resample(Temperatures)) # Calculates means of two resamples
+
+# We will use do() a numsamp number of times
+resampletemps <- do(numsamp) * mean(~ Temp, data = resample(Temperatures))
+gf_histogram(~ mean, data = resampletemps) %>%
+  gf_labs(x = "Mean Temperature", y = "# of Samples")
+```
+
 #### Step-By-Step Example: Tests and Intervals
 
 ```{r}
