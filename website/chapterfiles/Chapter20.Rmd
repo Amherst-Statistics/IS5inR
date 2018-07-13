@@ -81,7 +81,7 @@ XX NH not sure if I can make Figure 20.3 (page 643)
 numsamp <- 1000
 slopesdata <- do(numsamp) * lm(pct_bf ~ waist, data = resample(BodyFat))
 gf_point(pct_bf ~ waist, data = BodyFat) #%>%
-#  gf_abline(slope = ~ waist, intercept = ~ Intercept, slopesdata) # gf_coefline()?
+  gf_line(slope = ~ waist, intercept = ~ Intercept, slopesdata) 
 gf_histogram(~ waist, data = slopesdata, binwidth = .05, center = .025) %>%
   gf_labs(x = "Slope", y = "# of Trials")
 ```
@@ -99,7 +99,7 @@ gf_point(resid(bodyfatlm) ~ fitted(bodyfatlm)) %>%
 ```{r}
 Diamonds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Diamonds.csv") %>%
   clean_names()
-diamondlm <- lm(price ~ carat_size, data = Diamonds) # there's no carat weight varible?
+diamondlm <- lm(price ~ carat_size, data = Diamonds) # there's no carat weight variable?
 # Figure 20.8, page 646
 gf_point(resid(diamondlm) ~ fitted(diamondlm))
 # Figure 20.9

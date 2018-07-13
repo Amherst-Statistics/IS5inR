@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Understanding and Comparing Distributions (Chapter 4)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 12, 2018"
+date: "July 13, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -98,6 +98,8 @@ Here we replicate the results from Figure 4.3 (page 99).
 
 We use `as.factor()` to convert a variable into a factor.  
 We also use `gf_labs()` to clean up the code for the first line and improve readability.  
+
+`y ~ x` is the general modeling language for two variables in `mosaic`.  
 
 #### Example 4.2: Comparing Groups with Boxplots
 

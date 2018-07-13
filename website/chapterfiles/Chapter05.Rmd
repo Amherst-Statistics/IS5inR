@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: The Standard Deviation as a Ruler and the Normal Model (Chapter 5)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 12, 2018"
+date: "July 13, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -110,7 +110,9 @@ MenWeight %>%
   gf_labs(x = "Weight Type", y = "")
 ```
 
-Here we use the `gather()` function to transform the dataset into the needed format, which can be seen with the `head()` function.
+Here we use the `gather()` function to transform the dataset into the needed format, which can be seen with the `head()` function.  
+`y ~ x` is the general modeling language for two variables in `mosaic`.  
+
 
 #### Shifting, Scaling, and the *z*-Scores
 
