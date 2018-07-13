@@ -14,5 +14,5 @@ title: Resources Related to the mosaic Package
 </br>
 - Additional mosaic package vignettes can be found [here](http://cran.r-project.org/web/packages/mosaic).
 
-- Direct link to all the data sets used in these materials can be found [here](https://media.pearsoncmg.com/aw/aw_deveaux_introstats_5/datasets/stat5dv_datasets.html).
+- The data sets used in these materials can be found [here](data).
 
