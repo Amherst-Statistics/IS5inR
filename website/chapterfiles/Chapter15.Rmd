@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Testing Hypotheses (Chapter 15)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 12, 2018"
+date: "July 13, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -113,7 +113,27 @@ pt(q = t, df = df) # p-value
 
 ### Section 15.5: Intervals and Tests
 
-XX NH Can't find temperature data (page 487) - data should be from an exercise (Chapter 14, Exercise 29)
+```{r}
+# page 487
+Temperatures <- read_csv("http://nhorton.people.amherst.edu/is5/data/Normal_temperature.csv")
+favstats(~ Temp, data = Temperatures)
+gf_histogram(~ Temp, data = Temperatures, binwidth = .2)
+# Confidence interval
+y <- mean(~ Temp, data = Temperatures)
+y
+s <- sd(~ Temp, data = Temperatures)
+s
+n <- nrow(Temperatures)
+n
+tstats <- qt(df = n - 1, p = c(.005, .995))
+tstats
+y + (tstats * (s/(n^.5)))
+# Hypothesis test
+mu <- 98.6
+t <- (y - mu)/(s/(n^.5))
+t
+2 * pt(q = t, df = n - 1) # two sided test
+```
 
 #### Step-By-Step Example: Tests and Intervals
 
