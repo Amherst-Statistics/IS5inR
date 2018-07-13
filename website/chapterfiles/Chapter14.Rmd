@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Confidence Intervals for Means (Chapter 14)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 10, 2018"
+date: "July 12, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -60,7 +60,7 @@ gf_histogram(~ weight, data = Babies, binwidth = 125) %>%
   gf_labs(x = "Birthweight (g)", y = "# of Babies")
 
 # Figure 14.2
-set.seed(12346) # For reproducibility
+set.seed(12346) # To ensure we get the same values when we run it multiple times
 numsim <- 10000 # Number of simulations
 
 # What does do() do?
@@ -149,7 +149,7 @@ The `confint()` function takes an object, in this case a linear regression model
 #### Example 14.2: Checking Assumptions and Conditions for Student's *t*
 
 ```{r}
-# replicate figure in Example 14.2 with a normal distribution (page 450)
+# With a normal distribution (page 450)
 gf_dhistogram(~ mirex, data = Salmon, binwidth = 0.04, center = 0.02) %>%
   gf_dist(dist = "norm", mean = mean(~ mirex, data = Salmon), sd = sd(~ mirex, data = Salmon)) %>%
   gf_labs(x = "Mirex (ppm)", y = "Density of Salmon") +
@@ -182,7 +182,7 @@ gf_histogram(~ mean, data = WeightMeans, binwidth = 10)
 CommuteSample <- read_csv("http://nhorton.people.amherst.edu/is5/data/Commuter_sample.csv")
 gf_histogram(~ time, data = CommuteSample, binwidth = 10, center = 5)
 # Bootstrap 
-set.seed(134) # For reproducibility
+set.seed(134)  # To ensure we get the same values when we run it multiple times
 numsim <- 10000
 commutebootstrap <- do(numsim) * mean(~ time, data = resample(CommuteSample))
 ```

@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Testing Hypotheses (Chapter 15)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 12, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -118,7 +118,32 @@ XX NH Can't find temperature data (page 487) - data should be from an exercise (
 #### Step-By-Step Example: Tests and Intervals
 
 ```{r}
-# XX NH There's a baseball 2016 csv, but it doesn't seem to have a variable about home vs away (page 489)
+# Creating the data set
+Baseball <- rbind(
+  do(1308) * (winner = "HOME"),
+  do(2431 - 1308) * (winner = "AWAY")
+) %>%
+  rename(winner = result)
+# Mechanics (page 490)
+n <- nrow(Baseball)
+p <- .5
+phat <- Baseball %>%
+  filter(winner == "HOME") %>%
+  nrow()/n
+phat
+sdphat <- ((p * (1 - p))/n)^.5
+sdphat
+z <- (phat - p)/sdphat # z-value
+z
+1 - pnorm(z) # p-value
+# Or, without calculating the z-score:
+1 - pnorm(q = phat, mean = p, sd = sdphat)
+# Mechanics (page 491)
+sep <- ((phat * (1 - phat))/n)^.5
+sep
+me <- 1.96 * sep
+phat - me # lower bound of 95% confidence
+phat + me # upper bound of 95% confidence
 ```
 
 ### Section 15.6: P-Values and Decisions: What to Tell About a Hypothesis Test

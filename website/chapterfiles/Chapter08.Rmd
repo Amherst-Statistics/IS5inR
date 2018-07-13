@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Regression Wisdom (Chapter 8)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 12, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -62,11 +62,11 @@ By default, `read_csv()` prints the variable names. These messages can be suppre
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
 
 ```{r}
-gf_point(dive_heart_rate ~ duration_min, data = Penguins, xlab = "Duration (min)", 
-         ylab = "Dive Heart Rate (bpm)")
+gf_point(dive_heart_rate ~ duration_min, data = Penguins) %>%
+  gf_labs(x = "Duration (min)", y = "Dive Heart Rate (bpm)")
 penguinlm <- lm(dive_heart_rate ~ duration_min, data = Penguins)
-gf_point(resid(penguinlm) ~ duration_min, data = Penguins, xlab = "Duration (min)", 
-         ylab = "Residuals")
+gf_point(resid(penguinlm) ~ duration_min, data = Penguins) %>%
+  gf_labs(x = "Duration (min)", y = "Residuals")
 ```
 
 #### Sifting Residuals for Groups
@@ -240,8 +240,8 @@ See table and Figure 8.23 on page 250.
 
 ```{r}
 gf_point(dive_heart_rate ~ duration_min, data = Penguins, xlab = "Duration", ylab = "DHR")
-gf_point(resid(penguinlm) ~ fitted(penguinlm), data = Penguins, xlab = "Predicted Values", 
-         ylab = "Residuals")
+gf_point(resid(penguinlm) ~ fitted(penguinlm), data = Penguins) %>%
+  gf_labs(x = "Predicted Values", y = "Residuals")
 gf_histogram(~ resid(penguinlm), binwidth = 10, center = 5) %>%
   gf_labs(x = "Residuals", y = "# of Residuals")
 ```
@@ -261,8 +261,8 @@ gf_point(log(dive_heart_rate) ~ duration_min, data = Penguins) %>%
 penguinlm2 <- lm(log(dive_heart_rate) ~ duration_min, data = Penguins)
 gf_point(resid(penguinlm2) ~ fitted (penguinlm2)) %>%
   gf_labs(x = "Predicted Values", y = "Residuals")
-gf_histogram(~ resid(penguinlm2), binwidth = 0.1, xlab = "Residuals", ylab = "# of Residuals",
-             center = .025)
+gf_histogram(~ resid(penguinlm2), binwidth = 0.1, center = .025) %>%
+  gf_labs(x = "Residuals", y = "# of Residuals")
 ```
 
 Mutating with a (negative) reciprocal:  
@@ -273,8 +273,8 @@ gf_point(-1/(dive_heart_rate) ~ duration_min, data = Penguins) %>%
 penguinlm3 <- lm(-1/(dive_heart_rate) ~ duration_min, data = Penguins)
 gf_point(resid(penguinlm3) ~ fitted(penguinlm3)) %>%
   gf_labs(x = "Predicted Values", y = "Residuals")
-gf_histogram(~ resid(penguinlm3), binwidth = 0.0025, xlab = "Residuals", ylab = "# of Residuals",
-             center = 0.00125)
+gf_histogram(~ resid(penguinlm3), binwidth = 0.0025, center = 0.00125) %>%
+  gf_labs(x = "Residuals", y = "# of Residuals")
 ```
 
 $-1/\sqrt{DHR}$ follows the same process on pages 253-254.

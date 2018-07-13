@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Sampling Distribution Models and Confidence Intervals for Proportions (Chapter 13)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 12, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -72,7 +72,7 @@ gf_histogram(~ gestation, binwidth = 1, center = .5, fill = ~ preemie, data = Ba
 # page 418
 BodyFat <- read_csv("http://nhorton.people.amherst.edu/is5/data/Bodyfat.csv") %>%
   clean_names()
-set.seed(3245) # For reproducibility
+set.seed(3245)  # To ensure we get the same values when we run it multiple times
 numsim <- 1000  # Number of samples
 
 # What does do() do?
