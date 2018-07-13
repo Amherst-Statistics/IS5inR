@@ -47,16 +47,64 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 library(mosaic)
 library(readr)
 library(janitor)
-#Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") %>%
-#  clean_names()
+BodyFat <- read_csv("http://nhorton.people.amherst.edu/is5/data/Bodyfat.csv") %>%
+  clean_names()
 ```
 
 By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
-Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
+Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).  
+
+```{r}
+# Figure 20.1, page 642
+gf_point(pct_bf ~ waist, data = BodyFat) %>%
+  gf_smooth() %>% # to show linear relationship
+  gf_labs(x = "Waist (in.)", y = "% Body Fat")
+```
 
 ### Section 20.1: The Regression Model
 
+```{r}
+lm(pct_bf ~ waist, data = BodyFat)
+```
+
+```{r}
+# Figure 20.2
+gf_histogram(~ pct_bf, data = BodyFat, binwidth =  2.5, center = 1.25) %>%
+  gf_labs(x = "% Body Fat", y = "# of Men")
+```
+
+XX NH not sure if I can make Figure 20.3 (page 643)
+
+#### Random Matters: Slopes Vary
+
+```{r}
+numsamp <- 1000
+slopesdata <- do(numsamp) * lm(pct_bf ~ waist, data = resample(BodyFat))
+gf_point(pct_bf ~ waist, data = BodyFat) #%>%
+#  gf_abline(slope = ~ waist, intercept = ~ Intercept, slopesdata) # gf_coefline()?
+gf_histogram(~ waist, data = slopesdata, binwidth = .05, center = .025) %>%
+  gf_labs(x = "Slope", y = "# of Trials")
+```
+
 ### Section 20.2: Assumptions and Conditions
+
+```{r}
+# Figure 20.6 is the same as Figure 20.1
+# Figure 20.7 (page 645)
+bodyfatlm <- lm(pct_bf ~ waist, data = BodyFat)
+gf_point(resid(bodyfatlm) ~ fitted(bodyfatlm)) %>%
+  gf_labs(x = "Predicted", y = "Residuals")
+```
+
+```{r}
+Diamonds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Diamonds.csv") %>%
+  clean_names()
+diamondlm <- lm(price ~ carat_size, data = Diamonds) # there's no carat weight varible?
+# Figure 20.8, page 646
+gf_point(resid(diamondlm) ~ fitted(diamondlm))
+# Figure 20.9
+gf_histogram(~ resid(diamondlm))
+```
 
 ### Section 20.3: Regression Inference and Intuition
 
