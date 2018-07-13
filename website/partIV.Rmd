@@ -15,4 +15,4 @@ Chapter 12 : From Randomness to Probability | There was not a significant use of
 Chapter 13 : Sampling Distribution Models and Confidence Intervals for Proportions | <a href='chapterfiles/Chapter13.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter13.pdf'>(pdf)</a>
 Chapter 14 : Confidence Intervals for Means | <a href='chapterfiles/Chapter14.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter14.pdf'>(pdf)</a>
 Chapter 15 : Testing Hypotheses | <a href='chapterfiles/Chapter15.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter15.pdf'>(pdf)</a>
-Chapter 16 : More About Tests and Intervals | There was not a significant use of R in chapter 16
+Chapter 16 : More About Tests and Intervals | <a href='chapterfiles/Chapter16.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter16.pdf'>(pdf)</a>

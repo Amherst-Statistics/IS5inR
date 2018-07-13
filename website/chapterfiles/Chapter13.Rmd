@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Sampling Distribution Models and Confidence Intervals for Proportions (Chapter 13)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 12, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -44,7 +44,6 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 ## Chapter 13: Sampling Distribution Models and Confidence Intervals for Proportions
 
 ```{r}
-# Add page refs
 library(mosaic)
 library(readr)
 library(janitor)
@@ -52,12 +51,13 @@ Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv")
   clean_names()
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
 
 ```{r}
+# Figure 13.1, page 411
 gf_histogram(~ gestation, binwidth = 1, center = .5, fill = ~ preemie, data = Babies) %>%
-  gf_labs(x = "Gestation Time (weeks)", y = "Births")
+  gf_labs(x = "Gestation Time (weeks)", y = "Births", fill = "")
 ```
 
 ### Section 13.1: The Sampling Distribution Model for a Proportion
@@ -69,9 +69,10 @@ gf_histogram(~ gestation, binwidth = 1, center = .5, fill = ~ preemie, data = Ba
 #### Random Matters: Does the Normal Model Always Work? Sampling Distributions for Other Statistics
 
 ```{r}
+# page 418
 BodyFat <- read_csv("http://nhorton.people.amherst.edu/is5/data/Bodyfat.csv") %>%
   clean_names()
-set.seed(3245) # For reproducibility
+set.seed(3245)  # To ensure we get the same values when we run it multiple times
 numsim <- 1000  # Number of samples
 
 # What does do() do?
@@ -104,19 +105,29 @@ gf_histogram(~ min, data = bodyfatsamples, binwidth = 3, center = 1.5) %>%
 
 ```{r}
 # Here is a simulation of Figure 13.9 (page 422)
-set.seed(355)
+set.seed(118)
 CIsim(n = 100, samples = 20) # We expect 19/20 intervals to cover the true mean
 ```
 
-XX Book gets 18/20
+We expect 19 of the 20 intervals to cover the true mean, but since only 20 samples are drawn, there is more variability. Here, only 18 out of the 20 intervals cover the true mean.  
+
+To get the actual plot, the code is more complicated.  
 
 ```{r}
-CIdata <- do(20) * favstats(~ preemie, data = sample(Babies, size = 100))
-CIdata <- CIdata %>%
-  mutate(lowerbound = mean - 1.96 * sd/(100^.5), upperbound = mean + 1.96 * sd/(100^.5)) # use t test function
-CIdata %>%
-  select(lowerbound, upperbound) # make function that returns center, lower, upper, t test, recreating process is a bit harder, but here (line plot, point plot in the middle)
-# CIsim(~ preemie, data = sample(Babies, size = 100), samples = 20)
+findingpoints <- function(sampsize) {
+  CItest <- do(1) * t.test(~ preemie, data = sample(Babies, size = sampsize)) # Using do() so that CItest can run as a data frame
+  CItest <- CItest %>%
+    select(lower, upper) %>%
+    mutate(mean = (upper + lower)/2)
+}
+
+numsamp <- 20
+ConfData <- do(numsamp) * findingpoints(sampsize = 100)
+
+gf_point(mean ~ (1:20), data = ConfData) %>%
+  gf_segment(upper + lower ~ (1:20) + (1:20), data = ConfData) %>%
+  gf_hline(yintercept = ~ mean(preemie), data = Babies, color = 4) %>%
+  gf_labs(x = "", y = "Proportion")
 ```
 
 ### Section 13.5: Margin of Error: Certainty vs. Precision

@@ -5,7 +5,7 @@ date: "July 11, 2018"
 output: 
   pdf_document:
     fig_height: 3
-    fig_width: 5
+    fig_width: 7
   html_document:
     fig_height: 3
     fig_width: 5
@@ -65,17 +65,31 @@ We've added `gf_smooth()` to demonstrate how to add a smoother.
 
 ### Section 9.1: What is Multiple Regression?
 
-XX Generate number table on page 277
+```{r}
+# Table 9.1, page 277
+multiplereg <- lm(pct_bf ~ waist + height, data = BodyFat)
+summary(multiplereg)
+```
+
+The `summary()` function provides the multiple R-squared along with the regression coefficients.  
 
 #### Example 9.1: Modeling Home Prices
 
 ```{r}
 RealEstate <- read_csv("http://nhorton.people.amherst.edu/is5/data/Real_Estate.csv") %>%
   clean_names()
-msummary(lm(price ~ living_area + bedrooms, data = RealEstate)) # save this as an object for a make fun for a predicted value (off by one to predict slope)
-```
+realestatelm <- lm(price ~ living_area + bedrooms, data = RealEstate)
+summary(realestatelm)
 
-The coefficients for the model can be seen in the `Estimate` column.  
+# Predicted Values
+realestatefn <- makeFun(realestatelm) # Making a function to find predicted values
+# Predicted price for a home with 2800 sq ft living area and 5 bedrooms
+realestatefn(living_area = 2800, bedrooms = 5) 
+# Predicted price for a home with 2801 sq ft living area and 5 bedrooms
+realestatefn(living_area = 2801, bedrooms = 5) 
+# If we subtract predicted values one value apart, we get the slope
+realestatefn(living_area = 2801, bedrooms = 5) - realestatefn(living_area = 2800, bedrooms = 5) 
+```
 
 ### Section 9.2: Interpreting Multiple Regression Coefficients
 
@@ -89,6 +103,13 @@ BodyFat %>%
   filter(waist >= 36 & waist <= 38) %>% # Just plotting waist sizes between 36 and 38 inches
   gf_point(pct_bf ~ height) %>%
   gf_labs(x = "Height (in)", y = "% Body Fat") %>%
+  gf_lm()
+# Plotting all points
+BodyFat %>%
+  mutate(pointtype = ifelse(waist >= 36 & waist <= 38, "Waist Size Between 36 and 38 inches", 
+                            "Waist Size Not Between 36 and 38 inches")) %>% # Subsetting
+  gf_point(pct_bf ~ height, shape = ~ pointtype, color = ~ pointtype) %>%
+  gf_labs(x = "Height (in)", y = "% Body Fat", shape = "", color = "") %>%
   gf_lm()
 ```
 

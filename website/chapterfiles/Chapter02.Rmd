@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Displaying and Describing Data (Chapter 2)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 13, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -67,6 +67,9 @@ gf_bar(~ Class, data = Titanic) %>%
   gf_labs(x = "Ticket Class", y = "Number of People")
 ```
 
+`~ x` is the general modeling language for one variable in `mosaic`.  
+We use `gf_bar()` to make a bar graph using the `ggformula` system, which is automatically downloaded with the `mosaic` package.  
+
 ### Section 2.2: Displaying a Quantitative Variable
 
 #### Ages of Those Aboard the Titanic
@@ -76,7 +79,7 @@ gf_bar(~ Class, data = Titanic) %>%
 gf_histogram(~ Age, data = Titanic, binwidth = 5, ylab = "# of People", center = 5/2)
 ```
 
-The function generates a warning because three of the ages are missing: this output can be suppressed by adding `warning=FALSE` as an option in this code chunk.
+The function generates a warning because three of the ages are missing; this output can be suppressed by adding `warning=FALSE` as an option in this code chunk.
 
 #### Earthquakes and Tsunamis
 
@@ -136,7 +139,12 @@ gf_histogram(~ consumer_price_index, data = CPI, ylab = "# of Cities",
              xlab = "Consumer Price Index", binwidth = 5, center = 5/2)
 ```
 
+<<<<<<< HEAD
 We can use the `clean_names()` function from the `janitor` package to format the names of the columns when necessary. You can use the `names()` function to check the reformatted names.    
+=======
+We can use `clean_names()` from the `janitor` package to format the names of the columns when necessary. You can use the `names()` function to check the reformatted names.    
+Piping (`%>%`) takes the output of the line of code and uses it in the next.  
+>>>>>>> 1a2a863fddfad80156770641f1b41383c6eefe9c
 
 #### Credit Card Expenditures
 

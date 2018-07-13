@@ -102,8 +102,16 @@ gf_boxplot(avg_wind_mph ~ as.factor(month), data = HopkinsForest) %>%
   gf_labs(x = "Month", y = "Average wind speed (mph)")
 ```
 
+<<<<<<< HEAD
 We use the `as.factor()` function to convert a variable into a factor.  
+=======
+Here we replicate the results from Figure 4.3 (page 99).
 
+We use `as.factor()` to convert a variable into a factor.  
+We also use `gf_labs()` to clean up the code for the first line and improve readability.  
+>>>>>>> 1a2a863fddfad80156770641f1b41383c6eefe9c
+
+`y ~ x` is the general modeling language for two variables in `mosaic`.  
 
 #### Example 4.2: Comparing Groups with Boxplots
 
@@ -127,9 +135,14 @@ gf_boxplot(Difference ~ Container, data = Cups, ylab = "Temp Change in F")
 ```{r, warning=FALSE}
 Flights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Flights_on_time_2016.csv") %>%
   clean_names()
+<<<<<<< HEAD
 # Bureau of Transportation Statistics, page 101
 gf_histogram(~ ontime_pct, data = Flights, binwidth = 2, ylab = "# of Months", xlab = "Ontime %", 
              center = 1)
+=======
+gf_histogram(~ ontime_pct, data = Flights, binwidth = 2, center = 1) %>%
+  gf_labs(x = "Ontime %", y = "$ of Months")
+>>>>>>> 1a2a863fddfad80156770641f1b41383c6eefe9c
 gf_boxplot(~ ontime_pct, data = Flights)
 gf_boxplot(ontime_pct ~ month, data = Flights)
 ```
@@ -152,24 +165,31 @@ XX MC removed beause we made the same graph earlier
 CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation_2014.csv") %>%
   clean_names()
 # Figure 4.6, page 105
-gf_histogram(~ ceo_compensation_m, xlab = "Compensation (M$)", ylab = "Millions of $", 
-             data = CEOComp, binwidth = 2.5, center = 2.5/2)
-gf_boxplot(~ ceo_compensation_m, xlab = "Compensation (M$)", ylab = "Millions of $", 
-           data = CEOComp)
+gf_histogram(~ ceo_compensation_m, data = CEOComp, binwidth = 2.5, center = 2.5/2) %>%
+  gf_labs(x = "Compensation (M$)", y = "Millions of $")
+gf_boxplot(~ ceo_compensation_m, data = CEOComp) %>%
+  gf_labs(x = "Compensation (M$)", y = "Millions of $")
 
 # Figure 4.7, page 106
-gf_histogram(~ log(ceo_compensation_m), xlab = "Log (compensation)", ylab = "# of CEOs", 
-             data = CEOComp, binwidth = .224, center = .112)
+gf_histogram(~ log(ceo_compensation_m), data = CEOComp, binwidth = .224, center = .112) %>%
+  gf_labs(x = "Log (compensation)", y = "# of CEOs")
 ```
 
 #### Re-Expression to Equalize Spread Across Groups
 
 ```{r}
 PassiveSmoke <- read_csv("http://nhorton.people.amherst.edu/is5/data/Passive_smoke.csv")
+<<<<<<< HEAD
 # Figure 4.8, page 107
 gf_boxplot(cotinine ~ smoke_exposure, ylab = "Cotinine (ng/ml)", xlab = "Smoke Exposure", 
            data = PassiveSmoke)
 # Figure 4.9, page 107
 gf_boxplot(log(cotinine) ~ smoke_exposure, ylab = "Log(cotinine)", xlab = "Smoke Exposure", 
            data = PassiveSmoke)
+=======
+gf_boxplot(cotinine ~ smoke_exposure, data = PassiveSmoke) %>%
+  gf_labs(x = "Smoke Exposure", y = "Cotinine (ng/ml)")
+gf_boxplot(log(cotinine) ~ smoke_exposure, data = PassiveSmoke) %>%
+  gf_labs(x = "Smoke Exposure", y = "Log(cotinine)")
+>>>>>>> 1a2a863fddfad80156770641f1b41383c6eefe9c
 ```
