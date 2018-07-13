@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Understanding and Comparing Distributions (Chapter 4)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 13, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -56,7 +56,9 @@ By default, `read_csv()` prints the variable names. These messages can be suppre
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace). You can use the `names()` function to check the cleaned names.
 
 ```{r}
-gf_histogram(~ avg_wind_mph, data = HopkinsForest, binwidth = 0.5, center = 0.25)
+# Figure 4.1, page 96
+gf_histogram(~ avg_wind_mph, data = HopkinsForest, 
+             xlab = "Average Wind Speed (mph)", ylab = "# of Days", binwidth = 0.5, center = 0.25)
 favstats(~ avg_wind_mph, data = HopkinsForest)
 ```
 
@@ -67,7 +69,9 @@ favstats(~ avg_wind_mph, data = HopkinsForest)
 ```{r}
 HopkinsForest <- HopkinsForest %>%
   mutate(catmonth = ifelse(month <= 9 & month >= 4, "Spring/Summer", "Fall/Winter"))
-gf_histogram(~ avg_wind_mph, data = HopkinsForest, binwidth = 0.5, center = 0.25) %>%
+# Figure 4.2, page 96 
+gf_histogram(~ avg_wind_mph, data = HopkinsForest, binwidth = 0.5, center = 0.25, 
+             xlab = "Average Wind Speed (mph)", y = "# of Days") %>%
   gf_facet_wrap(~ catmonth)
 favstats(~ avg_wind_mph | catmonth, data = HopkinsForest)
 ```
@@ -75,6 +79,7 @@ favstats(~ avg_wind_mph | catmonth, data = HopkinsForest)
 #### Example 4.1: Comparing Groups with Stem-And-Leaf
 
 ```{r}
+# Figure 4.1, page 97
 NestEgg <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nest_Egg_Index.csv") %>%
   clean_names()
 with(NestEgg, stem(nest_egg_index))
@@ -82,26 +87,28 @@ with(NestEgg, stem(nest_egg_index))
 
 #### Boxplots
 
+As noted in the book, boxplots are most useful to compare distributions. Below, we have replicated the single boxplot from page 98, but we don't recommend the use of single boxplots.
+
 ```{r}
-gf_boxplot(~ avg_wind_mph, data = HopkinsForest)  # or gf_boxplot(X ~ 1)
+# Step 4 on page 98
+gf_boxplot(~ avg_wind_mph, data = HopkinsForest, y = "Daily Average Wind Speed (mph)")  # or gf_boxplot(X ~ 1)
 ```
 
-As noted in the book, boxplots are most useful to compare distributions.  Here we replicate the single boxplot 
-from page 98 but don't recommend the use of single boxplots.
+Instead, we can make comparisons more easily by placing boxplots side by side with the following code: 
 
 ```{r}
+# Figure 4.3, page 99
 gf_boxplot(avg_wind_mph ~ as.factor(month), data = HopkinsForest) %>%
-  gf_labs(x = "month", y = "average wind speed (mph)")
+  gf_labs(x = "Month", y = "Average wind speed (mph)")
 ```
 
-Here we replicate the results from Figure 4.3 (page 99).
-
-We use `as.factor()` to convert a variable into a factor.  
+We use the `as.factor()` function to convert a variable into a factor.  
 
 
 #### Example 4.2: Comparing Groups with Boxplots
 
 ```{r}
+# Example 4.2, page 99
 Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv")
 gf_boxplot(Speed ~ Track, data = Coasters)
 ```
@@ -111,7 +118,8 @@ gf_boxplot(Speed ~ Track, data = Coasters)
 ```{r}
 Cups <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cups.csv")
 favstats(~ Difference | Container, data = Cups)
-gf_boxplot(Difference ~ Container, data = Cups) 
+# Step by Step, page 101
+gf_boxplot(Difference ~ Container, data = Cups, ylab = "Temp Change in F") 
 ```
 
 #### Just Checking
@@ -119,6 +127,7 @@ gf_boxplot(Difference ~ Container, data = Cups)
 ```{r, warning=FALSE}
 Flights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Flights_on_time_2016.csv") %>%
   clean_names()
+# Bureau of Transportation Statistics, page 101
 gf_histogram(~ ontime_pct, data = Flights, binwidth = 2, ylab = "# of Months", xlab = "Ontime %", 
              center = 1)
 gf_boxplot(~ ontime_pct, data = Flights)
@@ -128,24 +137,12 @@ gf_boxplot(ontime_pct ~ month, data = Flights)
 #### Random Matters
 
 ```{r}
+# Figure 4.4, page 102
 CarSpeeds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Car_speeds.csv")
 gf_boxplot(speed ~ direction, data = CarSpeeds)
 ```
 
-See histogram on page 103.  
-
-### Section 4.2: Outliers
-
-```{r}
-gf_boxplot(avg_wind_mph ~ as.factor(month), data = HopkinsForest) %>%
-  gf_labs(x = "Month", y = "Average Wind Speed (mph)")
-```
-
-#### Example 4.3: Checking Out the Outliers
-
-```{r}
-gf_boxplot(Speed ~ Track, data = Coasters)
-```
+XX MC removed beause we made the same graph earlier
 
 ### Section 4.3: Re-Expressing Data: A First Look
 
@@ -169,8 +166,10 @@ gf_histogram(~ log(ceo_compensation_m), xlab = "Log (compensation)", ylab = "# o
 
 ```{r}
 PassiveSmoke <- read_csv("http://nhorton.people.amherst.edu/is5/data/Passive_smoke.csv")
+# Figure 4.8, page 107
 gf_boxplot(cotinine ~ smoke_exposure, ylab = "Cotinine (ng/ml)", xlab = "Smoke Exposure", 
            data = PassiveSmoke)
+# Figure 4.9, page 107
 gf_boxplot(log(cotinine) ~ smoke_exposure, ylab = "Log(cotinine)", xlab = "Smoke Exposure", 
            data = PassiveSmoke)
 ```
