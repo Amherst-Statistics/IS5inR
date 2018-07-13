@@ -114,17 +114,19 @@ We expect 19 of the 20 intervals to cover the true mean, but since only 20 sampl
 To get the actual plot, the code is more complicated.  
 
 ```{r}
+set.seed(234)
 findingpoints <- function(sampsize) {
   CItest <- do(1) * t.test(~ preemie, data = sample(Babies, size = sampsize)) # Using do() so that CItest can run as a data frame
   CItest <- CItest %>%
     select(lower, upper) %>%
-    mutate(mean = (upper + lower)/2)
+    mutate(mean = (upper + lower)/2,
+           success = ifelse(lower <= .11 & upper >= .11, TRUE, FALSE))
 }
 
 numsamp <- 20
 ConfData <- do(numsamp) * findingpoints(sampsize = 100)
 
-gf_point(mean ~ (1:20), data = ConfData) %>%
+gf_point(mean ~ (1:20), data = ConfData, color = ~ success) %>%
   gf_segment(upper + lower ~ (1:20) + (1:20), data = ConfData) %>%
   gf_hline(yintercept = ~ mean(preemie), data = Babies, color = 4) %>%
   gf_labs(x = "", y = "Proportion")
