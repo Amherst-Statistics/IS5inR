@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Relationships Between Categorical Variables--Contingency Tables (Chapter 3)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 14, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -86,11 +86,9 @@ tally(~ Class | Survived, format = "percent", margin = TRUE, data = Titanic)
 
 See displays on 68-69.
 
-```{r}
+```{r fig.width=7}
 gf_bar(~ cats_dogs_both | gender, data = OKCupid)
-# There are many who don't own either
-
-# Figure 3.2, page 69
+# There are many who don't own either (Figure 3.2, page 69)
 gf_bar(~ cats_dogs_both | gender, fill = ~ cats_dogs_both,
   data = filter(OKCupid, cats_dogs_both != "NA"))
 ```
@@ -140,7 +138,7 @@ gf_percents(~ Class, fill = ~ Survived, position = position_dodge(), data = Tita
 gf_percents(~ Survived, fill = ~ Class, position = "fill", data = Titanic)
 ```
 
-```{r}
+```{r fig.width=7}
 # Figure 3.6, page 76
 vcd::mosaic(tally(~ Survived + Class, data = Titanic), 
            main = "Mosaic plot of Class by Survival",
@@ -157,7 +155,7 @@ tally(~ gender + cats_dogs_both + drugs_y_n, format = "percent", data = OKCupid)
 
 #### Example 3.7: Looking for Associations Among Three Variables at Once
 
-```{r}
+```{r fig.width=7}
 vcd::mosaic(tally(~ Sex + Survived + Class, data = Titanic), shade = TRUE)
 ```
 

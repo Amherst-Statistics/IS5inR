@@ -111,17 +111,13 @@ with(Pulse_rates, stem(Pulse))
 Derby <- read_csv("http://nhorton.people.amherst.edu/is5/data/Kentucky_Derby_2016.csv")
 gf_dotplot(~ Time_Sec, data = Derby, binwidth = 1) %>%
   gf_labs(x = "Winning Time (sec)", y = "# of Races")
-
-# XX MC and NH the y axis not displaying counts seems to be a bug in ggformula that cannot be fixed 
 ```
 
 #### Density Plots
 
 ```{r}
 # Figure 2.10, page 27
-gf_dens(~ Age, data = Titanic, ylab = "Density")
-
-# XX BL be consistent with labs in ggformula
+gf_dens(~ Age, data = Titanic, y = "Density")
 ```
 
 ### Section 2.3: Shape
@@ -139,12 +135,8 @@ gf_histogram(~ consumer_price_index, data = CPI, ylab = "# of Cities",
              xlab = "Consumer Price Index", binwidth = 5, center = 5/2)
 ```
 
-<<<<<<< HEAD
-We can use the `clean_names()` function from the `janitor` package to format the names of the columns when necessary. You can use the `names()` function to check the reformatted names.    
-=======
 We can use `clean_names()` from the `janitor` package to format the names of the columns when necessary. You can use the `names()` function to check the reformatted names.    
-Piping (`%>%`) takes the output of the line of code and uses it in the next.  
->>>>>>> 1a2a863fddfad80156770641f1b41383c6eefe9c
+The pipe operator (`%>%`) takes the output of the line of code and uses it in the next.  
 
 #### Credit Card Expenditures
 
