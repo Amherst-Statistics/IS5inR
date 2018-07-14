@@ -172,11 +172,11 @@ Berk <- rbind(
   do(89) *        data.frame(admit = TRUE,  sex = "F", school = "A"), 
   do(19) *        data.frame(admit = FALSE, sex = "F", school = "A")
 )  
-class(Berk)
+```
 
+In this case, `do(n)` creates `n` observations with the specified values in `data.frame()`. The `rbind()` function can then be used to combine the data frames into one.  
+
+```{r}
 tally(~ sex + admit, data = Berk)
 tally(~ admit | sex, format = "percent", data = Berk)
 ```
-
-In this case, `do(n)` creates `n` number of observations with the properties in `data.frame()`. We use `data.frame()` to make `Berk` a data frame. This can be checked with the `class()` function.  `rbind()` is used to combine the data frames into one.  
-
