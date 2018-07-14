@@ -134,7 +134,7 @@ gf_point(resid(craterlm) ~ fitted(craterlm)) %>%
   gf_labs(x = "Predicted", y = "Residuals")
 gf_qq(~ resid(craterlm)) %>%
   gf_labs(x = "Nscores", y = "Residuals")
-gf_histogram(~ resid(craterlm), binwidth = .5/3, center = .5/6) %>%
+gf_histogram(~ resid(craterlm), binwidth = 0.5/3, center = 0.5/6) %>%
   gf_labs(x = "Residuals", y = "# of Years")
 ```
 
