@@ -155,7 +155,7 @@ tally(~ gender + cats_dogs_both + drugs_y_n, format = "percent", data = OKCupid)
 
 #### Example 3.7: Looking for Associations Among Three Variables at Once
 
-```{r fig.width=7}
+```{r fig.height=5, fig.width=7}
 vcd::mosaic(tally(~ Sex + Survived + Class, data = Titanic), shade = TRUE)
 ```
 
