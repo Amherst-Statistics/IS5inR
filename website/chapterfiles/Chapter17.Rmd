@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Comparing Groups (Chapter 17)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 16, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -51,7 +51,60 @@ library(janitor)
 
 ### Section 17.1: A Confidence Interval for the Difference Between Two Proportions
 
-XX NH need seatbelts data and online profiles data
+```{r}
+# Creating a data frame for Seatbelts
+Seatbelts <- rbind(
+  do(2777) * data.frame(passenger = "F", belted = TRUE),
+  do(4208 - 2777) * data.frame(passenger = "F", belted = FALSE),
+  do(1363) * data.frame(passenger = "M", belted = TRUE),
+  do(2763 - 1363) * data.frame(passenger = "M", belted = FALSE)
+) %>%
+  select(passenger, belted)
+```
+
+Here, the `do()` function creates a number of rows for the data frame.
+
+```{r}
+set.seed(234)
+numsim <- 10000
+
+# What does do() do?
+resample(Seatbelts) %>%
+  group_by(passenger) %>%
+  summarise(proportion = sum(belted)/n()) %>%
+  summarise(diffprop = abs(diff(proportion))) # Difference of proportions from one random resample
+resample(Seatbelts) %>%
+  group_by(passenger) %>%
+  summarise(proportion = sum(belted)/n()) %>%
+  summarise(diffprop = abs(diff(proportion))) # Difference of proportions from another random resample
+
+do(2) * resample(Seatbelts) %>%
+  group_by(passenger) %>%
+  summarise(proportion = sum(belted)/n()) %>%
+  summarise(diffprop = abs(diff(proportion))) # Calculates two differences
+
+# We need 10000 differences of proportions
+seatbeltresamples <- do(numsim) * resample(Seatbelts) %>%
+  group_by(passenger) %>%
+  summarise(proportion = sum(belted)/n()) %>%
+  summarise(diffprop = abs(diff(proportion)))
+
+# Figure 17.1, page 542
+gf_histogram(~ diffprop, data = seatbeltresamples) %>%
+  gf_labs(x = "Difference of Proportions", y = "# of Resamples")
+```
+
+#### Example 17.1: Finding the Standard Error of a Difference in Proportions
+
+```{r}
+# Creating the data set for online profiles
+OnlineProf <- rbind(
+  
+  
+  
+  
+)
+```
 
 ### Section 17.2: Assumptions and Conditions for Comparing Proportions
 
