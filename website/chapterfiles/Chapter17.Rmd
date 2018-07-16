@@ -64,7 +64,7 @@ Seatbelts <- rbind(
 
 Here, the `do()` function creates a number of rows for the data frame.
 
-```{r}
+```{r cache=TRUE}
 set.seed(234)
 numsim <- 10000
 
@@ -95,6 +95,9 @@ gf_histogram(~ diffprop, data = seatbeltresamples) %>%
 ```
 
 #### Example 17.1: Finding the Standard Error of a Difference in Proportions
+
+
+XX MC: need to break up this block and add more annotation.
 
 ```{r}
 # Creating the data set for online profiles
