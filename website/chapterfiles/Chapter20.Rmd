@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Inferences for Regression (Chapter 20)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 13, 2018"
+date: "July 16, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -154,15 +154,88 @@ See the displays on pages 650 and 651.
 #### Example 20.2: Confidence Interval and Hypothesis Test for a Slope
 
 ```{r}
-
+msummary(bodyfatlm)
+mean <- 1.70
+se <- .074
+tstats <- qt(p = c(.025, .975), df = 248)
+tstats
+mean + tstats * se
+t <- (mean - 0.00)/se
+t
 ```
 
 ### Section 20.4: The Regression Table
 
+```{r}
+# Table 20.1, page 654
+msummary(bodyfatlm)
+```
+
 ### Section 20.5: Multiple Regression Inference
+
+```{r}
+# Table 20.2
+bodyfatmlm <- lm(pct_bf ~ waist + height, data = BodyFat)
+msummary(bodyfatmlm)
+```
+
+#### Just Checking
+
+```{r}
+Mouth <- read_csv("http://nhorton.people.amherst.edu/is5/data/Mouth_volume.csv") 
+mouthlm <- lm(Mouth_Volume ~ Height, data = Mouth)
+favstats(~ Mouth_Volume, data = Mouth)
+summary(mouthlm)
+mouthmlm <- lm(Mouth_Volume ~ Age + Height, data = Mouth)
+summary(mouthmlm)
+```
+
+#### Collinearity
+
+```{r}
+Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv") 
+Coasters <- Coasters %>%
+  filter(Name != "Tower of Terror") %>%
+  mutate(Inversions = as.factor(Inversions))
+coasterlm <- lm(Duration ~ Drop, data = Coasters)
+# Numbers are a bit off because the book has removed some rollercoasters
+msummary(coasterlm) 
+coastermlm <- lm(Duration ~ Drop + Speed, data = Coasters)
+msummary(coastermlm)
+```
+
+XX NH these values don't match the book, not sure how big of a deal that is
+
+```{r}
+gf_point(Speed ~ Drop, data = Coasters)
+```
 
 ### Section 20.6: Confidence and Prediction Intervals
 
+```{r}
+# Figure 20.16, page 659
+gf_point(pct_bf ~ waist, data = BodyFat) %>%
+  gf_lm(interval = "confidence", fill = "red") %>%
+  gf_lm(interval = "prediction", fill = "navy") %>%
+  gf_labs(x = "Waister (in.)", y = "% of Body Fat")
+```
+
 ### Section 20.7: Logistic Regression
+
+```{r}
+PimaIndians <- read_csv("http://nhorton.people.amherst.edu/is5/data/Pima_indians.csv") 
+PimaIndians <- PimaIndians %>%
+  filter(BMI != 0)
+# Figure 20.17, page 661
+gf_boxplot(BMI ~ as.factor(Diabetes), data = PimaIndians, xlab = "Diabetes (1 = yes)")
+# Figure 20.18
+gf_point(Diabetes ~ BMI, data = PimaIndians, ylab = "Diabetes (1 = yes)") 
+# Figure 20.19
+gf_point(Diabetes ~ BMI, data = PimaIndians, ylab = "Diabetes (1 = yes)") %>%
+  gf_lm()
+# Figure 20.21
+gf_point(Diabetes ~ BMI, data = PimaIndians, ylab = "Diabetes (1 = yes)")  %>%
+  gf_smooth(method = "glm", method.args = list(family = "binomial"))
+```
 
 ### Section 20.8: More About Regression

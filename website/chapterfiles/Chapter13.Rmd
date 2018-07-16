@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Sampling Distribution Models and Confidence Intervals for Proportions (Chapter 13)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 12, 2018"
+date: "July 16, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -116,7 +116,8 @@ To get the actual plot, the code is more complicated.
 ```{r}
 set.seed(234)
 findingpoints <- function(sampsize) {
-  CItest <- do(1) * t.test(~ preemie, data = sample(Babies, size = sampsize)) # Using do() so that CItest can run as a data frame
+  CItest <- do(1) * t.test(~ preemie, data = sample(Babies, size = sampsize)) 
+  # Using do() so that CItest can run as a data frame
   CItest <- CItest %>%
     select(lower, upper) %>%
     mutate(mean = (upper + lower)/2,
