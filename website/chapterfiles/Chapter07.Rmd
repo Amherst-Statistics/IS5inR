@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Linear Regression (Chapter 7)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 12, 2018"
+date: "July 14, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -77,8 +77,12 @@ burgerfun(protein_g = 31)
 
 ```{r}
 coef(burgerlm)
-burgerfun(0)
+burgerfun(protein_g = 0)
 burgerfun(32) - burgerfun(31)
+```
+
+```{r}
+msummary(burgerlm)
 ```
 
 #### Example 7.1: A Linear Model for Hurricanes

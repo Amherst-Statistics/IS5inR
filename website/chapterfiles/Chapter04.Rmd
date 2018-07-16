@@ -73,7 +73,7 @@ HopkinsForest <- HopkinsForest %>%
 gf_histogram(~ avg_wind_mph, data = HopkinsForest, binwidth = 0.5, center = 0.25, 
              xlab = "Average Wind Speed (mph)", y = "# of Days") %>%
   gf_facet_wrap(~ catmonth)
-favstats(~ avg_wind_mph | catmonth, data = HopkinsForest)
+favstats(avg_wind_mph ~ catmonth, data = HopkinsForest)
 ```
 
 #### Example 4.1: Comparing Groups with Stem-And-Leaf
@@ -106,7 +106,7 @@ We use the `as.factor()` function to convert a variable into a factor.
   
 We also use `gf_labs()` to clean up the code for the first line and improve readability.  
 
-`y ~ x` is the general modeling language for two variables in `mosaic`.  
+Here we use the mosaic modeling language to specify the variables.  As a general form, `GOAL(Y ~ X)` carries out a specific goal for Y as a function of X.
 
 #### Example 4.2: Comparing Groups with Boxplots
 
@@ -120,7 +120,7 @@ gf_boxplot(Speed ~ Track, data = Coasters)
 
 ```{r}
 Cups <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cups.csv")
-favstats(~ Difference | Container, data = Cups)
+favstats(Difference ~ Container, data = Cups)
 # Mechanics, page 101
 gf_boxplot(Difference ~ Container, data = Cups, ylab = "Temp Change in F") 
 ```

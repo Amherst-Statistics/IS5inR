@@ -67,7 +67,7 @@ gf_bar(~ Class, data = Titanic) %>%
   gf_labs(x = "Ticket Class", y = "Number of People")
 ```
 
-`~ x` is the general modeling language for one variable in `mosaic`.  
+`GOAL(~ X)` is the general form of the modeling language for one variable in the `mosaic` package.
 We use `gf_bar()` to make a bar graph using the `ggformula` system, which is automatically downloaded with the `mosaic` package.  
 
 ### Section 2.2: Displaying a Quantitative Variable
