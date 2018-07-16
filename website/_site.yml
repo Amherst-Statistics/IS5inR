@@ -19,6 +19,9 @@ navbar:
         - text: "Chapters 17-20 : Part V Inference for Relationships"
           href: partV.html
 
+    - text: "Videos"
+      icon: fa-lightbulb-o
+      href: videos.html
     - text: "Other Resources"
       icon: fa-lightbulb-o
       href: other_resources.html

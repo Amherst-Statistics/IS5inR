@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: The Standard Deviation as a Ruler and the Normal Model (Chapter 5)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 13, 2018"
+date: "July 14, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -109,9 +109,10 @@ MenWeight %>%
   gf_boxplot(weight ~ weighttype) %>%
   gf_labs(x = "Weight Type", y = "")
 ```
+XX MC need to expand here to break this up into multiple chunks and demo what's happening before and after the use of gather()
 
 Here we use the `gather()` function to transform the dataset into the needed format, which can be seen with the `head()` function.  
-`y ~ x` is the general modeling language for two variables in `mosaic`.  
+We see the use of `goal(Y ~ X` as an example of the general modeling language for two variables in the `mosaic` package.
 
 
 #### Shifting, Scaling, and the *z*-Scores
