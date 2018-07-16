@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Displaying and Describing Data (Chapter 2)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 13, 2018"
+date: "July 16, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -88,7 +88,6 @@ The function generates a warning because three of the ages are missing; this out
 Earthquakes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tsunamis_2016.csv")
 gf_histogram(~ Primary_Magnitude, data = Earthquakes, binwidth = 0.5, 
              ylab = "# of Earthquakes", xlab = "Magnitude", center = 0.25)
-# XX MC Not sure why the bins by the peak are off from textbook
 ```
 
 #### Stem-and-Leaf Displays
@@ -100,8 +99,6 @@ See page 26.
 Pulse_rates <- read_csv("http://nhorton.people.amherst.edu/is5/data/Pulse_rates.csv")
 gf_histogram(~ Pulse, data = Pulse_rates, binwidth = 5, center = 5/2)
 with(Pulse_rates, stem(Pulse))
-
-## MC The distribution looks very different. Seems like the textbook displayed the distributions of the pulse rates  of 24 women, while the `Pulse_rates` has 52 observations.  
 ```
 
 #### Dotplot
@@ -152,13 +149,15 @@ gf_histogram(~ charges, data = CreditCardEx, ylab = "# of Customers",
 
 #### Finding Median and Mean
 
-XX MC Do you want to include Figure 2.15 on page 32 for the 
-coloring effects? That or include Figure 2.17 on page 33? 
-
 ```{r}
 TitanicCrew <- filter(Titanic, Class == "Crew")
-# Figure 2.16, page 33
-gf_histogram(~ Age, data = TitanicCrew, ylab = "# of Crew Members", binwidth = 5, center = 5/2)
+# Figure 2.15, page 32
+TitanicCrew %>%
+  mutate(color = ifelse(Age <= median(Age), "Less", "Greater")) %>%
+  gf_histogram(~ Age, fill = ~ color, binwidth = 5, center = 5/2, ylab = "# of Crew Members")
+# Figure 2.16
+gf_histogram(~ Age, data = TitanicCrew, ylab = "# of Crew Members", binwidth = 5, center = 5/2) %>%
+  gf_vline(xintercept = mean(~ Age, data = TitanicCrew))
 favstats(~ Age, data = TitanicCrew)
 ```
 
