@@ -81,7 +81,7 @@ gf_point(pct_bf ~ jitter(as.numeric(roundedwaist)), data = BodyFat) %>%
 
 #### Random Matters: Slopes Vary
 
-```{r}
+```{r, fig.height=4, fig.width=7}
 numsamp <- 25 # It's too messy to do any more than 25
 slopesdata <- do(numsamp) * lm(pct_bf ~ waist, data = resample(BodyFat))
 slopesdata <- slopesdata %>%
@@ -90,6 +90,9 @@ slopesdata <- slopesdata %>%
 gf_point(pct_bf ~ waist, data = BodyFat) %>%
   gf_segment(at27 + at50 ~ 27 + 50, data = slopesdata, color = ~ color) %>%
   gf_labs(color = "Sample", x = "Waist (in.)", y = "Percent Body Fat")
+```
+
+```{r}
 # Figure 20.5
 gf_histogram(~ waist, data = slopesdata, binwidth = .05, center = .025) %>%
   gf_labs(x = "Slope", y = "# of Trials")
