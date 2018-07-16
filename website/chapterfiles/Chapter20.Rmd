@@ -207,7 +207,7 @@ coastermlm <- lm(Duration ~ Drop + Speed, data = Coasters)
 msummary(coastermlm)
 ```
 
-XX NH these values don't match the book, not sure how big of a deal that is
+XX MC can you please review what I did in SDM4 to see if this addresses the issue?
 
 ```{r}
 gf_point(Speed ~ Drop, data = Coasters)
