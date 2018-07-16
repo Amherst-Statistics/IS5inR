@@ -54,9 +54,9 @@ library(janitor)
 ```{r}
 # Creating a data frame for Seatbelts
 Seatbelts <- rbind(
-  do(2777) * data.frame(passenger = "F", belted = TRUE),
+  do(2777)        * data.frame(passenger = "F", belted = TRUE),
   do(4208 - 2777) * data.frame(passenger = "F", belted = FALSE),
-  do(1363) * data.frame(passenger = "M", belted = TRUE),
+  do(1363)        * data.frame(passenger = "M", belted = TRUE),
   do(2763 - 1363) * data.frame(passenger = "M", belted = FALSE)
 ) %>%
   select(passenger, belted)
@@ -99,20 +99,94 @@ gf_histogram(~ diffprop, data = seatbeltresamples) %>%
 ```{r}
 # Creating the data set for online profiles
 OnlineProf <- rbind(
-  
-  
-  
-  
+  do(248 * .57)     * data.frame(gender = "M", profile = TRUE),
+  do(248 * .43 + 1) * data.frame(gender = "M", profile = FALSE), # Add one for rounding errors
+  do(256 * .70)     * data.frame(gender = "F", profile = TRUE),
+  do(256 * .30 + 1) * data.frame(gender = "F", profile = FALSE)
 )
+tally(~ gender, data = OnlineProf)
+OnlineProfM <- OnlineProf %>%
+  filter(gender == "M")
+sepboys <- ((mean(~ profile, data = OnlineProfM) * (1 - mean(~ profile, data = OnlineProfM)))/nrow(OnlineProfM))^.5
+sepboys
+OnlineProfF <- OnlineProf %>%
+  filter(gender == "F")
+sepgirls <- ((mean(~ profile, data = OnlineProfF) * (1 - mean(~ profile, data = OnlineProfF)))/nrow(OnlineProfF))^.5
+sepgirls
+sep <- (sepboys^2 + sepgirls^2)^.5
+sep
+```
+
+#### Example 17.2: Finding a Two-Proportion *z*-Interval
+
+```{r}
+zstats <- qnorm(p = c(.025, .975))
+(mean(~ profile, data = OnlineProfF) - mean(~ profile, data = OnlineProfM)) + zstats * sep
 ```
 
 ### Section 17.2: Assumptions and Conditions for Comparing Proportions
 
 ### Section 17.3: The Two-Sample *z*-Test: Testing for the Difference Between Proportions
 
-XX NH need sleep data
+#### Step-By-Step Example: A Two-Proportion *z*-Test
+
+```{r}
+# Create the data set
+SleepHabits <- rbind(
+  do(205)       * data.frame(gen = "GenY", internet = TRUE),
+  do(293 - 205) * data.frame(gen = "GenY", internet = FALSE),
+  do(235)       * data.frame(gen = "GenX", internet = TRUE),
+  do(469 - 235) * data.frame(gen = "GenX", internet = FALSE)
+)
+```
+
+```{r}
+# Mechanics
+ngeny <- nrow(filter(SleepHabits, gen == "GenY"))
+ngeny
+ygeny <- nrow(filter(SleepHabits, gen == "GenY"  & internet == TRUE))
+ygeny
+pgeny <- mean(~ internet, data = filter(SleepHabits, gen == "GenY"))
+pgeny
+
+ngenx <- nrow(filter(SleepHabits, gen == "GenX"))
+ngenx
+ygenx <- nrow(filter(SleepHabits, gen == "GenX"  & internet == TRUE))
+ygenx
+pgenx <- mean(~ internet, data = filter(SleepHabits, gen == "GenX"))
+pgenx
+
+sepgen <- ((pgeny * (1 - pgeny))/ngeny + (pgenx * (1 - pgenx))/ngenx)^.5
+sepgen
+pdiff <- pgeny - pgenx
+pdiff
+z <- (pdiff - 0)/sepgen
+z
+2 * pnorm(q = z, lower.tail = FALSE)
+```
 
 ### Section 17.4: A Confidence Interval for the Difference Between Two Means
+
+#### Example 17.7: Finding a Confidence Interval for the Difference in Sample Means
+
+```{r}
+# Not sure if creating data set is really necessary
+# page 555
+nord <- 27
+nref <- 27
+yord <- 8.5
+yref <- 14.7
+sord <- 6.1
+sref <- 8.4
+
+seys <- 2.0
+diffy <- yref - yord # 6.2
+tstats <- qt(p = c(.025, .975), df = 47.46)
+tstats
+me <- tstats * seys
+me
+diffy + me
+```
 
 ### Section 17.5: The Two-Sample *t*-Test: Testing for the Difference Between Two Means
 
@@ -140,6 +214,12 @@ favstats(~ amount_offered | buying_type, data = BuyingCam)
 ```
 
 ### Section 17.6: Randomization Tests and Confidence Intervals for Two Means
+
+```{r}
+Cars <- read_csv("http://nhorton.people.amherst.edu/is5/data/Car_speeds.csv")
+# Figure 17.2 (page 560) is the same as Figure 4.4 (page 102)
+favstats(~ speed | direction, data = Cars)
+```
 
 ### Section 17.7: Pooling
 
