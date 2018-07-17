@@ -94,8 +94,6 @@ another.
 
 #### What was the slowest average speed of any tour?  Fastest?
 
-XX If the piping was already introduced twice should we start piping the data set into the functions from now on?
-
 ```{r}
 filter(Tour, Average.Speed == min(Average.Speed)) %>%
   select(Year, Average.Speed)
@@ -110,6 +108,3 @@ favstats(~ Average.Speed, data = Tour)
 ```
 
 `~ x` is the general modelling language for one variable in mosaic.  
-
-XX Consider starting the sentence with a word instead of the symbol. 
-XX Suggestion: The general modelling language for one variable in mosaic is `~ x`
