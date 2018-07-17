@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Regression Wisdom (Chapter 8)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 12, 2018"
+date: "July 17, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -58,13 +58,15 @@ Penguins <- read_csv("http://nhorton.people.amherst.edu/is5/data/Penguins.csv") 
   clean_names()
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
 
 ```{r}
+# Figure 8.1, page 234
 gf_point(dive_heart_rate ~ duration_min, data = Penguins) %>%
   gf_labs(x = "Duration (min)", y = "Dive Heart Rate (bpm)")
 penguinlm <- lm(dive_heart_rate ~ duration_min, data = Penguins)
+# Figure 8.2
 gf_point(resid(penguinlm) ~ duration_min, data = Penguins) %>%
   gf_labs(x = "Duration (min)", y = "Residuals")
 ```
@@ -87,7 +89,7 @@ Cereal <- Cereal %>%
 gf_point(jitter(residuals) ~ jitter(fitted), color = ~ resid_cat, data = Cereal)
 ```
 
-Jitter adds some random noise to allow easier observation of values that are shared by more than one cereal.  
+Jitter adds some random noise to allow easier observation of values that are shared by more than one type of breakfast cereal.  
 
 ```{r}
 tally(~ shelf, data = Cereal)
@@ -119,7 +121,8 @@ See displays on page 237 and 238.
 MarriageAge <- read_csv("http://nhorton.people.amherst.edu/is5/data/Marriage_age_2015.csv")
 MarriageAge <- MarriageAge %>%
   mutate(timeperiod = ifelse(Year <= 1940, "Section1", ifelse(Year >= 1980, "Section3", "Section2")))
-gf_point(Men ~ Year, color = ~ timeperiod, data = MarriageAge, ylab = "Men's Age at First Marriage")
+gf_point(Men ~ Year, color = ~ timeperiod, data = MarriageAge, ylab = "Men's Age at First Marriage") +
+  guides(color = FALSE)
 ```
 
 `ifelse()` works similarly to `recode()`.  
@@ -134,9 +137,9 @@ withoutlm <- lm(Buchanan ~ Nader, data = filter(Election2000, Buchanan <= 3000))
 msummary(withoutlm)
 # Figure 8.10, page 241
 gf_point(Buchanan ~ Nader, data = Election2000) %>%
-  gf_lm() %>%
+  gf_lm(color = "red") %>%
   gf_labs(x = "Nader (votes)", y = "Buchanan (votes)") %>%
-  gf_fun(withoutlm)
+  gf_fun(withoutlm, color = "blue") # adds line for model without outlier
 ```
 
 See page 242 for example of high-leverage point.  
@@ -148,20 +151,24 @@ Doctors <- read_csv("http://nhorton.people.amherst.edu/is5/data/Doctors_and_life
   clean_names()
 # Figure 8.13, page 243
 gf_point(life_exp ~ sqrt_doctors_person, data = Doctors) %>%
-  gf_labs(x = "Sqrt Doctors/Person", y = "Life Expectancy (yr)")
+  gf_labs(x = "Sqrt (Doctors/Person)", y = "Life Expectancy (yr)")
 # Figure 8.14
 gf_point(life_exp ~ sqrt_tv_person, data = Doctors) %>%
-  gf_labs(x = "Sqrt TVs/Person", y = "Live Expectancy (yr)")
+  gf_labs(x = "Sqrt (TVs/Person)", y = "Live Expectancy (yr)")
 ```
 
 #### Example 8.2: Using Several of These Methods Together
 
 ```{r}
+# page 244
 DirtBikes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Dirt_bikes_2014.csv")
 gf_point(MSRP ~ Displacement, data = DirtBikes)
 bikeslm <- lm(MSRP ~ Displacement, data = DirtBikes)
 gf_point(resid(bikeslm) ~ fitted(bikeslm)) %>%
   gf_labs(x = "Predicted Values", y = "Residuals")
+```
+
+```{r, fig.width=7}
 DirtBikes %>%
   filter(Cooling != "NA") %>%
   mutate(Cooling = ifelse(Cooling == "Air-Cooled", "Air-Cooled", "LiquidCooled")) %>%
@@ -185,7 +192,7 @@ HeightsWeights %>%
   gf_lm()
 ```
 
-We can use `group_by()` and `summarise()` together to find summary values.  
+We can use `group_by()` and `summarise()` together to find summary values of data.  
 
 ### Section 8.6: Straightening Scatterplots--The Three Goals
 
@@ -202,8 +209,8 @@ gf_point(resid(fuellm) ~ fitted(fuellm)) %>%
 
 ```{r}
 FuelEfficiency <- FuelEfficiency %>%
-  mutate(fuel_consumption = 1/city_mpg)
-# Figure 8.19
+  mutate(fuel_consumption = (1/city_mpg) * 100)
+# Figure 8.19, page 247
 gf_point(fuel_consumption ~ weight, data = FuelEfficiency) %>%
   gf_labs(x = "Weight (lb)", y = "Fuel Consumption (gal/100 mi)")
 fuellm2 <- lm(fuel_consumption ~ weight, data = FuelEfficiency)
@@ -213,19 +220,23 @@ gf_point(resid(fuellm2) ~ fitted(fuellm2)) %>%
 
 #### Goals of Re-Expression for Regression
 
-```{r}
+```{r, fig.width=7}
 HandDexterity <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hand_dexterity.csv") %>%
   clean_names() %>%
-  mutate(dominant = as.factor(dominant))
+  mutate(dominant = ifelse(dominant == 0, "Dominant hand", "Non-dominant hand")) %>%
+  mutate(dominant = as.factor(dominant)) 
 # Figure 8.20, page 248
 gf_point(time_sec ~ age_yr, color = ~ dominant, data = HandDexterity) %>%
-  gf_labs(x = "Age (yr)", y = "Time (sec)")
+  gf_labs(x = "Age (yr)", y = "Time (sec)", color = "")
 HandDexterity <- HandDexterity %>%
   mutate(speed = 1/time_sec)
 # Figure 8.21
 gf_point(speed ~ age_yr, color = ~ dominant, data = HandDexterity) %>%
   gf_lm() %>%
-  gf_labs(x = "Age (yr)", y = "Speed")
+  gf_labs(x = "Age (yr)", y = "Speed", color = "")
+```
+
+```{r}
 handlm <- lm(speed ~ age_yr, data = HandDexterity)
 # Figure 8.22
 gf_histogram(~ resid(handlm), binwidth = .0075, center = .0075/2) %>%
