@@ -84,6 +84,8 @@ tally(~ Plan + Sex, data = SuperBowl)
 
 #### Example 3.2: Exploring Percentages: Children and First-Class Ticket Holders First?
 
+XX Consider using `y ~ x` format instead of using ` ~ y | x` in `tally()` calls.
+
 ```{r}
 Titanic <- read_csv("http://nhorton.people.amherst.edu/is5/data/Titanic.csv")
 tally(~ Class + Survived, format = "percent", margin = TRUE, data = Titanic)
@@ -94,6 +96,8 @@ tally(~ Class | Survived, format = "percent", margin = TRUE, data = Titanic)
 ### Section 3.2: Conditional Distributions
 
 See displays on 68-69.
+
+XX The colored bar graph is a bit confusing because the book's y axis is different so I don't know what can be done here.
 
 ```{r fig.width=7}
 gf_bar(~ cats_dogs_both | gender, data = OKCupid)
@@ -111,6 +115,9 @@ tally(~ Plan | Sex, format = "percent", data = SuperBowl)
 
 #### Example 3.4: Looking for Associations Between Variables: Still Watching the Super Bowl
 
+XX Consider this: `gf_bar(~ Plan, fill = ~ Sex, data = SuperBowl, position = "dodge")`
+XX The barplot still doesn't have percentages like the book(it has counts) but it is equally readable than the current version with the added bonus that it looks like the chart in the book.
+
 ```{r}
 gf_bar(~ Plan | Sex, fill = ~ Plan, format = "percent", data = SuperBowl)
 ```
@@ -118,6 +125,8 @@ gf_bar(~ Plan | Sex, fill = ~ Plan, format = "percent", data = SuperBowl)
 #### Examining Contingency Tables
 
 See displays on page 72.  
+
+XX Why not use `margins = TRUE` in this `tally()` call?
 
 ```{r}
 FishDiet <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fish_diet.csv", skip = 1) %>%
@@ -128,6 +137,8 @@ tally(~ diet_counts + cancer_counts, data = FishDiet)
 #### Random Matters
 
 See display on page 74.
+
+XX Consider changing the order in the `tally()` call into `~ Dream + Side` and adding `margins = TRUE`
 
 ```{r}
 Nightmares <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nightmares.csv", skip = 1)
@@ -158,6 +169,8 @@ See the mosaic plots on page 77.
 
 ### Section 3.4: Three Categorical Variables
 
+## Consider using `useNA = "no"` option
+
 ```{r}
 tally(~ gender + cats_dogs_both + drugs_y_n, format = "percent", data = OKCupid)
 ```
@@ -171,7 +184,7 @@ vcd::mosaic(tally(~ Sex + Survived + Class, data = Titanic), shade = TRUE)
 #### Example 3.8: Simpson's Paradox: Gender Discrimination?
 
 Here we demonstrate how to generate one of the tables on page 80.  
-
+XX Why do we have to have `825-512` can we just not put the difference? 
 ```{r}
 # Create a dataframe from the counts
 # http://mathemathinking.blogspot.com/2012/06/simpsons-paradox.html
