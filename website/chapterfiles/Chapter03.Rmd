@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Relationships Between Categorical Variables--Contingency Tables (Chapter 3)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 14, 2018"
+date: "July 17, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -45,11 +45,14 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 
 ### Section 3.1: Contingency Tables
 
+XX note:Code chunk was flowing out of chunk space in pdf so I fixed that 
+
 ```{r}
 library(mosaic)
 library(readr)
 library(janitor)
-OKCupid <- read_csv("http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", skip = 1) %>%
+OKCupid <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", skip = 1) %>%
   clean_names()
 names(OKCupid)
 ```
@@ -58,7 +61,11 @@ By default, `read_csv()` prints the variable names. These messages can be suppre
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace). You can use the `names()` function to check the cleaned names.    
 We use `skip = 1` because the first line in the original data set is `Col1`, `Col2`, etc.  
 
+XX A reference saying how we are replicating Table 3.1-3.4 starting at pg. 65 would be helpful
+
 ```{r}
+## XX Consider using useNA = "no" (in the first tally command for example) to match the table in page65. The other tables also seem to need this option.
+
 tally(~ cats_dogs_both + gender, margin = TRUE, data = OKCupid)
 tally(~ cats_dogs_both + gender, format = "percent", margin = TRUE, data = OKCupid)
 tally(~ cats_dogs_both | gender, format = "percent", margin = TRUE, data = OKCupid)
@@ -69,7 +76,9 @@ tally(~ gender | cats_dogs_both, format = "percent", margin = TRUE, data = OKCup
 #### Example 3.1: Exploring Marginal Distributions
 
 ```{r}
-SuperBowl <- read_csv("http://nhorton.people.amherst.edu/is5/data/Watch_the_Super_bowl.csv", skip = 1)
+SuperBowl <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Watch_the_Super_bowl.csv", 
+           skip = 1)
 tally(~ Plan + Sex, data = SuperBowl)
 ```
 
