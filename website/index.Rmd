@@ -4,7 +4,7 @@ title: "Introduction"
 
 
 These documents are intended to help describe how to undertake analyses introduced 
-as examples in *Intro Stats* (Fifth Edition, 2018) by De Veaux, Velleman, and Bock (http://wps.aw.com/aw_deveaux_stats_series/27/6993/1790249.cw/index.html) using R.
+as examples in *Intro Stats* (Fifth Edition, 2018) by De Veaux, Velleman, and Bock (http://wps.pearsoned.com/aw_deveaux_stats_series/27/6993/1790249.cw/index.html) using R.
 
 This work leverages initiatives undertaken by [Project MOSAIC](http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum. For more information about the `mosaic` package, visit the `About' tab. 
 
