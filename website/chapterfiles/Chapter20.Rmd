@@ -205,9 +205,18 @@ coasterlm <- lm(Duration ~ Drop, data = Coasters)
 msummary(coasterlm) 
 coastermlm <- lm(Duration ~ Drop + Speed, data = Coasters)
 msummary(coastermlm)
-```
 
-XX MC can you please review what I did in SDM4 to see if this addresses the issue?
+# Temporary code that isn't matching
+Coasterstemp <- Coasters %>%
+  filter(Drop != "NA") %>%
+  filter(Duration != "NA") %>%
+  filter(Name != "Tower of Terror") %>%
+  filter(Name != "Wild Beast")
+coastertemp <- lm(Duration ~ Drop, data = Coasterstemp)
+msummary(coastertemp)
+coastermlmtemp <- lm(Duration ~ Drop + Speed, data = Coasterstemp)
+msummary(coastermlmtemp)
+```
 
 ```{r}
 gf_point(Speed ~ Drop, data = Coasters)
