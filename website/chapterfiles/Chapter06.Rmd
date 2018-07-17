@@ -49,7 +49,6 @@ library(readr)
 library(janitor)
 Hurricanes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tracking_hurricanes_2015.csv")
 ```
-XX Should eval be set to false in this chunk since it repeats the loading from earlier
 
 By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
@@ -62,8 +61,6 @@ gf_point(Error_72h ~ Year, data = Hurricanes, ylab = "Prediction Error")
 ### Section 6.1: Scatterplots
 
 See dots on pages 164-165.
-
-XX Why include? 
 
 #### Example 6.1: Comparing Prices Worldwide
 
@@ -85,7 +82,6 @@ gf_point(clothing_index ~ hours_worked, data = Prices) %>%
 gf_point(food_costs ~ vacation_days, data = Prices) %>%
   gf_labs(x = "Vacation Days (per year)", y = "Food Costs ($)")
 ```
-XX use of ylab= earlier and use of gf_labs here; be consistent
 
 #### Roles for Variables
 
@@ -115,8 +111,6 @@ gf_boxplot(weight ~ as.factor(month), data = Fitness) %>%
 ```
 
 Warnings can be suppressed with the `warnings=FALSE` chunk option. 
-
-XX histogram doesn't match exactly to the one on page 168
 
 ### Section 6.2: Correlation
 
@@ -163,18 +157,16 @@ do(2) * cor(mom_age ~ dad_age, data = sample(LiveBirths, size = 50)) # Finds the
 LiveCorr <- do(numsim) * cor(mom_age ~ dad_age, data = sample(LiveBirths, size = 50))
 ```
 
-The `do()` function runs, 10,000 times, the correlation and sampling functions on a random sample of 50.  \
+The `do()` function runs, 10,000 times, the correlation and sampling functions on a random sample of 50.  
 
-XX Since this is the first use of cache=TRUE, should there be a short explanation/intro for its function?  
+(We can use the chunk option `cache=TRUE` to enable cache) 
 
 ```{r}
-gf_histogram(~ cor, data = LiveCorr) %>%
+# Figure 6.8, page 176
+gf_histogram(~ cor, data = LiveCorr, binwidth = .05, center = .025) %>%
   gf_labs(x = "Correlation of Mother's Age and Father's Age in Samples of Size 50",
           y = "# of Samples")
 ```
-
-XX change binwidith to match textbook page 176 
-XX include page number
 
 ### Section 6.3: Warning: Correlation $\neq$ Causation
 
@@ -184,19 +176,17 @@ Storks <- read_csv("http://nhorton.people.amherst.edu/is5/data/Storks.csv")
 gf_point(Population ~ Storks, data = Storks) %>%
   gf_labs(x = "# of Storks", y = "Human Population")
 ```
-XX page number
 
 #### Correlation Tables
 
 ```{r}
 Companies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Companies.csv") %>%
   clean_names()
+# Table 6.1, page 178
 Companies %>%
   select(assets, sales, market_value, profits, cash_flow, employees) %>%
   cor()
 ```
-XX is hiding either the upper or lower triangles (reflecting) necessary? If not, ignore comment. 
-XX page number 
 
 ### Section 6.4: Straightening Scatterplots
 
