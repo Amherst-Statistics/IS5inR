@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Comparing Groups (Chapter 17)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 16, 2018"
+date: "July 17, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -96,9 +96,6 @@ gf_histogram(~ diffprop, data = seatbeltresamples) %>%
 
 #### Example 17.1: Finding the Standard Error of a Difference in Proportions
 
-
-XX MC: need to break up this block and add more annotation.
-
 ```{r}
 # Creating the data set for online profiles
 OnlineProf <- rbind(
@@ -119,6 +116,9 @@ propMyes <- mean(~ profile, data = OnlineProfM)
 propMyes # p for males
 sepboys <- ((propMyes * (1 - propMyes))/nM)^.5 
 sepboys # SE for males
+```
+
+```{r}
 OnlineProfF <- OnlineProf %>%
   filter(gender == "F") # Make a data set for male observations
 nF <- nrow(OnlineProfF)
@@ -127,6 +127,9 @@ propFyes <- mean(~ profile, data = OnlineProfF)
 propFyes # p for females
 sepgirls <- ((propFyes * (1 - propFyes))/nF)^.5
 sepgirls # SE for females
+```
+
+```{r}
 sep <- (sepboys^2 + sepgirls^2)^.5
 sep # overall SE
 ```
@@ -232,6 +235,45 @@ favstats(~ amount_offered | buying_type, data = BuyingCam)
 Cars <- read_csv("http://nhorton.people.amherst.edu/is5/data/Car_speeds.csv")
 # Figure 17.2 (page 560) is the same as Figure 4.4 (page 102)
 favstats(~ speed | direction, data = Cars)
+```
+
+```{r}
+set.seed(23456)
+numsim <- 10000
+
+CarSims <- do(numsim) * Cars %>%
+  mutate(direction = shuffle(direction)) %>%
+  group_by(direction) %>%
+  summarise(means = mean(~ speed)) %>%
+  summarise(diffmeans = diff(means))
+
+# Figure 17.3, page 560
+gf_histogram(~ diffmeans, data = CarSims, binwidth = .1, center = .05) %>%
+  gf_vline(xintercept = 2.53) %>%
+  gf_labs(x = "Differences in Means from 10,000 Trials", y = "# of Trials")
+```
+
+```{r}
+set.seed(32453)
+numsim <- 10000
+
+CarBoots <- do(numsim) * Cars %>%
+  resample() %>%
+  group_by(direction) %>%
+  summarise(means = mean(~ speed)) %>%
+  summarise(diffmeans = diff(means))
+
+qdata(~ diffmeans, p = c(.025, .975), data = CarBoots)
+CarBoots <- CarBoots %>%
+  mutate(interval = ifelse(diffmeans > 1.88 & diffmeans < 3.19, "Within 95% Confidence", "Outside 95% Confidence"))
+
+# Figure 17.4
+gf_histogram(~ diffmeans, fill = ~ interval, data = CarBoots, binwidth = .2, 
+             center = .1) %>%
+  gf_vline(xintercept = 1.88) %>%
+  gf_vline(xintercept = 3.19) %>%
+  gf_labs(x = "Difference in Means", y = "# of Trials") +
+  guides(fill = FALSE) # to remove the legend
 ```
 
 ### Section 17.7: Pooling

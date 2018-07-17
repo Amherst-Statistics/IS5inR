@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: More About Tests and Intervals (Chapter 16)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 16, 2018"
+date: "July 17, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -87,5 +87,5 @@ gf_dist("norm", mean = 0, sd = 1, fill = ~ cut(x, c(-Inf, 2, 100, Inf)), geom = 
   gf_refine(annotate(geom = "text", x = 1.35, y = .01, size = 2.5, label = "Type 2 Error")) %>%
   gf_refine(annotate(geom = "text", x = 2.6, y = .01, size = 2.5, label = "Type 1 Error")) %>%
   gf_refine(annotate(geom = "text", x = 4, y = .15, size = 3, label = "Suppose H0 is not true")) +
-  guides(fill = FALSE) # Improve on the colors?
+  guides(fill = FALSE) # To remove the legend
 ```
