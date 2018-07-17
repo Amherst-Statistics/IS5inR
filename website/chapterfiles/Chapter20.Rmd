@@ -113,10 +113,10 @@ Diamonds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Diamonds.csv") 
   clean_names()
 ```
 
-Here we fit `price` by `carat_size`, which differs somewhat from the display in the book.  
+Here we fit `price` by `carat_size` for diamonds with the color `E`.  
 
 ```{r}
-diamondlm <- lm(price ~ carat_size, data = Diamonds) 
+diamondlm <- lm(price ~ carat_size, data = filter(Diamonds, color = "E")) 
 # Figure 20.8, page 646
 gf_point(resid(diamondlm) ~ fitted(diamondlm))
 # Figure 20.9
