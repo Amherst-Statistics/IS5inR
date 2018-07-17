@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Sampling Distribution Models and Confidence Intervals for Proportions (Chapter 13)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 12, 2018"
+date: "July 16, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -85,7 +85,7 @@ do(2) * favstats(~ weight, data = sample(BodyFat, 10)) # finds favstats twice
 bodyfatsamples <- do(numsim) * favstats(~ weight, data = sample(BodyFat, 10))
 ```
 
-Here, the `do()` function finds, 1,000 times, the `favstats()` of a random sample of 10 `BodyFat` weights. 
+Here the `do()` function repeatedly calculates the summary statistics for a random sample of 10 weights. 
 
 ```{r}
 bodyfatsamples <- bodyfatsamples %>%
@@ -109,22 +109,25 @@ set.seed(118)
 CIsim(n = 100, samples = 20) # We expect 19/20 intervals to cover the true mean
 ```
 
-We expect 19 of the 20 intervals to cover the true mean, but since only 20 samples are drawn, there is more variability. Here, only 18 out of the 20 intervals cover the true mean.  
+We expect 19 of the 20 intervals to cover the true mean, but since only 20 samples are drawn, there is more variability. Only 18 out of the 20 intervals cover the true mean in this example.  
 
 To get the actual plot, the code is more complicated.  
 
 ```{r}
+set.seed(234)
 findingpoints <- function(sampsize) {
-  CItest <- do(1) * t.test(~ preemie, data = sample(Babies, size = sampsize)) # Using do() so that CItest can run as a data frame
+  CItest <- do(1) * t.test(~ preemie, data = sample(Babies, size = sampsize)) 
+  # Using do() so that CItest can run as a data frame
   CItest <- CItest %>%
     select(lower, upper) %>%
-    mutate(mean = (upper + lower)/2)
+    mutate(mean = (upper + lower)/2,
+           success = ifelse(lower <= .11 & upper >= .11, TRUE, FALSE))
 }
 
 numsamp <- 20
 ConfData <- do(numsamp) * findingpoints(sampsize = 100)
 
-gf_point(mean ~ (1:20), data = ConfData) %>%
+gf_point(mean ~ (1:20), data = ConfData, color = ~ success) %>%
   gf_segment(upper + lower ~ (1:20) + (1:20), data = ConfData) %>%
   gf_hline(yintercept = ~ mean(preemie), data = Babies, color = 4) %>%
   gf_labs(x = "", y = "Proportion")

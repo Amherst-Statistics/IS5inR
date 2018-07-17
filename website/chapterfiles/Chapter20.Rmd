@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Inferences for Regression (Chapter 20)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 16, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -71,17 +71,29 @@ lm(pct_bf ~ waist, data = BodyFat)
 # Figure 20.2
 gf_histogram(~ pct_bf, data = BodyFat, binwidth =  2.5, center = 1.25) %>%
   gf_labs(x = "% Body Fat", y = "# of Men")
+# Figure 20.3 (reinterpreted with points)
+BodyFat <- BodyFat %>%
+  mutate(roundedwaist = cut(waist, breaks = c(0, 30, 35, 40, 45, Inf), labels = c(1:5)))
+gf_point(pct_bf ~ jitter(as.numeric(roundedwaist)), data = BodyFat) %>%
+  gf_lm() %>%
+  gf_labs(y = "% Body Fat", x = "Waist")
 ```
-
-XX NH not sure if I can make Figure 20.3 (page 643)
 
 #### Random Matters: Slopes Vary
 
-```{r}
-numsamp <- 1000
+```{r, fig.height=4, fig.width=7}
+numsamp <- 25 # It's too messy to do any more than 25
 slopesdata <- do(numsamp) * lm(pct_bf ~ waist, data = resample(BodyFat))
-gf_point(pct_bf ~ waist, data = BodyFat) #%>%
-  gf_line(slope = ~ waist, intercept = ~ Intercept, slopesdata) 
+slopesdata <- slopesdata %>%
+  mutate(at27 = Intercept + waist * 27, at50 = Intercept + waist * 50, color = as.factor(1:25))
+# Figure 20.4, page 644
+gf_point(pct_bf ~ waist, data = BodyFat) %>%
+  gf_segment(at27 + at50 ~ 27 + 50, data = slopesdata, color = ~ color) %>%
+  gf_labs(color = "Sample", x = "Waist (in.)", y = "Percent Body Fat")
+```
+
+```{r}
+# Figure 20.5
 gf_histogram(~ waist, data = slopesdata, binwidth = .05, center = .025) %>%
   gf_labs(x = "Slope", y = "# of Trials")
 ```
@@ -104,16 +116,129 @@ diamondlm <- lm(price ~ carat_size, data = Diamonds) # there's no carat weight v
 gf_point(resid(diamondlm) ~ fitted(diamondlm))
 # Figure 20.9
 gf_histogram(~ resid(diamondlm))
+# Figure 20.10 (reinterpreted with points) - will fix once I understand the data
+#BodyFat <- BodyFat %>%
+#  mutate(roundedwaist = cut(waist, breaks = c(0, 30, 35, 40, 45, Inf), labels = c(1:5)))
+#gf_point(pct_bf ~ jitter(as.numeric(roundedwaist)), data = BodyFat) %>%
+#  gf_lm() %>%
+#  gf_labs(y = "% Body Fat", x = "Waist")
+```
+
+#### Example 20.1: Checking Assumptions and Conditions
+
+```{r}
+Craters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Craters.csv") %>%
+  clean_names() %>%
+  filter(log_age <= 1.5) # Removed points to match the textbook
+gf_point(log_diam ~ log_age, data = Craters) %>%
+  gf_labs(x = "Log(Age)", y = "Log(Diameter)")
+craterlm <- lm(log_diam ~ log_age, data = Craters)
+gf_point(resid(craterlm) ~ fitted(craterlm)) %>%
+  gf_labs(x = "Predicted", y = "Residuals")
+gf_qq(~ resid(craterlm)) %>%
+  gf_labs(x = "Nscores", y = "Residuals")
+gf_histogram(~ resid(craterlm), binwidth = 0.5/3, center = 0.5/6) %>%
+  gf_labs(x = "Residuals", y = "# of Years")
+```
+
+#### Step-By-Step Example: Regression Inference
+
+```{r}
+# Scatterplot matches Figure 20.1
+gf_qq(~ resid(bodyfatlm)) %>%
+  gf_labs(x = "Normal Scores", y = "Residuals (% body fat)")
+msummary(bodyfatlm)
 ```
 
 ### Section 20.3: Regression Inference and Intuition
 
+See the displays on pages 650 and 651.
+
+#### Example 20.2: Confidence Interval and Hypothesis Test for a Slope
+
+```{r}
+msummary(bodyfatlm)
+mean <- 1.70
+se <- .074
+tstats <- qt(p = c(.025, .975), df = 248)
+tstats
+mean + tstats * se
+t <- (mean - 0.00)/se
+t
+```
+
 ### Section 20.4: The Regression Table
+
+```{r}
+# Table 20.1, page 654
+msummary(bodyfatlm)
+```
 
 ### Section 20.5: Multiple Regression Inference
 
+```{r}
+# Table 20.2
+bodyfatmlm <- lm(pct_bf ~ waist + height, data = BodyFat)
+msummary(bodyfatmlm)
+```
+
+#### Just Checking
+
+```{r}
+Mouth <- read_csv("http://nhorton.people.amherst.edu/is5/data/Mouth_volume.csv") 
+mouthlm <- lm(Mouth_Volume ~ Height, data = Mouth)
+favstats(~ Mouth_Volume, data = Mouth)
+summary(mouthlm)
+mouthmlm <- lm(Mouth_Volume ~ Age + Height, data = Mouth)
+summary(mouthmlm)
+```
+
+#### Collinearity
+
+```{r}
+Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv") 
+Coasters <- Coasters %>%
+  filter(Name != "Tower of Terror") %>%
+  mutate(Inversions = as.factor(Inversions))
+coasterlm <- lm(Duration ~ Drop, data = Coasters)
+# Numbers are a bit off because the book has removed some rollercoasters
+msummary(coasterlm) 
+coastermlm <- lm(Duration ~ Drop + Speed, data = Coasters)
+msummary(coastermlm)
+```
+
+XX MC can you please review what I did in SDM4 to see if this addresses the issue?
+
+```{r}
+gf_point(Speed ~ Drop, data = Coasters)
+```
+
 ### Section 20.6: Confidence and Prediction Intervals
 
+```{r}
+# Figure 20.16, page 659
+gf_point(pct_bf ~ waist, data = BodyFat) %>%
+  gf_lm(interval = "confidence", fill = "red") %>%
+  gf_lm(interval = "prediction", fill = "navy") %>%
+  gf_labs(x = "Waister (in.)", y = "% of Body Fat")
+```
+
 ### Section 20.7: Logistic Regression
+
+```{r}
+PimaIndians <- read_csv("http://nhorton.people.amherst.edu/is5/data/Pima_indians.csv") 
+PimaIndians <- PimaIndians %>%
+  filter(BMI != 0)
+# Figure 20.17, page 661
+gf_boxplot(BMI ~ as.factor(Diabetes), data = PimaIndians, xlab = "Diabetes (1 = yes)")
+# Figure 20.18
+gf_point(Diabetes ~ BMI, data = PimaIndians, ylab = "Diabetes (1 = yes)") 
+# Figure 20.19
+gf_point(Diabetes ~ BMI, data = PimaIndians, ylab = "Diabetes (1 = yes)") %>%
+  gf_lm()
+# Figure 20.21
+gf_point(Diabetes ~ BMI, data = PimaIndians, ylab = "Diabetes (1 = yes)")  %>%
+  gf_smooth(method = "glm", method.args = list(family = "binomial"))
+```
 
 ### Section 20.8: More About Regression

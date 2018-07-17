@@ -1,0 +1,8 @@
+Chapter 0 (overview): https://youtu.be/K7zZEznqRwQ
+Chapter 1 (stats starts here): https://youtu.be/hPXKhNQt8lg
+Chapter 2 (displaying and describing data): https://youtu.be/EM0VDixlupU
+Chapter 3 (relationships between categorical variables): https://youtu.be/qUe6a76ClB0
+Chapter 4 (understanding and comparing distributions): https://youtu.be/xhorCK9pJV0
+Chapter 5 (standard deviation as a ruler and the normal model): https://youtu.be/2DPMgAFW-PM
+Chapter 6 (scatterplots, association, and correlation): https://youtu.be/L-T53CvXFtU
+Chapter 7 (linear regression): https://youtu.be/gQjPjUuzaPA

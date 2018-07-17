@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Confidence Intervals for Means (Chapter 14)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 12, 2018"
+date: "July 16, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -73,7 +73,7 @@ do(2) * mean(~ weight, data = sample(Babies, size = 100)) # Calculates the mean 
 WeightMeans <- do(numsim) * mean(~ weight, data = sample(Babies, size = 100)) 
 ```
 
-Here, the `do()` function calculates, 10,000 times, the mean of a random sample of 100 baby weights. 
+The `do()` function repeatedly calculates the mean of a random sample of 100 baby weights. 
 
 ```{r}
 gf_histogram(~ mean, data = WeightMeans, binwidth = 10)
@@ -104,7 +104,7 @@ gf_histogram(~ mean, data = CEOMeans3) %>%
   gf_labs(x = "Sampling Distribution of Mean Compensation (in millions), n=200", y = "Frequency")
 ```
 
-Here, in each example, the `do()` function calculates the mean of random samples of 10, 50, and 200 CEO compensations.
+For each example sample size, the `do()` function calculates the mean of random samples of that specified size.
 
 ```{r}
 # Samples as overlaid density plots
@@ -120,10 +120,10 @@ gf_density(~ mean, data = CEOMeans, fill = 6) %>%
 ```{r}
 # Figure 14.9, page 446
 gf_dist(dist = "norm", linetype = 2, lwd = 1.5) %>%
-  gf_refine(annotate(geom = "text", x = 1.75, y = .35, label = "Normal Distribution")) %>%
+  gf_refine(annotate(geom = "text", x = 1.9, y = .35, label = "Normal Distribution")) %>%
   gf_labs(x = "", y = "") %>%
   gf_dist(dist = "t", df = 2, lwd = 1.25) %>%
-  gf_refine(annotate(geom = "text", x = 3.25, y = .05, label = "T Distribution")) +
+  gf_refine(annotate(geom = "text", x = 3.4, y = .05, label = "T Distribution")) +
   xlim(-4, 4) 
 ```
 
@@ -189,7 +189,7 @@ commutebootstrap <- do(numsim) * mean(~ time, data = resample(CommuteSample))
 
 The `resample()` function samples of that data set size with replacement.  
 
-```{r}
+```{r, fig.width=7}
 qdata(~ mean, p = c(.025, .975), data = commutebootstrap) # grab the percentiles with qdata
 confint(commutebootstrap, method = "quantile") # an equivalent quantile approach
 commutebootstrap <- commutebootstrap %>%

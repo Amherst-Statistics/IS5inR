@@ -12,5 +12,7 @@ title: Resources Related to the mosaic Package
 </br>
 - Additional mosaic-related resources and documentation are available [here](https://cran.r-project.org/web/packages/mosaic/vignettes/mosaic-resources.html)
 </br>
-- Additional mosaic package vignettes can be found at [here](http://cran.r-project.org/web/packages/mosaic).
+- Additional mosaic package vignettes can be found [here](http://cran.r-project.org/web/packages/mosaic).
+
+- The data sets used in these materials can be found [here](data).
 

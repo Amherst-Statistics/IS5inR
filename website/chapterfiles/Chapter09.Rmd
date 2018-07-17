@@ -1,11 +1,11 @@
 ---
 title: "IS5 in R: Multiple Regression (Chapter 9)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 16, 2018"
 output: 
   pdf_document:
     fig_height: 3
-    fig_width: 7
+    fig_width: 5
   html_document:
     fig_height: 3
     fig_width: 5
@@ -104,6 +104,9 @@ BodyFat %>%
   gf_point(pct_bf ~ height) %>%
   gf_labs(x = "Height (in)", y = "% Body Fat") %>%
   gf_lm()
+```
+
+```{r, fig.width=7}
 # Plotting all points
 BodyFat %>%
   mutate(pointtype = ifelse(waist >= 36 & waist <= 38, "Waist Size Between 36 and 38 inches", 
