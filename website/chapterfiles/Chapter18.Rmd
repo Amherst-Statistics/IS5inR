@@ -114,9 +114,82 @@ Couples %>%
 ```{r}
 DexData <- Dexterity %>% 
   select(dominant_1, non_dominant_2) %>%
-  mutate(difference = dominant_1 - non_dominant_2)
+  mutate(difference = dominant_1 - non_dominant_2) %>%
+  filter(dominant_1 < 1) # For some reason, the book has removed one observation where dominant_1 = 1, but has kept the count of children at 93 instead of 92
 gf_histogram(~ difference, data = DexData, binwidth = .05, center = .025) %>%
   gf_labs(x = "Dominant-Non-dominant", y = "# Subjects")
+# Mechanics
+ndex <- nrow(DexData) + 1 # the book kept n at 93 for some reason
+ndex # number of pairs (children)
+ddex <- mean(~ difference, data = DexData)
+ddex # mean difference
+sdex <- sd(~ difference, data = DexData)
+sdex # standard deviation of the differences
+sedex <- sdex/(ndex^.5)
+sedex # standard error of the differences
+df <- ndex - 1
+df
+tstats <- qt(p = c(.025, .975), df = df)
+tstats
+medex <- tstats  * sedex
+medex # margin of error of the differences
+
+ddex + medex
+
+# Or, if you don't want to go through all those calculations:
+t.test(~ difference, data = DexData, df = df)
 ```
 
+#### Effect Size  
+
+XX NH skating data (page 594), workweek data (page 595)
+
 ### Section 18.4: Blocking
+
+#### What's Independent?
+
+#### Random Matters: A Bootstrapped Paired Data Confidence Interval and Hypothesis Test
+
+```{r}
+set.seed(2345)
+numsim <- 5000
+
+# What does do() do?
+mean(~ difference, data = resample(DexData)) # One mean of a random resample
+mean(~ difference, data = resample(DexData)) # Another mean of a random resample
+
+do(2) * mean(~ difference, data = resample(DexData)) # Calculates two means
+
+# We need numsim means
+DexBoots <- do(numsim) * mean(~ difference, data = resample(DexData))
+
+qdata(~ mean, p = c(.025, .975), data = DexBoots)
+DexBoots <- DexBoots %>%
+  mutate(interval = ifelse(mean > .0245 & mean < .0783, "Within 95% Confidence", 
+                           "Outside 95% Confidence"))
+
+# Figure 18.4, page 597
+gf_histogram(~ mean, fill = ~ interval, data = DexBoots, binwidth = .002, center = .001) %>%
+  gf_vline(xintercept = .0245) %>%
+  gf_vline(xintercept = .0783) %>%
+  gf_labs(x = "Differences of Bootstrapped Means", y = "# of Trials") + 
+  guides(fill = FALSE)
+
+# Figure 18.5
+gf_histogram(~ (mean - ddex), data = DexBoots, binwidth = .002, center = .001) %>%
+  gf_vline(xintercept = ddex) %>%
+  gf_vline(xintercept = -ddex)
+```
+
+```{r}
+favstats(~ (mean - ddex), data = DexBoots)
+```
+
+With `favstats()`, we can see that our minimum is within the interval, but our maximum isn't.
+
+```{r}
+DexBoots %>%
+  filter((mean - ddex) > ddex)
+```
+
+Like the book, there is one instance (out of 5,000), so we estimate the P-value as 1/5,000 (the book says 50,000, which is incorrect), or .0002.
