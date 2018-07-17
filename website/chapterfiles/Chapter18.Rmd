@@ -21,6 +21,7 @@ output:
 library(mosaic)
 library(readr)
 library(janitor)
+library(tidyr)
 ```
 
 ```{r, include = FALSE}
@@ -47,17 +48,75 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 library(mosaic)
 library(readr)
 library(janitor)
-#Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") %>%
-#  clean_names()
+Dexterity <- read_csv("http://nhorton.people.amherst.edu/is5/data/Dexterity.csv") %>%
+  clean_names()
 ```
 
 By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
-Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
+Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace). 
+
+```{r}
+Dexterity %>%
+  select(age_months, dominant_1, non_dominant_2, gender) %>%
+  head(n = 7)
+```
 
 ### Section 18.1: Paired Data
 
+```{r}
+library(tidyr) # for the gather() function
+# Figure 18.1, page 586
+Dexterity %>%
+  select(dominant_1, non_dominant_2) %>%
+  gather(key = hand_type, value = speed, dominant_1, non_dominant_2) %>%
+  gf_boxplot(speed ~ hand_type, fill = ~ hand_type) %>%
+  gf_labs(x = "", y = "Speed (cyl/sec)") +
+  ylim(.2, .9) + 
+  guides(fill = FALSE)
+```
+
+```{r}
+Dexterity %>% 
+  select(dominant_1, non_dominant_2) %>%
+  mutate(difference = dominant_1 - non_dominant_2) %>%
+  head(n = 18)
+```
+
 ### Section 18.2: The Paired *t*-Test
 
+#### Step-By-Step Example: A Paired *t*-Test
+
+XX NH can't find data for 2006 winter olympics speed skating data (page 589)
+
+```{r}
+# This data doesn't seem to be correct!! (wrong year an doesn't have lane data)
+SpeedySkatey <- read_csv("http://nhorton.people.amherst.edu/is5/data/Winter_Olympics_2010_speed_skating.csv")
+SpeedySkatey %>%
+  arrange(Result) %>%
+  head()
+```
+
 ### Section 18.3: Confidence Intervals for Matched Pairs
+
+```{r}
+Couples <- read_csv("http://nhorton.people.amherst.edu/is5/data/Couples.csv") %>%
+  filter(wAge != "*") %>%
+  mutate(wAge = as.numeric(wAge))
+# table on page 592
+Couples %>%
+  select(wAge, hAge) %>%
+  mutate(difference = hAge - wAge) %>%
+  head(n = 7)
+```
+
+#### Step-By-Step Example: A Paired *t*-Interval
+
+```{r}
+DexData <- Dexterity %>% 
+  select(dominant_1, non_dominant_2) %>%
+  mutate(difference = dominant_1 - non_dominant_2)
+gf_histogram(~ difference, data = DexData, binwidth = .05, center = .025) %>%
+  gf_labs(x = "Dominant-Non-dominant", y = "# Subjects")
+```
 
 ### Section 18.4: Blocking
