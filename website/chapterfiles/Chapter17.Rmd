@@ -222,7 +222,7 @@ BuyingCam <- BuyingCam %>%
 # Model
 gf_boxplot(amount_offered ~ buying_type, fill = ~ buying_type, data = BuyingCam) %>%
   gf_labs(x = "Buying From", y = "Amount Offered ($)", fill = "")
-gf_histogram(~ amount_offered, binwidth = 25, center = 12.5, data = BuyingCam) %>% # doesn't exactly match
+gf_histogram(~ amount_offered, binwidth = 25, center = 12.5, data = BuyingCam) %>%
   gf_facet_wrap(buying_type ~ .) %>%
   gf_labs(x = "Amount Offered", y = "")
 # Mechanics
@@ -265,7 +265,8 @@ CarBoots <- do(numsim) * Cars %>%
 
 qdata(~ diffmeans, p = c(.025, .975), data = CarBoots)
 CarBoots <- CarBoots %>%
-  mutate(interval = ifelse(diffmeans > 1.88 & diffmeans < 3.19, "Within 95% Confidence", "Outside 95% Confidence"))
+  mutate(interval = ifelse(diffmeans > 1.88 & diffmeans < 3.19, "Within 95% Confidence", 
+                           "Outside 95% Confidence"))
 
 # Figure 17.4
 gf_histogram(~ diffmeans, fill = ~ interval, data = CarBoots, binwidth = .2, 
