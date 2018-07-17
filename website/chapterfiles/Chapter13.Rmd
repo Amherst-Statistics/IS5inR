@@ -85,7 +85,7 @@ do(2) * favstats(~ weight, data = sample(BodyFat, 10)) # finds favstats twice
 bodyfatsamples <- do(numsim) * favstats(~ weight, data = sample(BodyFat, 10))
 ```
 
-Here, the `do()` function finds, 1,000 times, the `favstats()` of a random sample of 10 `BodyFat` weights. 
+Here the `do()` function repeatedly calculates the summary statistics for a random sample of 10 weights. 
 
 ```{r}
 bodyfatsamples <- bodyfatsamples %>%
@@ -109,7 +109,7 @@ set.seed(118)
 CIsim(n = 100, samples = 20) # We expect 19/20 intervals to cover the true mean
 ```
 
-We expect 19 of the 20 intervals to cover the true mean, but since only 20 samples are drawn, there is more variability. Here, only 18 out of the 20 intervals cover the true mean.  
+We expect 19 of the 20 intervals to cover the true mean, but since only 20 samples are drawn, there is more variability. Only 18 out of the 20 intervals cover the true mean in this example.  
 
 To get the actual plot, the code is more complicated.  
 

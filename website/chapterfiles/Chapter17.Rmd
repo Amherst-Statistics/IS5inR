@@ -62,7 +62,7 @@ Seatbelts <- rbind(
   select(passenger, belted)
 ```
 
-Here, the `do()` function creates a number of rows for the data frame.
+The `do()` function constructs the correct rows for the data frame from the provided cell counts.
 
 ```{r cache=TRUE}
 set.seed(234)
@@ -83,7 +83,7 @@ do(2) * resample(Seatbelts) %>%
   summarise(proportion = sum(belted)/n()) %>%
   summarise(diffprop = abs(diff(proportion))) # Calculates two differences
 
-# We need 10000 differences of proportions
+# We need numsim differences of proportions
 seatbeltresamples <- do(numsim) * resample(Seatbelts) %>%
   group_by(passenger) %>%
   summarise(proportion = sum(belted)/n()) %>%
