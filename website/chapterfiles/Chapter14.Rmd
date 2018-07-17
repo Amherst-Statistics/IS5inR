@@ -108,12 +108,14 @@ For each example sample size, the `do()` function calculates the mean of random 
 
 ```{r}
 # Samples as overlaid density plots
-gf_density(~ mean, data = CEOMeans, fill = 6) %>%
-  gf_density(~ mean, data = CEOMeans2, fill = 4) %>%
-  gf_density(~ mean, data = CEOMeans3, fill = 5) %>%
+gf_density(~ mean, data = CEOMeans, fill = "purple") %>%
+  gf_density(~ mean, data = CEOMeans2, fill = "blue") %>%
+  gf_density(~ mean, data = CEOMeans3, fill = "red") %>%
   gf_labs(y = "Density", x = "Means") +
   xlim(7, 25)
 ```
+
+The purple density reflects the distribution of the means from random samples of size 10. The blue density reflects the distribution of the means from random samples of size 50. The red density reflects the distribution of the means from random samples of size 200.  
 
 ### Section 14.2: A Confidence Interval for the Mean
 

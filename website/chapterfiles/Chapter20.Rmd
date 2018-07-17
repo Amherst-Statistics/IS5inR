@@ -111,17 +111,17 @@ gf_point(resid(bodyfatlm) ~ fitted(bodyfatlm)) %>%
 ```{r}
 Diamonds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Diamonds.csv") %>%
   clean_names()
-diamondlm <- lm(price ~ carat_size, data = Diamonds) # there's no carat weight variable?
+```
+
+Here we fit `price` by `carat_size`, which differs somewhat from the display in the book.  
+
+```{r}
+diamondlm <- lm(price ~ carat_size, data = Diamonds) 
 # Figure 20.8, page 646
 gf_point(resid(diamondlm) ~ fitted(diamondlm))
 # Figure 20.9
-gf_histogram(~ resid(diamondlm))
-# Figure 20.10 (reinterpreted with points) - will fix once I understand the data
-#BodyFat <- BodyFat %>%
-#  mutate(roundedwaist = cut(waist, breaks = c(0, 30, 35, 40, 45, Inf), labels = c(1:5)))
-#gf_point(pct_bf ~ jitter(as.numeric(roundedwaist)), data = BodyFat) %>%
-#  gf_lm() %>%
-#  gf_labs(y = "% Body Fat", x = "Waist")
+gf_histogram(~ resid(bodyfatlm), binwidth = 2, center = 1)
+# Figure 20.10 is the same idea as Figure 20.3 (page 643)
 ```
 
 #### Example 20.1: Checking Assumptions and Conditions
@@ -198,16 +198,25 @@ summary(mouthmlm)
 ```{r}
 Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv") 
 Coasters <- Coasters %>%
-  filter(Name != "Tower of Terror") %>%
+  filter(Name != "Tower of Terror" | Name != "Wild Beast") %>%
   mutate(Inversions = as.factor(Inversions))
 coasterlm <- lm(Duration ~ Drop, data = Coasters)
 # Numbers are a bit off because the book has removed some rollercoasters
 msummary(coasterlm) 
 coastermlm <- lm(Duration ~ Drop + Speed, data = Coasters)
 msummary(coastermlm)
-```
 
-XX MC can you please review what I did in SDM4 to see if this addresses the issue?
+# Temporary code that isn't matching
+Coasterstemp <- Coasters %>%
+  filter(Drop != "NA") %>%
+  filter(Duration != "NA") %>%
+  filter(Name != "Tower of Terror") %>%
+  filter(Name != "Wild Beast")
+coastertemp <- lm(Duration ~ Drop, data = Coasterstemp)
+msummary(coastertemp)
+coastermlmtemp <- lm(Duration ~ Drop + Speed, data = Coasterstemp)
+msummary(coastermlmtemp)
+```
 
 ```{r}
 gf_point(Speed ~ Drop, data = Coasters)

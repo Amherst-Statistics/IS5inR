@@ -62,7 +62,7 @@ Seatbelts <- rbind(
   select(passenger, belted)
 ```
 
-The `do()` function constructs the correct rows for the data frame from the provided cell counts.
+The `do()` function constructs the correct number of rows for the data frame from provided cell counts.
 
 ```{r cache=TRUE}
 set.seed(234)
@@ -102,29 +102,40 @@ XX MC: need to break up this block and add more annotation.
 ```{r}
 # Creating the data set for online profiles
 OnlineProf <- rbind(
-  do(248 * .57)     * data.frame(gender = "M", profile = TRUE),
-  do(248 * .43 + 1) * data.frame(gender = "M", profile = FALSE), # Add one for rounding errors
-  do(256 * .70)     * data.frame(gender = "F", profile = TRUE),
-  do(256 * .30 + 1) * data.frame(gender = "F", profile = FALSE)
+  do(141) * data.frame(gender = "M", profile = TRUE), # 248 * .57 rounds to 141
+  do(107) * data.frame(gender = "M", profile = FALSE), # 248 - 141
+  do(179) * data.frame(gender = "F", profile = TRUE), 
+  do(77)  * data.frame(gender = "F", profile = FALSE)
 )
 tally(~ gender, data = OnlineProf)
+```
+
+```{r}
 OnlineProfM <- OnlineProf %>%
-  filter(gender == "M")
-sepboys <- ((mean(~ profile, data = OnlineProfM) * (1 - mean(~ profile, data = OnlineProfM)))/nrow(OnlineProfM))^.5
-sepboys
+  filter(gender == "M") # Make a data set for male observations
+nM <- nrow(OnlineProfM) 
+nM # n for males
+propMyes <- mean(~ profile, data = OnlineProfM)
+propMyes # p for males
+sepboys <- ((propMyes * (1 - propMyes))/nM)^.5 
+sepboys # SE for males
 OnlineProfF <- OnlineProf %>%
-  filter(gender == "F")
-sepgirls <- ((mean(~ profile, data = OnlineProfF) * (1 - mean(~ profile, data = OnlineProfF)))/nrow(OnlineProfF))^.5
-sepgirls
+  filter(gender == "F") # Make a data set for male observations
+nF <- nrow(OnlineProfF)
+nF # n for females
+propFyes <- mean(~ profile, data = OnlineProfF)
+propFyes # p for females
+sepgirls <- ((propFyes * (1 - propFyes))/nF)^.5
+sepgirls # SE for females
 sep <- (sepboys^2 + sepgirls^2)^.5
-sep
+sep # overall SE
 ```
 
 #### Example 17.2: Finding a Two-Proportion *z*-Interval
 
 ```{r}
 zstats <- qnorm(p = c(.025, .975))
-(mean(~ profile, data = OnlineProfF) - mean(~ profile, data = OnlineProfM)) + zstats * sep
+(propFyes - propMyes) + zstats * sep
 ```
 
 ### Section 17.2: Assumptions and Conditions for Comparing Proportions
@@ -146,23 +157,23 @@ SleepHabits <- rbind(
 ```{r}
 # Mechanics
 ngeny <- nrow(filter(SleepHabits, gen == "GenY"))
-ngeny
+ngeny # n for GenY
 ygeny <- nrow(filter(SleepHabits, gen == "GenY"  & internet == TRUE))
-ygeny
+ygeny # y for GenY
 pgeny <- mean(~ internet, data = filter(SleepHabits, gen == "GenY"))
-pgeny
+pgeny # proportion for GenY
 
 ngenx <- nrow(filter(SleepHabits, gen == "GenX"))
-ngenx
+ngenx # n for GenX
 ygenx <- nrow(filter(SleepHabits, gen == "GenX"  & internet == TRUE))
-ygenx
+ygenx # y for GenX
 pgenx <- mean(~ internet, data = filter(SleepHabits, gen == "GenX"))
-pgenx
+pgenx # proportion for GenX
 
 sepgen <- ((pgeny * (1 - pgeny))/ngeny + (pgenx * (1 - pgenx))/ngenx)^.5
-sepgen
+sepgen # overall SE
 pdiff <- pgeny - pgenx
-pdiff
+pdiff # difference between proportions
 z <- (pdiff - 0)/sepgen
 z
 2 * pnorm(q = z, lower.tail = FALSE)
@@ -173,22 +184,21 @@ z
 #### Example 17.7: Finding a Confidence Interval for the Difference in Sample Means
 
 ```{r}
-# Not sure if creating data set is really necessary
 # page 555
-nord <- 27
-nref <- 27
-yord <- 8.5
-yref <- 14.7
-sord <- 6.1
-sref <- 8.4
+nord <- 27 # n for ordinary bowls
+nref <- 27 # n for refilling bowls
+yord <- 8.5 # y for ordinary bowls
+yref <- 14.7 # y for refilling bowls
+sord <- 6.1 # standard deviation for ordinary bowls
+sref <- 8.4 # standard deviation for refilling bowls
 
-seys <- 2.0
-diffy <- yref - yord # 6.2
+seys <- 2.0 # overall SE
+diffy <- yref - yord # difference between y's is 6.2
 tstats <- qt(p = c(.025, .975), df = 47.46)
 tstats
 me <- tstats * seys
-me
-diffy + me
+me # margin of error
+diffy + me # confidence interval
 ```
 
 ### Section 17.5: The Two-Sample *t*-Test: Testing for the Difference Between Two Means
