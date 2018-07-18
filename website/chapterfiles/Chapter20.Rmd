@@ -116,7 +116,7 @@ Diamonds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Diamonds.csv") 
 Here we fit `price` by `carat_size` for diamonds with the color `E`.  
 
 ```{r}
-diamondlm <- lm(price ~ carat_size, data = filter(Diamonds, color = "E")) 
+diamondlm <- lm(price ~ carat_size, data = filter(Diamonds, color == "E")) 
 # Figure 20.8, page 646
 gf_point(resid(diamondlm) ~ fitted(diamondlm))
 # Figure 20.9
@@ -198,24 +198,13 @@ summary(mouthmlm)
 ```{r}
 Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv") 
 Coasters <- Coasters %>%
-  filter(Name != "Tower of Terror" | Name != "Wild Beast") %>%
+  filter(Name != "Tower of Terror", Name != "Xcelerator") %>% # Remove artificially accelerated coasters and Tower of Terror
+  filter(Drop != "NA", Duration != "NA") %>%
   mutate(Inversions = as.factor(Inversions))
 coasterlm <- lm(Duration ~ Drop, data = Coasters)
-# Numbers are a bit off because the book has removed some rollercoasters
 msummary(coasterlm) 
 coastermlm <- lm(Duration ~ Drop + Speed, data = Coasters)
 msummary(coastermlm)
-
-# Temporary code that isn't matching
-Coasterstemp <- Coasters %>%
-  filter(Drop != "NA") %>%
-  filter(Duration != "NA") %>%
-  filter(Name != "Tower of Terror") %>%
-  filter(Name != "Wild Beast")
-coastertemp <- lm(Duration ~ Drop, data = Coasterstemp)
-msummary(coastertemp)
-coastermlmtemp <- lm(Duration ~ Drop + Speed, data = Coasterstemp)
-msummary(coastermlmtemp)
 ```
 
 ```{r}
