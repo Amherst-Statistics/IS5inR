@@ -139,7 +139,12 @@ sep # overall SE
 ```{r}
 zstats <- qnorm(p = c(.025, .975))
 (propFyes - propMyes) + zstats * sep
+
+# Or, you can use:
+prop.test(x = c(179, 141), n = c(nF, nM), correct = FALSE)
 ```
+
+The `prop.test()` function can be used to find confidence intervals and p-values of both one or two proportion z-tests.  
 
 ### Section 17.2: Assumptions and Conditions for Comparing Proportions
 

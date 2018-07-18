@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Paired Samples and Blocks (Chapter 18)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 11, 2018"
+date: "July 17, 2018"
 output: 
   pdf_document:
     fig_height: 3
