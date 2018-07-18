@@ -152,7 +152,9 @@ Couples %>%
 DexData <- Dexterity %>% 
   select(dominant_1, non_dominant_2) %>%
   mutate(difference = dominant_1 - non_dominant_2) %>%
-  filter(dominant_1 < 1) # For some reason, the book has removed one observation where dominant_1 = 1, but has kept the count of children at 93 instead of 92
+  filter(dominant_1 < 1) 
+# For some reason, the book has removed one observation where dominant_1 = 1, 
+# but has kept the count of children at 93 instead of 92
 gf_histogram(~ difference, data = DexData, binwidth = .05, center = .025) %>%
   gf_labs(x = "Dominant-Non-dominant", y = "# Subjects")
 # Mechanics
@@ -225,7 +227,8 @@ gf_histogram(~ mean, fill = ~ interval, data = DexBoots, binwidth = .002, center
 # Figure 18.5
 gf_histogram(~ (mean - ddex), data = DexBoots, binwidth = .002, center = .001) %>%
   gf_vline(xintercept = ddex) %>%
-  gf_vline(xintercept = -ddex)
+  gf_vline(xintercept = -ddex) %>%
+  gf_labs(x = "Differences of Bootstrapped Means - Actual Difference", y = "# of Trials")
 ```
 
 ```{r}

@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Comparing Counts (Chapter 19)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 17, 2018"
+date: "July 18, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -59,17 +59,187 @@ Zodiac %>%
 
 ### Section 19.1: Goodness-of-Fit Tests
 
+#### Example 19.1: Finding Expected Counts
+
 ```{r}
 # page 611
-BaseBallBirths <- read_csv("http://nhorton.people.amherst.edu/is5/data/Ballplayer_births.csv") %>%
-  clean_names()
+BaseballBirths <- read_csv("http://nhorton.people.amherst.edu/is5/data/Ballplayer_births.csv") %>%
+  clean_names() # doesn't contain national birth %
 ```
 
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace). 
 
+```{r}
+natbirth <- c(.08, .07, .08, .08, .08, .08, .09, .09, .09, .09, .08, .09) 
+BaseballBirths <- cbind(BaseballBirths, natbirth) # adding a column for national birth %
+totaln <- sum(~ ballplayer_count , data = BaseballBirths)
+totaln
+BaseballBirths <- BaseballBirths %>%
+  mutate(expected = totaln * natbirth)
+BaseballBirths %>%
+  select(month, expected)
+```
+
+#### Assumptions and Conditions
+
+#### Calculations
+
+#### Chi-Square P-values
+
+```{r}
+# Examples of chisq p-values
+qchisq(df = 2, p = .1, lower.tail = FALSE)
+qchisq(df = 10, p = .05, lower.tail = FALSE)
+```
+
+#### Example 19.3: Doing a Goodness-of-Fit Test
+
+```{r}
+# page 614
+df <- nrow(BaseballBirths) - 1
+df
+BaseballBirths %>%
+  mutate(chisq = ((ballplayer_count - expected)^2)/expected) %>%
+  summarise(sum(chisq))
+xpchisq(q = 26.5, df = df, lower.tail = FALSE) 
+```
+
+#### Step-By-Step Example: A Chi-Square Test for Goodness-of-Fit
+
+```{r}
+expected <- mean(~ Births, data = Zodiac)
+expected
+gf_col(Births ~ Month, data = Zodiac) %>%
+  gf_hline(yintercept = expected) %>%
+  gf_labs(x = "Sign", y = "Count") + 
+  theme(axis.text.x = element_text(angle = 30, hjust = 1)) # to adjust the angle of the x axis labels
+```
+
+```{r}
+# Mechanics
+df <- nrow(Zodiac) - 1
+df
+Zodiac %>%
+  mutate(chisq = ((Births - Expected)^2)/Expected) %>%
+  summarise(sum(chisq))
+xpchisq(q = 5.09, df = df, lower.tail = FALSE) 
+```
+
+#### The Chi-Square Calculation
+
+```{r}
+Zodiac %>%
+  mutate(residsq = Residual^2) %>%
+  mutate(component = residsq/Expected)
+```
+
+#### The Trouble with Goodness-of-Fit Tests: What's the Alternative?
 
 ### Section 19.2: Chi-Square Test of Homogeneity
 
+```{r}
+# Create the data set
+Postgrad <- rbind(
+  do(209) * data.frame(activity = "Employed", school = "Agriculture"),
+  do(198) * data.frame(activity = "Employed", school = "Arts & Sciences"),
+  do(177) * data.frame(activity = "Employed", school = "Engineering"),
+  do(101) * data.frame(activity = "Employed", school = "ILR"),
+  do(104) * data.frame(activity = "Grad School", school = "Agriculture"),
+  do(171) * data.frame(activity = "Grad School", school = "Arts & Sciences"),
+  do(158) * data.frame(activity = "Grad School", school = "Engineering"),
+  do(33)  * data.frame(activity = "Grad School", school = "ILR"),
+  do(135) * data.frame(activity = "Other", school = "Agriculture"),
+  do(115) * data.frame(activity = "Other", school = "Arts & Sciences"),
+  do(39)  * data.frame(activity = "Other", school = "Engineering"),
+  do(16)  * data.frame(activity = "Other", school = "ILR")
+)
+```
+
+```{r}
+# Table 19.1, page 618
+tally(activity ~ school, data = Postgrad, margins = TRUE)
+# Table 19.2
+tally(activity ~ school, format = "percent", data = Postgrad, margins = TRUE)
+# Table 19.3
+with(chisq.test(tally(activity ~ school, data = Postgrad, margins = TRUE)), expected)
+```
+
+#### Step-By-Step Example: A Chi-Square Test for Homogeneity
+
+```{r, fig.width=7}
+tally(activity ~ school, format = "percent", data = Postgrad) %>%
+  data.frame() %>%
+  gf_col(Freq ~ school, fill = ~ activity, position = "dodge") %>%
+  gf_labs(x = "School", y = "Percent", fill = "")
+```
+
+```{r}
+# Mechanics
+tally(activity ~ school, data = Postgrad, margins = TRUE)
+with(chisq.test(tally(activity ~ school, data = Postgrad, margins = TRUE)), expected)
+with(chisq.test(tally(activity ~ school, data = Postgrad)), statistic)
+xpchisq(q = 93.7, df = 6, lower.tail = FALSE) 
+```
+
 ### Section 19.3: Examining the Residuals
 
+```{r}
+# Table 19.4, page 622
+with(chisq.test(tally(activity ~ school, data = Postgrad, margins = TRUE)), residuals)
+```
+
+#### Example 19.4: Looking at $\chi^2$, Residuals
+
+```{r}
+BaseballBirths %>%
+  mutate(residuals = (ballplayer_count - expected)/(expected^.5)) %>%
+  select(month, residuals)
+```
+
 ### Section 19.4: Chi-Square Test of Independence
+
+```{r}
+Tattoos <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tattoos.csv", skip = 1) %>%
+  clean_names() # skip = 1 because first row is "Col1", "Col2"
+# Table 19.5, page 623
+tally(location ~ has_hepatitis_c, data = Tattoos, margins = TRUE)
+```
+
+#### Assumptions and Conditions
+
+#### Step-By-Step Example: A Chi-Square Test for Independence
+
+```{r}
+tally(has_hepatitis_c ~ location, format = "percent", data = Tattoos) %>%
+  data.frame() %>%
+  filter(has_hepatitis_c == "Yes") %>%
+  gf_col(Freq ~ location) %>%
+  gf_labs(x = "Tattoo Status", y = "Proportion Infected", title = "Tattoos and Hepatitis C")
+
+# Observed
+tally(location ~ has_hepatitis_c, data = Tattoos, margins = TRUE)
+# Expected
+with(chisq.test(tally(location ~ has_hepatitis_c, data = Tattoos, margins = TRUE)), expected)
+```
+
+```{r}
+# Mechanics
+with(chisq.test(tally(location ~ has_hepatitis_c, data = Tattoos)), statistic)
+xpchisq(q = 57.9, df = 2, lower.tail = FALSE)
+```
+
+#### Examine the Residuals
+
+```{r}
+# Table 19.6, page 627
+with(chisq.test(tally(location ~ has_hepatitis_c, data = Tattoos)), residuals)
+```
+
+```{r}
+# Table 19.7, page 628
+Tattoos <- Tattoos %>%
+  mutate(tattoo = ifelse(location == "No Tattoo", "None", "Tattoo"))
+tally(tattoo ~ has_hepatitis_c, margins = TRUE, data = Tattoos)
+```
+
+#### Chi-Square and Causation

@@ -198,7 +198,8 @@ summary(mouthmlm)
 ```{r}
 Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv") 
 Coasters <- Coasters %>%
-  filter(Name != "Tower of Terror", Name != "Xcelerator") %>% # Remove artificially accelerated coasters and Tower of Terror
+  filter(Name != "Tower of Terror", Name != "Xcelerator") %>% 
+  # Removed artificially accelerated coasters and Tower of Terror
   filter(Drop != "NA", Duration != "NA") %>%
   mutate(Inversions = as.factor(Inversions))
 coasterlm <- lm(Duration ~ Drop, data = Coasters)
