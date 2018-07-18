@@ -1,6 +1,6 @@
 <h2>
 <center>
-"Part V: Inference for Relationships"
+Part V: Inference for Relationships
 </center>
 </h2>
 
