@@ -98,6 +98,8 @@ gf_histogram(~ waist, data = slopesdata, binwidth = .05, center = .025) %>%
   gf_labs(x = "Slope", y = "# of Trials")
 ```
 
+The histogram is not as normal as it is in the book because we only did 25 trials instead of 1,000.  
+
 ### Section 20.2: Assumptions and Conditions
 
 ```{r}
@@ -118,9 +120,11 @@ Here we fit `price` by `carat_size` for diamonds with the color `E`.
 ```{r}
 diamondlm <- lm(price ~ carat_size, data = filter(Diamonds, color == "E")) 
 # Figure 20.8, page 646
-gf_point(resid(diamondlm) ~ fitted(diamondlm))
+gf_point(resid(diamondlm) ~ fitted(diamondlm)) %>%
+  gf_labs(x = "Predicted Values", y = "Residuals")
 # Figure 20.9
-gf_histogram(~ resid(bodyfatlm), binwidth = 2, center = 1)
+gf_histogram(~ resid(bodyfatlm), binwidth = 2, center = 1) %>%
+  gf_labs(x = "Residuals", y = "Count")
 # Figure 20.10 is the same idea as Figure 20.3 (page 643)
 ```
 
@@ -138,7 +142,7 @@ gf_point(resid(craterlm) ~ fitted(craterlm)) %>%
 gf_qq(~ resid(craterlm)) %>%
   gf_qqline(linetype = "solid", color = "red") %>%
   gf_labs(x = "Nscores", y = "Residuals")
-gf_histogram(~ resid(craterlm), binwidth = 0.5/3, center = 0.5/6) %>%
+gf_histogram(~ resid(craterlm), binwidth = .5, center = 0.25) %>%
   gf_labs(x = "Residuals", y = "# of Years")
 ```
 
@@ -179,7 +183,7 @@ msummary(bodyfatlm)
 ### Section 20.5: Multiple Regression Inference
 
 ```{r}
-# Table 20.2
+# Table 20.2, page 655
 bodyfatmlm <- lm(pct_bf ~ waist + height, data = BodyFat)
 msummary(bodyfatmlm)
 ```
@@ -188,11 +192,11 @@ msummary(bodyfatmlm)
 
 ```{r}
 Mouth <- read_csv("http://nhorton.people.amherst.edu/is5/data/Mouth_volume.csv") 
-mouthlm <- lm(Mouth_Volume ~ Height, data = Mouth)
+mouthlm <- lm(Mouth_Volume ~ Height, data = Mouth) # simple linear model
 favstats(~ Mouth_Volume, data = Mouth)
-summary(mouthlm)
-mouthmlm <- lm(Mouth_Volume ~ Age + Height, data = Mouth)
-summary(mouthmlm)
+msummary(mouthlm)
+mouthmlm <- lm(Mouth_Volume ~ Age + Height, data = Mouth) # multiple linear model
+msummary(mouthmlm)
 ```
 
 #### Collinearity
@@ -204,9 +208,9 @@ Coasters <- Coasters %>%
   # Removed artificially accelerated coasters and Tower of Terror
   filter(Drop != "NA", Duration != "NA") %>%
   mutate(Inversions = as.factor(Inversions))
-coasterlm <- lm(Duration ~ Drop, data = Coasters)
+coasterlm <- lm(Duration ~ Drop, data = Coasters) # simple linear model
 msummary(coasterlm) 
-coastermlm <- lm(Duration ~ Drop + Speed, data = Coasters)
+coastermlm <- lm(Duration ~ Drop + Speed, data = Coasters) # multiple linear model
 msummary(coastermlm)
 ```
 

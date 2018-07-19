@@ -48,6 +48,7 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 library(mosaic)
 library(readr)
 library(janitor)
+library(tidyr) # for the gather() function
 Dexterity <- read_csv("http://nhorton.people.amherst.edu/is5/data/Dexterity.csv") %>%
   clean_names()
 ```
@@ -64,8 +65,7 @@ Dexterity %>%
 ### Section 18.1: Paired Data
 
 ```{r}
-library(tidyr) # for the gather() function
-# Figure 18.1, page 586
+# Figure 18.1
 Dexterity %>%
   select(dominant_1, non_dominant_2) %>%
   gather(key = hand_type, value = speed, dominant_1, non_dominant_2) %>%
@@ -78,6 +78,7 @@ Dexterity %>%
 #### Example 18.1: Identifying Paired Data
 
 ```{r}
+# page 586
 # Create the data set
 WorkWeek <- rbind(
   data.frame(name = "Jeff", fiveday = 2798, fourday = 2914),
@@ -94,6 +95,8 @@ WorkWeek <- rbind(
 )
 WorkWeek
 ```
+
+Looking at pairwise differences in `Dexterity`.
 
 ```{r}
 Dexterity %>% 
@@ -132,6 +135,8 @@ twork # t stat
 
 2 * xpt(twork, df = nwork - 1, lower.tail = FALSE)
 ```
+
+The `xpt()` function finds the p-value and plots it on a graph to visualize it. Here, the visualization shows a one-sided test, but in the book, it is two sided.
 
 ### Section 18.3: Confidence Intervals for Matched Pairs
 
