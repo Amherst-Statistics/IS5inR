@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Confidence Intervals for Means (Chapter 14)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 16, 2018"
+date: "July 19, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -59,7 +59,6 @@ Here we use the `clean_names()` function from the `janitor` package to sanitize 
 gf_histogram(~ weight, data = Babies, binwidth = 125) %>%
   gf_labs(x = "Birthweight (g)", y = "# of Babies")
 
-# Figure 14.2
 set.seed(12346) # To ensure we get the same values when we run it multiple times
 numsim <- 10000 # Number of simulations
 
@@ -76,6 +75,7 @@ WeightMeans <- do(numsim) * mean(~ weight, data = sample(Babies, size = 100))
 The `do()` function repeatedly calculates the mean of a random sample of 100 baby weights. 
 
 ```{r}
+# Figure 14.2
 gf_histogram(~ mean, data = WeightMeans, binwidth = 10)
 favstats(~ mean, data = WeightMeans)
 ```
@@ -85,32 +85,35 @@ favstats(~ mean, data = WeightMeans)
 ```{r, cache=TRUE}
 CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation_2014.csv") %>%
   clean_names()
-# Figure 14.3
-gf_histogram(~ ceo_compensation_m, data = CEOComp, binwidth = 10) %>%
+
+# Figure 14.3, page 443
+gf_histogram(~ ceo_compensation_m, data = CEOComp, binwidth = 10, center = 5) %>%
   gf_labs(x = "CEO Compensation in $1,000,000", y = "Frequency")
+
 # Figure 14.4
-set.seed(14354)
 numsim <- 1000 # Here the number of simulations is 1,000
-CEOMeans <- do(numsim) * mean(~ ceo_compensation_m, data = sample(CEOComp, size = 10))
-gf_histogram(~ mean, data = CEOMeans) %>%
-  gf_labs(x = "Sampling Distribution of Mean Compensation (in millions), n=10", y = "Frequency")
+CEOMeansn10 <- do(numsim) * mean(~ ceo_compensation_m, data = sample(CEOComp, size = 10))
+gf_histogram(~ mean, data = CEOMeansn10) %>%
+  gf_labs(x = "Sampling Distribution of Mean Compensation (in millions), n = 10", y = "Frequency")
+
 # Figure 14.5
-CEOMeans2 <- do(numsim) * mean(~ ceo_compensation_m, data = sample(CEOComp, size = 50))
-gf_histogram(~ mean, data = CEOMeans2) %>%
-  gf_labs(x = "Sampling Distribution of Mean Compensation (in millions), n=50", y = "Frequency")
+CEOMeansn50 <- do(numsim) * mean(~ ceo_compensation_m, data = sample(CEOComp, size = 50))
+gf_histogram(~ mean, data = CEOMeansn50) %>%
+  gf_labs(x = "Sampling Distribution of Mean Compensation (in millions), n = 50", y = "Frequency")
+
 # Figure 14.7 (skipped 14.6 because it's similar)
-CEOMeans3 <- do(numsim) * mean(~ ceo_compensation_m, data = sample(CEOComp, size = 200))
-gf_histogram(~ mean, data = CEOMeans3) %>%
-  gf_labs(x = "Sampling Distribution of Mean Compensation (in millions), n=200", y = "Frequency")
+CEOMeansn200 <- do(numsim) * mean(~ ceo_compensation_m, data = sample(CEOComp, size = 200))
+gf_histogram(~ mean, data = CEOMeansn200) %>%
+  gf_labs(x = "Sampling Distribution of Mean Compensation (in millions), n = 200", y = "Frequency")
 ```
 
 For each example sample size, the `do()` function calculates the mean of random samples of that specified size.
 
 ```{r}
 # Samples as overlaid density plots
-gf_density(~ mean, data = CEOMeans, fill = "purple") %>%
-  gf_density(~ mean, data = CEOMeans2, fill = "blue") %>%
-  gf_density(~ mean, data = CEOMeans3, fill = "red") %>%
+gf_density(~ mean, data = CEOMeansn10, fill = "purple") %>%
+  gf_density(~ mean, data = CEOMeansn50, fill = "blue") %>%
+  gf_density(~ mean, data = CEOMeansn200, fill = "red") %>%
   gf_labs(y = "Density", x = "Means") +
   xlim(7, 25)
 ```
@@ -132,6 +135,7 @@ gf_dist(dist = "norm", linetype = 2, lwd = 1.5) %>%
 #### Example 14.1: A One-Sample *t*-Interval for the Mean
 
 ```{r}
+# page 448
 Salmon <- read_csv("http://nhorton.people.amherst.edu/is5/data/Farmed_salmon.csv") %>%
   clean_names()
 Salmon <- Salmon %>%
@@ -141,7 +145,8 @@ t.test(~ mirex, data = Salmon)
 salmonlm <- lm(mirex ~ 1, data = Salmon)  # equiv to t.test(~ mirex)
 # replication of interval from page 448
 confint(salmonlm, data = Salmon)
-tstats <- xqt(df = 149, p = c(.025, .975), plot = FALSE) # t statistics
+tstats <- xqt(df = 149, p = c(.025, .975), plot = FALSE) 
+# finds the t statistics when given quantiles and df (default will plot a graph)
 sey <- sd(~ mirex, data = Salmon)/(150^(1/2)) # standard error
 mean(~ mirex, data = Salmon) + sey * tstats # calculations match those from confint
 ```
@@ -161,7 +166,6 @@ gf_dhistogram(~ mirex, data = Salmon, binwidth = 0.04, center = 0.02) %>%
 #### Step-By-Step Example: A One-Sample *t*-Interval for the Mean
 
 ```{r}
-set.seed(34)
 BabiesSample <- sample(Babies, size = 30)
 gf_histogram(~ weight, data = BabiesSample, binwidth = 200, center = 100) %>%
   gf_labs(x = "Sample of 30 Birthweights", y = "# of Babies")
@@ -175,7 +179,9 @@ confint(babieslm, level = 0.90)
 ### Section 14.4: Picking Our Interval up by Our Bootstraps
 
 ```{r}
-gf_histogram(~ mean, data = WeightMeans, binwidth = 10)
+# page 453
+gf_histogram(~ mean, data = WeightMeans, binwidth = 10, center = 5) %>%
+  gf_labs(x = "Sample Means from Samples of Size 100", y = "# of Samples")
 ```
 
 #### Step-By-Step Example: A Bootstrap Confidence Interval for the Mean
@@ -184,7 +190,6 @@ gf_histogram(~ mean, data = WeightMeans, binwidth = 10)
 CommuteSample <- read_csv("http://nhorton.people.amherst.edu/is5/data/Commuter_sample.csv")
 gf_histogram(~ time, data = CommuteSample, binwidth = 10, center = 5)
 # Bootstrap 
-set.seed(134)  # To ensure we get the same values when we run it multiple times
 numsim <- 10000
 commutebootstrap <- do(numsim) * mean(~ time, data = resample(CommuteSample))
 ```
