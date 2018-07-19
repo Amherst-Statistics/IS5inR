@@ -194,7 +194,7 @@ numsim <- 10000
 commutebootstrap <- do(numsim) * mean(~ time, data = resample(CommuteSample))
 ```
 
-The `resample()` function samples of that data set size with replacement.  
+The `resample()` function samples of that data set size with replacement. For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
 
 ```{r, fig.width=7}
 qdata(~ mean, p = c(.025, .975), data = commutebootstrap) # grab the percentiles with qdata

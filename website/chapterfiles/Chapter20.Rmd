@@ -84,6 +84,11 @@ gf_point(pct_bf ~ jitter(as.numeric(roundedwaist)), data = BodyFat) %>%
 ```{r, fig.height=4, fig.width=7}
 numsamp <- 25 # It's too messy to do any more than 25
 slopesdata <- do(numsamp) * lm(pct_bf ~ waist, data = resample(BodyFat))
+```
+
+For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
+
+```{r}
 slopesdata <- slopesdata %>%
   mutate(at27 = Intercept + waist * 27, at50 = Intercept + waist * 50, color = as.factor(1:25))
 # Figure 20.4, page 644

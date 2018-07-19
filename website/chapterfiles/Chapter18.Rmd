@@ -216,7 +216,11 @@ do(2) * mean(~ difference, data = resample(DexData)) # Calculates two means
 
 # We need numsim means
 DexBoots <- do(numsim) * mean(~ difference, data = resample(DexData))
+```
 
+For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
+
+```{r}
 qdata(~ mean, p = c(.025, .975), data = DexBoots)
 DexBoots <- DexBoots %>%
   mutate(interval = ifelse(mean > .0245 & mean < .0783, "Within 95% Confidence", 

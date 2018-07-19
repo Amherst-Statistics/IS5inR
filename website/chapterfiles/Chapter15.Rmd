@@ -148,6 +148,11 @@ do(2) * mean(~ Temp, data = resample(Temperatures)) # Calculates means of two re
 
 # We will use do() a numsamp number of times
 resampletemps <- do(numsamp) * mean(~ Temp, data = resample(Temperatures))
+```
+
+For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
+
+```{r}
 gf_histogram(~ mean, data = resampletemps) %>%
   gf_labs(x = "Mean Temperature", y = "# of Samples")
 qdata(~ mean, p = c(.005, .995), data = resampletemps) # reject null hypothesis

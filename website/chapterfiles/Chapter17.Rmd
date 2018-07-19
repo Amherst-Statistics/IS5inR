@@ -88,7 +88,11 @@ seatbeltresamples <- do(numsim) * resample(Seatbelts) %>%
   group_by(passenger) %>%
   summarise(proportion = sum(belted)/n()) %>%
   summarise(diffprop = abs(diff(proportion)))
+```
 
+For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
+
+```{r}
 # Figure 17.1, page 542
 gf_histogram(~ diffprop, data = seatbeltresamples) %>%
   gf_labs(x = "Difference of Proportions", y = "# of Resamples")
