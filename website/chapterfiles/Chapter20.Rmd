@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Inferences for Regression (Chapter 20)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 18, 2018"
+date: "July 19, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -136,6 +136,7 @@ craterlm <- lm(log_diam ~ log_age, data = Craters)
 gf_point(resid(craterlm) ~ fitted(craterlm)) %>%
   gf_labs(x = "Predicted", y = "Residuals")
 gf_qq(~ resid(craterlm)) %>%
+  gf_qqline(linetype = "solid", color = "red") %>%
   gf_labs(x = "Nscores", y = "Residuals")
 gf_histogram(~ resid(craterlm), binwidth = 0.5/3, center = 0.5/6) %>%
   gf_labs(x = "Residuals", y = "# of Years")
@@ -146,6 +147,7 @@ gf_histogram(~ resid(craterlm), binwidth = 0.5/3, center = 0.5/6) %>%
 ```{r}
 # Scatterplot matches Figure 20.1
 gf_qq(~ resid(bodyfatlm)) %>%
+  gf_qqline(linetype = "solid", color = "red") %>%
   gf_labs(x = "Normal Scores", y = "Residuals (% body fat)")
 msummary(bodyfatlm)
 ```

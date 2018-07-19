@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Multiple Regression (Chapter 9)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 16, 2018"
+date: "July 19, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -136,6 +136,7 @@ gf_point(resid(bodyfatlm) ~ fitted(bodyfatlm)) %>%
 gf_histogram(~ resid(bodyfatlm), binwidth = 1.5, center = 0.75) %>%
   gf_labs(x = "Residuals", y = "Counts")
 gf_qq(~ resid(bodyfatlm)) %>%
+  gf_qqline(linetype = "solid", color = "red") %>%
   gf_labs(x = "Normal Scores", y = "Residuals (% Body Fat)")
 ```
 

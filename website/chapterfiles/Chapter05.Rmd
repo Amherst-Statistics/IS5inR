@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: The Standard Deviation as a Ruler and the Normal Model (Chapter 5)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 17, 2018"
+date: "July 19, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -206,11 +206,13 @@ See examples on pages 136-140.
 Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
 # Figure 5.10, page 141
 gf_histogram(~ mpg, data = Nissan, binwidth = 1, center = .5)
-gf_qq(~ mpg, data = Nissan, xlab = "Normal Scores")
+gf_qq(~ mpg, data = Nissan, xlab = "Normal Scores") %>%
+  gf_qqline(linetype = "solid", color = "red")
 ```
 
 ```{r}
 # Figure 5.11
 gf_histogram(~ weight_in_kg, data = MenWeight, xlab = "Weights", binwidth = 10, center = 5)
-gf_qq(~ weight_in_kg, data = MenWeight, xlab = "Normal Scores")
+gf_qq(~ weight_in_kg, data = MenWeight, xlab = "Normal Scores") %>%
+  gf_qqline(linetype = "solid", color = "red")
 ```
