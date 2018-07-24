@@ -68,6 +68,8 @@ The `do()` function constructs the correct number of rows for the data frame fro
 set.seed(234)
 numsim <- 10000
 
+# XX use favstats and diffmean?
+
 # What does do() do?
 resample(Seatbelts) %>%
   group_by(passenger) %>%

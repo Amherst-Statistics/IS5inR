@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Comparing Counts (Chapter 19)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 18, 2018"
+date: "July 23, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -98,6 +98,11 @@ qchisq(df = 10, p = .05, lower.tail = FALSE)
 # page 614
 df <- nrow(BaseballBirths) - 1
 df
+# XX Can't seem to get the right value
+# Getting the chisq statistic
+# with(chisq.test(tally(~ ballplayer_count | expected, data = BaseballBirths)), statistic)
+# with(chisq.test(tally(natbirth ~ ballplayer_count, data = BaseballBirths)), statistic)
+# Alternate method
 BaseballBirths %>%
   mutate(chisq = ((ballplayer_count - expected)^2)/expected) %>%
   summarise(sum(chisq))
@@ -119,6 +124,7 @@ gf_col(Births ~ Month, data = Zodiac) %>%
 # Mechanics
 df <- nrow(Zodiac) - 1
 df
+# XX Need to get rid of tidyverse and find chisq statistic correctly
 Zodiac %>%
   mutate(chisq = ((Births - Expected)^2)/Expected) %>%
   summarise(sum(chisq))
