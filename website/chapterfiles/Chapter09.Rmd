@@ -47,6 +47,7 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 library(mosaic)
 library(readr)
 library(janitor)
+library(broom) # We'll use this for augment() later
 BodyFat <- read_csv("http://nhorton.people.amherst.edu/is5/data/Bodyfat.csv") %>%
   clean_names()
 ```
@@ -194,18 +195,23 @@ msummary(hurricanelm)
 
 ### Section 9.5: Indicator Variables
 
-```{r}
-library(broom) # We'll use this for augment() later
+```{r coaster}
 Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv")
 # Table 9.2, page 288
 head(Coasters)
 # Figure 9.7
-# Coasters[72, ], Tower of Terror isn't included by the book
+# Tower of Terror isn't included by the book
 Coasters <- Coasters %>%
   filter(Name != "Tower of Terror") %>%
   mutate(Inversions = as.factor(Inversions))
+```
+
+```{r}
 gf_point(Duration ~ Drop, data = Coasters) %>%
   gf_lm()
+```
+
+```{r error}
 coasterlm <- lm(Duration ~ Drop, data = Coasters)
 gf_point(resid(coasterlm) ~ fitted(coasterlm)) %>%
   gf_labs(x = "Predicted", y = "Residuals")
@@ -256,7 +262,7 @@ msummary(lm(calories ~ carbs_g * as.factor(meat), data = BurgerKing))
 
 #### One, Two, Many
 
-```{r}
+```{r cereal1}
 Cereal <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cereals.csv")
 cereallm <- lm(sugars ~ sodium + as.factor(shelf), data = Cereal)
 gf_point(sugars ~ sodium, color = ~ as.factor(shelf), data = Cereal) %>%
@@ -267,7 +273,7 @@ msummary(cereallm)
 
 #### Example 9.4: Indicators for Variables with Several Levels
 
-```{r}
+```{r diamonds}
 Diamonds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Diamonds.csv") %>%
   clean_names()
 
