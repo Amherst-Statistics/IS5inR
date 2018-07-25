@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Linear Regression (Chapter 7)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 14, 2018"
+date: "July 24, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -57,8 +57,11 @@ Here we use the `clean_names()` function from the `janitor` package to sanitize 
 
 ```{r}
 gf_point(fat_g ~ protein_g, data = BurgerKing) %>%
+  gf_smooth() %>%
   gf_labs(x = "Protein (g)", y = "Fat (g)")
 ```
+
+Here we add a smoother to show a clearer picture of the relationship.  
 
 ### Section 7.1: Least Squares: The Line of "Best Fit"
 
@@ -121,6 +124,7 @@ TompkinsBridges <-
   read_csv("http://nhorton.people.amherst.edu/is5/data/Tompkins_county_bridges_2016.csv") %>%
   clean_names()
 gf_point(condition ~ age_at_inspection, data = TompkinsBridges) %>%
+  gf_smooth() %>% # To show relationship
   gf_labs(x = "Age at Inspection", y = "Condition")
 ```
 

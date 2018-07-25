@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Multiple Regression (Chapter 9)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 19, 2018"
+date: "July 24, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -126,6 +126,7 @@ BodyFat %>%
 bodyfatlm <- lm(pct_bf ~ waist + height, data = BodyFat)
 # Figure 9.4, page 282
 gf_point(resid(bodyfatlm) ~ fitted(bodyfatlm)) %>%
+  gf_lm() %>%
   gf_labs(x = "Predicted", y = "Residuals")
 ```
 
@@ -146,15 +147,19 @@ gf_qq(~ resid(bodyfatlm)) %>%
 HousingPrices <- read_csv("http://nhorton.people.amherst.edu/is5/data/Housing_prices.csv") %>%
   clean_names()
 gf_point(price ~ living_area, data = HousingPrices) %>%
+  gf_smooth() %>%
   gf_labs(x = "Living Area", y = "Price")
 gf_boxplot(price ~ as.factor(bedrooms), data = HousingPrices) %>%
   gf_labs(x = "Bedrooms", y = "Price")
 gf_point(price ~ age, data = HousingPrices) %>%
+  gf_smooth() %>%
   gf_labs(x = "Age", y = "Price")
 gf_point(price ~ log(age + 1), data = HousingPrices) %>%
+  gf_smooth() %>%
   gf_labs(x = "LogAge", y = "Price")
 housinglm <- lm(price ~ log(age + 1), data = HousingPrices)
 gf_point(resid(housinglm) ~ fitted(housinglm)) %>%
+  gf_smooth() %>%
   gf_labs(x = "Predicted Values", y = "Residuals")
 housinglm2 <- lm(price ~ living_area + log(age + 1) + bedrooms, data = HousingPrices)
 msummary(housinglm2)
