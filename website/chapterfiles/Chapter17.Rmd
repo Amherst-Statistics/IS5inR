@@ -252,11 +252,16 @@ favstats(~ speed | direction, data = Cars)
 set.seed(23456)
 numsim <- 10000
 
+# XX tidyverse
 CarSims <- do(numsim) * Cars %>%
   mutate(direction = shuffle(direction)) %>%
   group_by(direction) %>%
   summarise(means = mean(~ speed)) %>%
   summarise(diffmeans = diff(means))
+
+#CarSims <- do(numsim) * Cars %>%
+#  mutate(direction = shuffle(direction)) %>%
+#  favstats(~ direction)
 
 # Figure 17.3, page 560
 gf_histogram(~ diffmeans, data = CarSims, binwidth = .1, center = .05) %>%
@@ -268,6 +273,7 @@ gf_histogram(~ diffmeans, data = CarSims, binwidth = .1, center = .05) %>%
 set.seed(32453)
 numsim <- 10000
 
+# XX tidyverse edit
 CarBoots <- do(numsim) * Cars %>%
   resample() %>%
   group_by(direction) %>%
