@@ -118,7 +118,6 @@ gf_col(Births ~ Month, data = Zodiac) %>%
 # Mechanics
 df <- nrow(Zodiac) - 1
 df
-# XX Need to get rid of tidyverse and find chisq statistic correctly
 Zodiac <- Zodiac %>%
   mutate(chisq = ((Births - Expected)^2)/Expected)
 chisq <- sum(~ chisq, data = Zodiac)
