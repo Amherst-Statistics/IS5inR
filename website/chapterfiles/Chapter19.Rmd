@@ -75,9 +75,10 @@ BaseballBirths <- cbind(BaseballBirths, natbirth) # adding a column for national
 totaln <- sum(~ ballplayer_count , data = BaseballBirths)
 totaln
 BaseballBirths <- BaseballBirths %>%
-  mutate(expected = totaln * natbirth)
-BaseballBirths %>%
-  select(month, expected)
+  mutate(expected = totaln * natbirth,
+         observed = ballplayer_count, 
+         contrib = (observed - expected)^2/expected)
+sum(~ contrib, data = BaseballBirths)
 ```
 
 #### Assumptions and Conditions
