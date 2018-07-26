@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Multiple Regression (Chapter 9)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 24, 2018"
+date: "July 25, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -81,7 +81,9 @@ RealEstate <- read_csv("http://nhorton.people.amherst.edu/is5/data/Real_Estate.c
   clean_names()
 realestatelm <- lm(price ~ living_area + bedrooms, data = RealEstate)
 summary(realestatelm)
+```
 
+```{r}
 # Predicted Values
 realestatefn <- makeFun(realestatelm) # Making a function to find predicted values
 # Predicted price for a home with 2800 sq ft living area and 5 bedrooms
@@ -152,6 +154,9 @@ gf_point(price ~ living_area, data = HousingPrices) %>%
   gf_labs(x = "Living Area", y = "Price")
 gf_boxplot(price ~ as.factor(bedrooms), data = HousingPrices) %>%
   gf_labs(x = "Bedrooms", y = "Price")
+```
+
+```{r}
 gf_point(price ~ age, data = HousingPrices) %>%
   gf_smooth() %>%
   gf_labs(x = "Age", y = "Price")
@@ -220,6 +225,9 @@ msummary(coasterlm)
 gf_point(Duration ~ Drop, color = ~ Inversions, data = Coasters) %>%
   gf_lm() %>%
   gf_labs(color = "Inversions") 
+```
+
+```{r}
 coasterlm2 <- lm(Duration ~ Drop + Inversions, data = Coasters)
 msummary(coasterlm2)
 coasterlm2asdata <- augment(coasterlm2) %>% 
@@ -289,7 +297,9 @@ gf_point(sqrt_price ~ carat_size, color = ~ color, data = diamonddata) %>%
   gf_line(fitted ~ carat_size) %>%
   gf_labs(x = "Carat Size", y = "sqrt(Price)") +
   ylim(30, 100)
+```
 
+```{r}
 # With interaction
 diamondlm2 <- lm(sqrt(price) ~ carat_size * color, data = Diamonds)
 msummary(diamondlm2)
