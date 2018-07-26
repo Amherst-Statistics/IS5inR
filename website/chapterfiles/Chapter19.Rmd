@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Comparing Counts (Chapter 19)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 23, 2018"
+date: "July 26, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -99,15 +99,8 @@ qchisq(df = 10, p = .05, lower.tail = FALSE)
 # page 614
 df <- nrow(BaseballBirths) - 1
 df
-# XX Can't seem to get the right value
-# Getting the chisq statistic
-# with(chisq.test(tally(~ ballplayer_count | expected, data = BaseballBirths)), statistic)
-# with(chisq.test(tally(natbirth ~ ballplayer_count, data = BaseballBirths)), statistic)
-# Alternate method
-BaseballBirths %>%
-  mutate(chisq = ((ballplayer_count - expected)^2)/expected) %>%
-  summarise(sum(chisq))
-xpchisq(q = 26.5, df = df, lower.tail = FALSE) 
+chisq <- sum(~ contrib, data = BaseballBirths)
+xpchisq(q = chisq, df = df, lower.tail = FALSE) 
 ```
 
 #### Step-By-Step Example: A Chi-Square Test for Goodness-of-Fit
@@ -126,10 +119,11 @@ gf_col(Births ~ Month, data = Zodiac) %>%
 df <- nrow(Zodiac) - 1
 df
 # XX Need to get rid of tidyverse and find chisq statistic correctly
-Zodiac %>%
-  mutate(chisq = ((Births - Expected)^2)/Expected) %>%
-  summarise(sum(chisq))
-xpchisq(q = 5.09, df = df, lower.tail = FALSE) 
+Zodiac <- Zodiac %>%
+  mutate(chisq = ((Births - Expected)^2)/Expected)
+chisq <- sum(~ chisq, data = Zodiac)
+chisq
+xpchisq(q = chisq, df = df, lower.tail = FALSE) 
 ```
 
 #### The Chi-Square Calculation

@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Comparing Groups (Chapter 17)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 17, 2018"
+date: "July 26, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -68,34 +68,21 @@ The `do()` function constructs the correct number of rows for the data frame fro
 set.seed(234)
 numsim <- 10000
 
-# XX MC to fix in same way as other one
 # What does do() do?
-resample(Seatbelts) %>%
-  group_by(passenger) %>%
-  summarise(proportion = sum(belted)/n()) %>%
-  summarise(diffprop = abs(diff(proportion))) # Difference of proportions from one random resample
-resample(Seatbelts) %>%
-  group_by(passenger) %>%
-  summarise(proportion = sum(belted)/n()) %>%
-  summarise(diffprop = abs(diff(proportion))) # Difference of proportions from another random resample
+abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) # Difference of proportions from one random resample
+abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) # Difference of proportions from another random resample
 
-do(2) * resample(Seatbelts) %>%
-  group_by(passenger) %>%
-  summarise(proportion = sum(belted)/n()) %>%
-  summarise(diffprop = abs(diff(proportion))) # Calculates two differences
+do(2) * abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) # Calculates two differences
 
 # We need numsim differences of proportions
-seatbeltresamples <- do(numsim) * resample(Seatbelts) %>%
-  group_by(passenger) %>%
-  summarise(proportion = sum(belted)/n()) %>%
-  summarise(diffprop = abs(diff(proportion)))
+seatbeltresamples <- do(numsim) * abs(diffmean(belted ~ passenger, data = resample(Seatbelts)))
 ```
 
 For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
 
 ```{r}
 # Figure 17.1, page 542
-gf_histogram(~ diffprop, data = seatbeltresamples) %>%
+gf_histogram(~ diffmean, data = seatbeltresamples) %>%
   gf_labs(x = "Difference of Proportions", y = "# of Resamples")
 ```
 
