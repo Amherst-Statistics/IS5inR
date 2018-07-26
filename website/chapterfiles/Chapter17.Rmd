@@ -68,17 +68,16 @@ The `do()` function constructs the correct number of rows for the data frame fro
 set.seed(234)
 numsim <- 10000
 
-# What does do() do?
 abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) # Difference of proportions from one random resample
-abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) # Difference of proportions from another random resample
+abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) # Difference of proportions from another one
 
-do(2) * abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) # Calculates two differences
+do(2) * abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) 
 
-# We need numsim differences of proportions
+# We want to calculate `numsim` resampled differences of proportions
 seatbeltresamples <- do(numsim) * abs(diffmean(belted ~ passenger, data = resample(Seatbelts)))
 ```
 
-For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
+For more information about `resample()`, refer to the resampling vignette: https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf.  
 
 ```{r}
 # Figure 17.1, page 542
