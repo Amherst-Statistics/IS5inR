@@ -68,8 +68,7 @@ The `do()` function constructs the correct number of rows for the data frame fro
 set.seed(234)
 numsim <- 10000
 
-# XX use favstats and diffmean?
-
+# XX MC to fix in same way as other one
 # What does do() do?
 resample(Seatbelts) %>%
   group_by(passenger) %>%
@@ -245,48 +244,33 @@ favstats(~ amount_offered | buying_type, data = BuyingCam)
 ```{r}
 Cars <- read_csv("http://nhorton.people.amherst.edu/is5/data/Car_speeds.csv")
 # Figure 17.2 (page 560) is the same as Figure 4.4 (page 102)
-favstats(~ speed | direction, data = Cars)
+favstats(speed ~ direction, data = Cars)
 ```
 
-```{r}
+```{r cache=TRUE}
 set.seed(23456)
 numsim <- 10000
-
-# XX tidyverse
-CarSims <- do(numsim) * Cars %>%
-  mutate(direction = shuffle(direction)) %>%
-  group_by(direction) %>%
-  summarise(means = mean(~ speed)) %>%
-  summarise(diffmeans = diff(means))
-
-#CarSims <- do(numsim) * Cars %>%
-#  mutate(direction = shuffle(direction)) %>%
-#  favstats(~ direction)
-
+CarSims <- do(numsim) * diffmean(speed ~ shuffle(direction), data = Cars)
 # Figure 17.3, page 560
-gf_histogram(~ diffmeans, data = CarSims, binwidth = .1, center = .05) %>%
+gf_histogram(~ diffmean, data = CarSims, binwidth = .1, center = .05) %>%
   gf_vline(xintercept = 2.53) %>%
   gf_labs(x = "Differences in Means from 10,000 Trials", y = "# of Trials")
 ```
 
-```{r}
+```{r cache=TRUE}
 set.seed(32453)
 numsim <- 10000
 
-# XX tidyverse edit
-CarBoots <- do(numsim) * Cars %>%
-  resample() %>%
-  group_by(direction) %>%
-  summarise(means = mean(~ speed)) %>%
-  summarise(diffmeans = diff(means))
-
-qdata(~ diffmeans, p = c(.025, .975), data = CarBoots)
+CarBoots <- do(numsim) * diffmean(speed ~ direction, data = resample(Cars))
+qdata(~ diffmean, p = c(.025, .975), data = CarBoots)
 CarBoots <- CarBoots %>%
-  mutate(interval = ifelse(diffmeans > 1.88 & diffmeans < 3.19, "Within 95% Confidence", 
+  mutate(interval = ifelse(diffmean > 1.88 & diffmean < 3.19, "Within 95% Confidence", 
                            "Outside 95% Confidence"))
+```
 
+```{r}
 # Figure 17.4
-gf_histogram(~ diffmeans, fill = ~ interval, data = CarBoots, binwidth = .2, 
+gf_histogram(~ diffmean, fill = ~ interval, data = CarBoots, binwidth = .2, 
              center = .1) %>%
   gf_vline(xintercept = 1.88) %>%
   gf_vline(xintercept = 3.19) %>%
