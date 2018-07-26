@@ -137,10 +137,12 @@ gf_histogram(~ resid(bodyfatlm), binwidth = 2, center = 1) %>%
 
 #### Example 20.1: Checking Assumptions and Conditions
 
-```{r}
+```{r message=FALSE}
 Craters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Craters.csv") %>%
   clean_names() %>%
   filter(log_age <= 1.5) # Removed points to match the textbook
+```
+```{r}
 gf_point(log_diam ~ log_age, data = Craters) %>%
   gf_lm() %>%
   gf_labs(x = "Log(Age)", y = "Log(Diameter)")
@@ -219,7 +221,7 @@ Coasters <- Coasters %>%
   mutate(Inversions = as.factor(Inversions))
 coasterlm <- lm(Duration ~ Drop, data = Coasters) # simple linear model
 msummary(coasterlm) 
-coastermlm <- lm(Duration ~ Drop + Speed, data = Coasters) # multiple linear model
+coastermlm <- lm(Duration ~ Drop + Speed, data = Coasters) # multiple linear regression model
 msummary(coastermlm)
 ```
 
