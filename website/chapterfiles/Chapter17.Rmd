@@ -69,8 +69,10 @@ set.seed(234)
 numsim <- 10000
 
 # What does do() do?
-abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) # Difference of proportions from one random resample
-abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) # Difference of proportions from another random resample
+abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) 
+# Difference of proportions from one random resample
+abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) 
+# Difference of proportions from another random resample
 
 do(2) * abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) # Calculates two differences
 
@@ -219,9 +221,15 @@ BuyingCam <- BuyingCam %>%
 # Model
 gf_boxplot(amount_offered ~ buying_type, fill = ~ buying_type, data = BuyingCam) %>%
   gf_labs(x = "Buying From", y = "Amount Offered ($)", fill = "")
-gf_histogram(~ amount_offered, binwidth = 25, center = 12.5, data = BuyingCam) %>%
-  gf_facet_wrap(buying_type ~ .) %>%
-  gf_labs(x = "Amount Offered", y = "")
+
+BuyingCam %>%
+  filter(buying_type == "Friend") %>%
+  gf_histogram(~ amount_offered, binwidth = 25, center = 12) %>%
+  gf_labs(x = "Buy from Friend", y = "")
+BuyingCam %>%
+  filter(buying_type == "Stranger") %>%
+  gf_histogram(~ amount_offered, binwidth = 50, center = 20) %>%
+  gf_labs(x = "Buy from Stranger", y = "")
 # Mechanics
 favstats(amount_offered ~ buying_type, data = BuyingCam)
 ```

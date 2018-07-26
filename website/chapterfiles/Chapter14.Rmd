@@ -187,6 +187,7 @@ gf_histogram(~ mean, data = WeightMeans, binwidth = 10, center = 5) %>%
 #### Step-By-Step Example: A Bootstrap Confidence Interval for the Mean
 
 ```{r}
+# page 455
 CommuteSample <- read_csv("http://nhorton.people.amherst.edu/is5/data/Commuter_sample.csv")
 gf_histogram(~ time, data = CommuteSample, binwidth = 10, center = 5)
 # Bootstrap 

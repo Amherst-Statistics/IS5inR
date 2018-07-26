@@ -92,8 +92,10 @@ gf_dist(dist = "t", df = 69) %>%
 #### Step-By-Step Example: A One-Sample *t*-Test for the Mean
 
 ```{r}
+# page 485
 Sleep <- read_csv("http://nhorton.people.amherst.edu/is5/data/Sleep.csv")
 # Plan
+favstats(~ Sleep, data = Sleep)
 gf_histogram(~ Sleep, data = Sleep, binwidth = 1) %>%
   gf_labs(x = "Hours of Sleep", y = "")
 gf_dist(dist = "t", df = 24) %>%
