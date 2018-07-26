@@ -223,7 +223,7 @@ gf_histogram(~ amount_offered, binwidth = 25, center = 12.5, data = BuyingCam) %
   gf_facet_wrap(buying_type ~ .) %>%
   gf_labs(x = "Amount Offered", y = "")
 # Mechanics
-favstats(~ amount_offered | buying_type, data = BuyingCam)
+favstats(amount_offered ~ buying_type, data = BuyingCam)
 ```
 
 ### Section 17.6: Randomization Tests and Confidence Intervals for Two Means

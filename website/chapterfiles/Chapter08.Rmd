@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Regression Wisdom (Chapter 8)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 25, 2018"
+date: "July 26, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -185,7 +185,7 @@ gf_point(Weight ~ Height, data = HeightsWeights) %>%
   gf_lm()
 
 # Figure 8.16
-HeightWeightSum <- favstats(~ Weight | Height, data = HeightsWeights)
+HeightWeightSum <- favstats(Weight ~ Height, data = HeightsWeights)
 head(HeightWeightSum)
 gf_point(mean ~ as.numeric(Height), data = HeightWeightSum) %>%
   gf_lm() %>%

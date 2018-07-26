@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Relationships Between Categorical Variables--Contingency Tables (Chapter 3)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 17, 2018"
+date: "July 26, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -65,10 +65,10 @@ tally(~ cats_dogs_both + gender, margin = TRUE, useNA = "no", data = OKCupid)
 # Table 3.2
 tally(~ cats_dogs_both + gender, format = "percent", margin = TRUE, useNA = "no", 
       data = OKCupid)
-tally(~ cats_dogs_both | gender, format = "percent", margin = TRUE, useNA = "no", 
+tally(cats_dogs_both ~ gender, format = "percent", margin = TRUE, useNA = "no", 
       data = OKCupid)
 # Table 3.3
-tally(~ gender | cats_dogs_both, format = "percent", margin = TRUE, data = OKCupid)
+tally(gender ~ cats_dogs_both, format = "percent", margin = TRUE, data = OKCupid)
 ```
 
 
@@ -95,7 +95,7 @@ tally(Survived ~ Class, format = "percent", margin = TRUE, data = Titanic)
 See displays on 68-69.
 
 ```{r fig.width=7}
-OKdata <- tally(~ cats_dogs_both | gender, format = "percent", useNA = "no", 
+OKdata <- tally(cats_dogs_both ~ gender, format = "percent", useNA = "no", 
       data = OKCupid) %>%
   data.frame()
 # Figure 3.2, page 69
@@ -107,13 +107,13 @@ gf_col(Freq ~ gender, fill = ~ cats_dogs_both, position = "dodge", data = OKdata
 
 ```{r}
 tally(~ Plan + Sex, margin = TRUE, data = SuperBowl)
-tally(~ Plan | Sex, format = "percent", data = SuperBowl)
+tally(Plan ~ Sex, format = "percent", data = SuperBowl)
 ```
 
 #### Example 3.4: Looking for Associations Between Variables: Still Watching the Super Bowl
 
 ```{r}
-Superdata <- tally(~ Plan | Sex, format = "percent", data = SuperBowl) %>%
+Superdata <- tally(Plan ~ Sex, format = "percent", data = SuperBowl) %>%
   data.frame()
 gf_col(Freq ~ Plan, fill = ~ Sex, position = "dodge", data = Superdata)
 ```
@@ -192,5 +192,5 @@ In this case, `do(n)` creates `n` observations with the specified values in `dat
 
 ```{r}
 tally(~ sex + admit, data = Berk)
-tally(~ admit | sex, format = "percent", data = Berk)
+tally(admit ~ sex, format = "percent", data = Berk)
 ```
