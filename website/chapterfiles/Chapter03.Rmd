@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Relationships Between Categorical Variables--Contingency Tables (Chapter 3)"
 author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 26, 2018"
+date: "July 28, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -160,8 +160,6 @@ vcd::mosaic(tally(~ Survived + Class, data = Titanic),
 See the mosaic plots on page 77.  
 
 ### Section 3.4: Three Categorical Variables
-
-## Consider using `useNA = "no"` option
 
 ```{r}
 tally(~ gender + cats_dogs_both + drugs_y_n, format = "percent", data = OKCupid)
