@@ -230,11 +230,15 @@ gf_point(Duration ~ Drop, color = ~ Inversions, data = Coasters) %>%
 ```{r}
 coasterlm2 <- lm(Duration ~ Drop + Inversions, data = Coasters)
 msummary(coasterlm2)
-coasterlm2asdata <- augment(coasterlm2) %>% 
-  clean_names()
-names(coasterlm2asdata)
-glance(coasterlm2asdata)
-gf_point(resid ~ fitted, color = ~ inversions, data = coasterlm2asdata)
+```
+
+```{r}
+coasterlm2asdata <- augment(coasterlm2) 
+glance(coasterlm2) %>% data.frame()
+```
+
+```{r}
+gf_point(.resid ~ .fitted, color = ~ Inversions, data = coasterlm2asdata) 
 ```
 
 The `augment()` function creates a data frame from a linear model that includes a column for residuals, fitted values, etc. Here we use `names()` to check out the column names and `glance()` to view the structure of the data set.  
