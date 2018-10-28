@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Sampling Distribution Models and Confidence Intervals for Proportions (Chapter 13)"
-author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 16, 2018"
+author: "Nicholas Horton (nhorton@amherst.edu) and Margaret Chien"
+date: "October 28, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -101,10 +101,36 @@ gf_histogram(~ min, data = bodyfatsamples, binwidth = 3, center = 1.5) %>%
 
 ### Section 13.3: A Confidence Interval for a Proportion
 
+
+
+
 ### Section 13.4: Interpreting Confidence Intervals: What Does 95% Confidence Really Mean?
 
+First we can replicate the example on pages 423-424.
+
 ```{r}
-# Here is a simulation of Figure 13.9 (page 422)
+y <- 1034
+n <- 1520
+phat <- y/n
+phat
+sephat <- sqrt(phat * (1 - phat) / n)
+sephat
+phat + c(-2, 2) * sephat   # matches interval on the bottom of page 423
+```
+
+Note that we should actually use 1.96 rather than 2 as the multipliers.
+
+We can also use the `prop.test()` and `binom.test()` functions to calculate the interval for us.
+
+```{r}
+prop.test(y, n, correct = FALSE)   # large sample methods
+binom.test(y, n)    # exact methods
+```
+
+The intervals are almost exactly the same (not surprising, given how large a sample size we have).
+
+Next, we can recreate the simulation displayed in Figure 13.9 (page 422)
+```{r}
 set.seed(118)
 CIsim(n = 100, samples = 20) # We expect 19/20 intervals to cover the true mean
 ```
@@ -132,6 +158,7 @@ gf_point(mean ~ (1:20), data = ConfData, color = ~ success) %>%
   gf_hline(yintercept = ~ mean(preemie), data = Babies, color = 4) %>%
   gf_labs(x = "", y = "Proportion")
 ```
+
 
 ### Section 13.5: Margin of Error: Certainty vs. Precision
 
