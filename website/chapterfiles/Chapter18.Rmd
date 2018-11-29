@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Paired Samples and Blocks (Chapter 18)"
-author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 18, 2018"
+author: "Nicholas Horton (nhorton@amherst.edu)"
+date: "November 29, 2018"
 output: 
   pdf_document:
     fig_height: 3
@@ -120,6 +120,12 @@ gf_histogram(~ difference, data = WorkWeek, binwidth = 2000, center = 1000) %>%
 #### Example 18.3: Doing a Paired *t*-Test
 
 ```{r}
+t.test(~ difference, data = WorkWeek)
+```
+
+or
+
+```{r}
 nwork <- nrow(WorkWeek)
 nwork # number of pairs
 dwork <- mean(~ difference, data = WorkWeek)
@@ -153,6 +159,8 @@ Couples %>%
 
 #### Step-By-Step Example: A Paired *t*-Interval
 
+We replicate the example from page 593.
+
 ```{r}
 DexData <- Dexterity %>% 
   select(dominant_1, non_dominant_2) %>%
@@ -162,7 +170,17 @@ DexData <- Dexterity %>%
 # but has kept the count of children at 93 instead of 92
 gf_histogram(~ difference, data = DexData, binwidth = .05, center = .025) %>%
   gf_labs(x = "Dominant-Non-dominant", y = "# Subjects")
-# Mechanics
+```
+
+Here we display the calculations using the `t.test()` function and then by hand.
+
+
+```{r}
+favstats(~ difference, data = DexData)
+t.test(~ difference, data = DexData)
+```
+
+```{r}
 ndex <- nrow(DexData) + 1 # the book kept n at 93 for some reason
 ndex # number of pairs (children)
 ddex <- mean(~ difference, data = DexData)
@@ -172,7 +190,7 @@ sdex # standard deviation of the differences
 sedex <- sdex/(ndex^.5)
 sedex # standard error of the differences
 df <- ndex - 1
-df
+df   # this matches the book, but it should be 91
 tstats <- qt(p = c(.025, .975), df = df)
 tstats
 medex <- tstats  * sedex
