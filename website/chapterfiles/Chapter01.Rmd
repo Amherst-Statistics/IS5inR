@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Stats Starts Here (Chapter 1)"
-author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 17, 2018"
+author: "Nicholas Horton (nhorton@amherst.edu)"
+date: "September 15, 2019"
 output: 
   pdf_document:
     fig_height: 3
@@ -74,7 +74,7 @@ filter(Tour, Year == 1998) %>%
   select(Winner, Year, Country)
 ```
 
-#### How many stages did Alberto Contador win in the years when he won the Tour?
+#### How many stages were there in the tour in the year that Alberto Contador won?
 
 ```{r}
 filter(Tour, Winner == "Contador Alberto") %>%
