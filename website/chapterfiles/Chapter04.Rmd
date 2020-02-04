@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Understanding and Comparing Distributions (Chapter 4)"
-author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 16, 2018"
+author: "Nicholas Horton (nhorton@amherst.edu)"
+date: "February 4, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -52,7 +52,7 @@ HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Fo
 names(HopkinsForest)
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message = FALSE` code chunk option to save space and improve readability.   
+By default, `read_csv()` prints the variable names. We can suppress this using the `message = FALSE` code chunk option to save space and improve readability.
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace). You can use the `names()` function to check the cleaned names.
 
 ```{r}
@@ -69,11 +69,14 @@ favstats(~ avg_wind_mph, data = HopkinsForest)
 ```{r}
 HopkinsForest <- HopkinsForest %>%
   mutate(catmonth = ifelse(month <= 9 & month >= 4, "Spring/Summer", "Fall/Winter"))
+```
+
+```{r}
 # Figure 4.2, page 96 
 gf_histogram(~ avg_wind_mph, data = HopkinsForest, binwidth = 0.5, center = 0.25, 
-             xlab = "Average Wind Speed (mph)", y = "# of Days") %>%
+             xlab = "Average Wind Speed (mph)", ylab = "# of Days") %>%
   gf_facet_wrap(~ catmonth)
-favstats(avg_wind_mph ~ catmonth, data = HopkinsForest)
+df_stats(avg_wind_mph ~ catmonth, data = HopkinsForest)
 ```
 
 #### Example 4.1: Comparing Groups with Stem-And-Leaf
