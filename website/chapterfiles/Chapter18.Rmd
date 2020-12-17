@@ -111,8 +111,9 @@ Dexterity %>%
 
 #### Example 18.2: Checking Assumptions and Conditions
 
+We can display the distribution of the differences (see page 588).
+
 ```{r}
-# page 588
 WorkWeek <- WorkWeek %>%
   mutate(difference = fiveday - fourday)
 gf_histogram(~difference, data = WorkWeek, binwidth = 2000, center = 1000) %>%

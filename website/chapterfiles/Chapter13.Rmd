@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Sampling Distribution Models and Confidence Intervals for Proportions (Chapter 13)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 17, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -49,7 +49,8 @@ library(mosaic)
 library(readr)
 library(janitor)
 Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") %>%
-  janitor::clean_names()
+  janitor::clean_names() %>%
+  mutate(status = ifelse(preemie, "Premature", "Normal"))
 ```
 
 By default, `read_csv()` prints the variable names.
@@ -58,7 +59,7 @@ Here we use the `clean_names()` function from the `janitor` package to sanitize 
 
 ```{r}
 # Figure 13.1, page 411
-gf_histogram(~gestation, binwidth = 1, center = .5, fill = ~preemie, data = Babies) %>%
+gf_histogram(~gestation, binwidth = 1, center = .5, fill = ~status, data = Babies) %>%
   gf_labs(x = "Gestation Time (weeks)", y = "Births", fill = "")
 ```
 

@@ -134,10 +134,13 @@ gf_point(resid(diamondlm) ~ fitted(diamondlm)) %>%
 # Figure 20.9
 gf_histogram(~ resid(bodyfatlm), binwidth = 2, center = 1) %>%
   gf_labs(x = "Residuals", y = "Count")
-# Figure 20.10 is the same idea as Figure 20.3 (page 643)
 ```
 
+Figure 20.10 is intended to convey the same idea as Figure 20.3 (page 643).
+
 #### Example 20.1: Checking Assumptions and Conditions
+
+Note that points are removed to match the results in the textbook!
 
 ```{r message=FALSE}
 Craters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Craters.csv") %>%

@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Multiple Regression (Chapter 9)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 17, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -98,11 +98,16 @@ realestatefn(living_area = 2801, bedrooms = 5) - realestatefn(living_area = 2800
 
 ### Section 9.2: Interpreting Multiple Regression Coefficients
 
-```{r}
+```{r message = FALSE}
 # Figure 9.2, page 279
 gf_point(pct_bf ~ height, data = BodyFat) %>%
   gf_smooth() %>% # Added a smoother to assess linearity
   gf_labs(x = "Height (in)", y = "% Body Fat")
+```
+
+A message about the default smoother option was suppressed by adding `message = FALSE` as a code chunk option.
+
+```{r}
 # Figure 9.3
 BodyFat %>%
   filter(waist >= 36 & waist <= 38) %>% # Just plotting waist sizes between 36 and 38 inches
@@ -114,11 +119,11 @@ BodyFat %>%
 ```{r, fig.width=7}
 # Plotting all points
 BodyFat %>%
-  mutate(pointtype = ifelse(waist >= 36 & waist <= 38, "Waist Size Between 36 and 38 inches",
-    "Waist Size Not Between 36 and 38 inches"
+  mutate(waistsize = ifelse(waist >= 36 & waist <= 38, "Between 36 and 38 inches",
+    "Not Between 36 and 38 inches"
   )) %>% # Subsetting
-  gf_point(pct_bf ~ height, shape = ~pointtype, color = ~pointtype) %>%
-  gf_labs(x = "Height (in)", y = "% Body Fat", shape = "", color = "") %>%
+  gf_point(pct_bf ~ height, shape = ~waistsize, color = ~waistsize) %>%
+  gf_labs(x = "Height (in)", y = "% Body Fat", shape = "Waist size", color = "Waist size") %>%
   gf_lm()
 ```
 
@@ -127,6 +132,9 @@ BodyFat %>%
 #### Linearity Assumption
 
 #### Equal Variance Assumption
+
+We can assess the equal variance assumption in several ways.
+The simplest is through a scatterplot of residuals vs. fitted values.
 
 ```{r}
 bodyfatlm <- lm(pct_bf ~ waist + height, data = BodyFat)
@@ -138,6 +146,8 @@ gf_point(resid(bodyfatlm) ~ fitted(bodyfatlm)) %>%
 
 #### Check the Residuals
 
+It's important to look at the residuals to see if the "Nearly Normal" condition is reasonable to assume.
+
 ```{r}
 # Figure 9.5
 gf_histogram(~ resid(bodyfatlm), binwidth = 1.5, center = 0.75) %>%
@@ -148,6 +158,8 @@ gf_qq(~ resid(bodyfatlm)) %>%
 ```
 
 #### Step-By-Step Example: Multiple Regression
+
+We begin by reading in the data for the step-by-step example.
 
 ```{r message = FALSE}
 HousingPrices <- read_csv("http://nhorton.people.amherst.edu/is5/data/Housing_prices.csv") %>%
@@ -203,7 +215,7 @@ msummary(hurricanelm)
 
 ### Section 9.5: Indicator Variables
 
-```{r coaster}
+```{r coaster, message = FALSE}
 Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv")
 # Table 9.2, page 288
 head(Coasters)
@@ -214,7 +226,7 @@ Coasters <- Coasters %>%
   mutate(Inversions = as.factor(Inversions))
 ```
 
-```{r}
+```{r warning = FALSE}
 gf_point(Duration ~ Drop, data = Coasters) %>%
   gf_lm()
 ```
@@ -248,7 +260,9 @@ The `augment()` function creates a data frame from a linear model that includes 
 
 #### Example 9.3: Using Indicator Variables
 
-```{r}
+We can explore the use of indicator variables to model categorical variables.
+
+```{r message = FALSE}
 DirtBikes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Dirt_bikes_2014.csv")
 DirtBikes <- DirtBikes %>%
   filter(Cooling != "NA") %>%
@@ -263,7 +277,9 @@ The `I()` function is used to keep the class of an object the same. Here we use 
 
 #### Adjusting for Different Slopes
 
-```{r}
+We can fit a model with different slopes.
+
+```{r message = FALSE}
 BurgerKing <- read_csv("http://nhorton.people.amherst.edu/is5/data/Burger_King_items.csv") %>%
   clean_names()
 # Figure 9.9, page 292
@@ -271,13 +287,16 @@ gf_point(calories ~ carbs_g, data = BurgerKing) %>%
   gf_labs(x = "Carbs (g)", y = "Calories")
 # Figure 9.10
 gf_point(calories ~ carbs_g, color = ~ as.factor(meat), data = BurgerKing) %>%
-  gf_labs(x = "Carbs (g)", y = "Calories", color = "Meat")
+  gf_labs(x = "Carbs (g)", y = "Calories", color = "Meat") %>%
+  gf_lm()
 msummary(lm(calories ~ carbs_g * as.factor(meat), data = BurgerKing))
 ```
 
 #### One, Two, Many
 
-```{r cereal1}
+We can also consider three level variables.
+
+```{r cereal1, message = FALSE}
 Cereal <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cereals.csv")
 cereallm <- lm(sugars ~ sodium + as.factor(shelf), data = Cereal)
 gf_point(sugars ~ sodium, color = ~ as.factor(shelf), data = Cereal) %>%
@@ -288,7 +307,9 @@ msummary(cereallm)
 
 #### Example 9.4: Indicators for Variables with Several Levels
 
-```{r diamonds}
+We will read in the diamonds data.
+
+```{r diamonds, message = FALSE, warning = FALSE}
 Diamonds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Diamonds.csv") %>%
   clean_names()
 
@@ -306,7 +327,7 @@ gf_point(sqrt_price ~ carat_size, color = ~color, data = diamonddata) %>%
   ylim(30, 100)
 ```
 
-```{r}
+```{r warning = FALSE}
 # With interaction
 diamondlm2 <- lm(sqrt(price) ~ carat_size * color, data = Diamonds)
 msummary(diamondlm2)

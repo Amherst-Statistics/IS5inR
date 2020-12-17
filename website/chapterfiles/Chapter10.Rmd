@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Sample Surveys (Chapter 10)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 17, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -58,19 +58,24 @@ library(janitor)
 
 #### Random Matters
 
-```{r}
+We begin by loading in the data on birthweights.
+
+```{r message = FALSE, warning = FALSE}
 Births <- read_csv("http://nhorton.people.amherst.edu/is5/data/AllBirths1998.csv")
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names.
+These messages were suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
-```{r}
+```{r warning = FALSE}
 # Histogram of known population
 gf_histogram(~birthweight, data = Births, binwidth = 125, center = 62.5) %>%
   gf_labs(x = "Weight (g)", y = "Births")
 ```
 
 The histogram shows the distribution of the population of nearly four million births.
+Warning messages about missing values were suppressed using the `warnings=FALSE` code chunk option.
+
 
 Figure 10.2 (page 326):
 

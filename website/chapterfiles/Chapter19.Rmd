@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Comparing Counts (Chapter 19)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 17, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -101,7 +101,7 @@ xpchisq(q = chisq, df = df, lower.tail = FALSE)
 
 #### Step-By-Step Example: A Chi-Square Test for Goodness-of-Fit
 
-```{r}
+```{r warning = FALSE}
 expected <- mean(~Births, data = Zodiac)
 expected
 gf_col(Births ~ Month, data = Zodiac) %>%
@@ -162,6 +162,9 @@ with(chisq.test(tally(activity ~ school, data = Postgrad, margins = TRUE)), expe
 
 #### Step-By-Step Example: A Chi-Square Test for Homogeneity
 
+We can undertake a chi-square test for homogeneity. 
+First let's display the data.
+
 ```{r, fig.width=7}
 tally(activity ~ school, format = "percent", data = Postgrad) %>%
   data.frame() %>%
@@ -205,6 +208,8 @@ tally(location ~ has_hepatitis_c, data = Tattoos, margins = TRUE)
 
 #### Step-By-Step Example: A Chi-Square Test for Independence
 
+We use the `mosaic::tally()` function to prepare the data for the graphical display.
+
 ```{r}
 tally(has_hepatitis_c ~ location, format = "percent", data = Tattoos) %>%
   data.frame() %>%
@@ -217,6 +222,8 @@ tally(location ~ has_hepatitis_c, data = Tattoos, margins = TRUE)
 # Expected
 with(chisq.test(tally(location ~ has_hepatitis_c, data = Tattoos, margins = TRUE)), expected)
 ```
+
+We note the warning that several of the expected cell counts are less than 5, which raises concerns about the accuracy of the test.
 
 ```{r}
 # Mechanics
