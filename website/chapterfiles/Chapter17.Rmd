@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Comparing Groups (Chapter 17)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "November 28, 2018"
+date: "December 13, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -27,19 +27,20 @@ library(janitor)
 # knitr settings to control how R chunks work.
 require(knitr)
 opts_chunk$set(
-  tidy = FALSE,     # display code as typed
-  size = "small"    # slightly smaller font for code
+  tidy = FALSE, # display code as typed
+  size = "small" # slightly smaller font for code
 )
 ```
 
 ## Introduction and background 
 
-This document is intended to help describe how to undertake analyses introduced 
-as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-More information about the book can be found at http://wps.aw.com/aw_deveaux_stats_series.  This
-file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
+This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
+This file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
 
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum. In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses. A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (http://cran.r-project.org/web/packages/mosaic).  A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
+This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
+In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
+A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
+A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
 ## Chapter 17: Comparing Groups
 
@@ -54,9 +55,9 @@ library(janitor)
 ```{r}
 # Creating a data frame for Seatbelts
 Seatbelts <- rbind(
-  do(2777)        * data.frame(passenger = "F", belted = TRUE),
+  do(2777) * data.frame(passenger = "F", belted = TRUE),
   do(4208 - 2777) * data.frame(passenger = "F", belted = FALSE),
-  do(1363)        * data.frame(passenger = "M", belted = TRUE),
+  do(1363) * data.frame(passenger = "M", belted = TRUE),
   do(2763 - 1363) * data.frame(passenger = "M", belted = FALSE)
 ) %>%
   select(passenger, belted)
@@ -69,9 +70,9 @@ set.seed(234)
 numsim <- 10000
 
 # What does do() do?
-abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) 
+abs(diffmean(belted ~ passenger, data = resample(Seatbelts)))
 # Difference of proportions from one random resample
-abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) 
+abs(diffmean(belted ~ passenger, data = resample(Seatbelts)))
 # Difference of proportions from another random resample
 
 do(2) * abs(diffmean(belted ~ passenger, data = resample(Seatbelts))) # Calculates two differences
@@ -84,7 +85,7 @@ For more information about `resample()`, refer to the resampling vignette: https
 
 ```{r}
 # Figure 17.1, page 542
-gf_histogram(~ diffmean, data = seatbeltresamples) %>%
+gf_histogram(~diffmean, data = seatbeltresamples) %>%
   gf_labs(x = "Difference of Proportions", y = "# of Resamples")
 ```
 
@@ -95,20 +96,20 @@ gf_histogram(~ diffmean, data = seatbeltresamples) %>%
 OnlineProf <- rbind(
   do(141) * data.frame(gender = "M", profile = TRUE), # 248 * .57 rounds to 141
   do(107) * data.frame(gender = "M", profile = FALSE), # 248 - 141
-  do(179) * data.frame(gender = "F", profile = TRUE), 
-  do(77)  * data.frame(gender = "F", profile = FALSE)
+  do(179) * data.frame(gender = "F", profile = TRUE),
+  do(77) * data.frame(gender = "F", profile = FALSE)
 )
-tally(~ gender, data = OnlineProf)
+tally(~gender, data = OnlineProf)
 ```
 
 ```{r}
 OnlineProfM <- OnlineProf %>%
   filter(gender == "M") # Make a data set for male observations
-nM <- nrow(OnlineProfM) 
+nM <- nrow(OnlineProfM)
 nM # n for males
-propMyes <- mean(~ profile, data = OnlineProfM)
+propMyes <- mean(~profile, data = OnlineProfM)
 propMyes # p for males
-sepboys <- ((propMyes * (1 - propMyes))/nM)^.5 
+sepboys <- ((propMyes * (1 - propMyes)) / nM)^.5
 sepboys # SE for males
 ```
 
@@ -117,9 +118,9 @@ OnlineProfF <- OnlineProf %>%
   filter(gender == "F") # Make a data set for male observations
 nF <- nrow(OnlineProfF)
 nF # n for females
-propFyes <- mean(~ profile, data = OnlineProfF)
+propFyes <- mean(~profile, data = OnlineProfF)
 propFyes # p for females
-sepgirls <- ((propFyes * (1 - propFyes))/nF)^.5
+sepgirls <- ((propFyes * (1 - propFyes)) / nF)^.5
 sepgirls # SE for females
 ```
 
@@ -149,9 +150,9 @@ The `prop.test()` function can be used to find confidence intervals and p-values
 ```{r}
 # Create the data set
 SleepHabits <- rbind(
-  do(205)       * data.frame(gen = "GenY", internet = TRUE),
+  do(205) * data.frame(gen = "GenY", internet = TRUE),
   do(293 - 205) * data.frame(gen = "GenY", internet = FALSE),
-  do(235)       * data.frame(gen = "GenX", internet = TRUE),
+  do(235) * data.frame(gen = "GenX", internet = TRUE),
   do(469 - 235) * data.frame(gen = "GenX", internet = FALSE)
 )
 ```
@@ -160,23 +161,23 @@ SleepHabits <- rbind(
 # Mechanics
 ngeny <- nrow(filter(SleepHabits, gen == "GenY"))
 ngeny # n for GenY
-ygeny <- nrow(filter(SleepHabits, gen == "GenY"  & internet == TRUE))
+ygeny <- nrow(filter(SleepHabits, gen == "GenY" & internet == TRUE))
 ygeny # y for GenY
-pgeny <- mean(~ internet, data = filter(SleepHabits, gen == "GenY"))
+pgeny <- mean(~internet, data = filter(SleepHabits, gen == "GenY"))
 pgeny # proportion for GenY
 
 ngenx <- nrow(filter(SleepHabits, gen == "GenX"))
 ngenx # n for GenX
-ygenx <- nrow(filter(SleepHabits, gen == "GenX"  & internet == TRUE))
+ygenx <- nrow(filter(SleepHabits, gen == "GenX" & internet == TRUE))
 ygenx # y for GenX
-pgenx <- mean(~ internet, data = filter(SleepHabits, gen == "GenX"))
+pgenx <- mean(~internet, data = filter(SleepHabits, gen == "GenX"))
 pgenx # proportion for GenX
 
-sepgen <- ((pgeny * (1 - pgeny))/ngeny + (pgenx * (1 - pgenx))/ngenx)^.5
+sepgen <- ((pgeny * (1 - pgeny)) / ngeny + (pgenx * (1 - pgenx)) / ngenx)^.5
 sepgen # overall SE
 pdiff <- pgeny - pgenx
 pdiff # difference between proportions
-z <- (pdiff - 0)/sepgen
+z <- (pdiff - 0) / sepgen
 z
 2 * pnorm(q = z, lower.tail = FALSE)
 ```
@@ -220,22 +221,22 @@ library(tidyr) # for gather() function
 BuyingCam <- BuyingCam %>%
   gather(key = buying_type, value = amount_offered, Friend, Stranger)
 # Model
-gf_boxplot(amount_offered ~ buying_type, fill = ~ buying_type, data = BuyingCam) %>%
+gf_boxplot(amount_offered ~ buying_type, fill = ~buying_type, data = BuyingCam) %>%
   gf_labs(x = "Buying From", y = "Amount Offered ($)", fill = "")
 
 BuyingCam %>%
   filter(buying_type == "Friend") %>%
-  gf_histogram(~ amount_offered, binwidth = 25, center = 12) %>%
+  gf_histogram(~amount_offered, binwidth = 25, center = 12) %>%
   gf_labs(x = "Buy from Friend", y = "")
 BuyingCam %>%
   filter(buying_type == "Stranger") %>%
-  gf_histogram(~ amount_offered, binwidth = 50, center = 20) %>%
+  gf_histogram(~amount_offered, binwidth = 50, center = 20) %>%
   gf_labs(x = "Buy from Stranger", y = "")
 ```
 
 We can replicate the analyses on pages 557-558.
 ```{r}
-favstats(amount_offered ~ buying_type, data = BuyingCam)
+df_stats(amount_offered ~ buying_type, data = BuyingCam)
 t.test(amount_offered ~ buying_type, data = BuyingCam)
 ```
 
@@ -244,7 +245,7 @@ t.test(amount_offered ~ buying_type, data = BuyingCam)
 ```{r}
 Cars <- read_csv("http://nhorton.people.amherst.edu/is5/data/Car_speeds.csv")
 # Figure 17.2 (page 560) is the same as Figure 4.4 (page 102)
-favstats(speed ~ direction, data = Cars)
+df_stats(speed ~ direction, data = Cars)
 ```
 
 ```{r Carsims, cache=TRUE}
@@ -252,7 +253,7 @@ set.seed(23456)
 numsim <- 10000
 CarSims <- do(numsim) * diffmean(speed ~ shuffle(direction), data = Cars)
 # Figure 17.3, page 560
-gf_histogram(~ diffmean, data = CarSims, binwidth = .1, center = .05) %>%
+gf_histogram(~diffmean, data = CarSims, binwidth = .1, center = .05) %>%
   gf_vline(xintercept = 2.53) %>%
   gf_labs(x = "Differences in Means from 10,000 Trials", y = "# of Trials")
 ```
@@ -262,16 +263,19 @@ set.seed(32453)
 numsim <- 10000
 
 CarBoots <- do(numsim) * diffmean(speed ~ direction, data = resample(Cars))
-qdata(~ diffmean, p = c(.025, .975), data = CarBoots)
+qdata(~diffmean, p = c(.025, .975), data = CarBoots)
 CarBoots <- CarBoots %>%
-  mutate(interval = ifelse(diffmean > 1.88 & diffmean < 3.19, "Within 95% Confidence", 
-                           "Outside 95% Confidence"))
+  mutate(interval = ifelse(diffmean > 1.88 & diffmean < 3.19, "Within 95% Confidence",
+    "Outside 95% Confidence"
+  ))
 ```
 
 ```{r}
 # Figure 17.4
-gf_histogram(~ diffmean, fill = ~ interval, data = CarBoots, binwidth = .2, 
-             center = .1) %>%
+gf_histogram(~diffmean,
+  fill = ~interval, data = CarBoots, binwidth = .2,
+  center = .1
+) %>%
   gf_vline(xintercept = 1.88) %>%
   gf_vline(xintercept = 3.19) %>%
   gf_labs(x = "Difference in Means", y = "# of Trials") +

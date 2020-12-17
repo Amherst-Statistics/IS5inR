@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Understanding and Comparing Distributions (Chapter 4)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "February 4, 2020"
+date: "December 13, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -27,39 +27,43 @@ library(janitor)
 # knitr settings to control how R chunks work.
 require(knitr)
 opts_chunk$set(
-  tidy = FALSE,     # display code as typed
-  size = "small"    # slightly smaller font for code
+  tidy = FALSE, # display code as typed
+  size = "small" # slightly smaller font for code
 )
 ```
 
 ## Introduction and background 
 
-This document is intended to help describe how to undertake analyses introduced 
-as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-More information about the book can be found at http://wps.aw.com/aw_deveaux_stats_series.  This
-file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
+This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
+This file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
 
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum. In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses. A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (http://cran.r-project.org/web/packages/mosaic).  A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
+This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
+In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
+A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
+A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
 ## Chapter 4: Understanding and Comparing Distributions
 
-```{r}
+```{r message = FALSE}
 library(mosaic)
 library(readr)
 library(janitor)
 HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
-  clean_names()
+  janitor::clean_names()
 names(HopkinsForest)
 ```
 
-By default, `read_csv()` prints the variable names. We can suppress this using the `message = FALSE` code chunk option to save space and improve readability.
+By default, `read_csv()` prints the variable names.
+We suppressed these using the `message = FALSE` code chunk option to save space and improve readability.
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace). You can use the `names()` function to check the cleaned names.
 
 ```{r}
 # Figure 4.1, page 96
-gf_histogram(~ avg_wind_mph, data = HopkinsForest, 
-             xlab = "Average Wind Speed (mph)", ylab = "# of Days", binwidth = 0.5, center = 0.25)
-favstats(~ avg_wind_mph, data = HopkinsForest)
+gf_histogram(~avg_wind_mph,
+  data = HopkinsForest,
+  xlab = "Average Wind Speed (mph)", ylab = "# of Days", binwidth = 0.5, center = 0.25
+)
+df_stats(~avg_wind_mph, data = HopkinsForest)   # an improved version of "favstats()"
 ```
 
 ### Section 4.1: Displays for Comparing Groups
@@ -72,32 +76,37 @@ HopkinsForest <- HopkinsForest %>%
 ```
 
 ```{r}
-# Figure 4.2, page 96 
-gf_histogram(~ avg_wind_mph, data = HopkinsForest, binwidth = 0.5, center = 0.25, 
-             xlab = "Average Wind Speed (mph)", ylab = "# of Days") %>%
-  gf_facet_wrap(~ catmonth)
+# Figure 4.2, page 96
+gf_histogram(~avg_wind_mph,
+  data = HopkinsForest, binwidth = 0.5, center = 0.25,
+  xlab = "Average Wind Speed (mph)", ylab = "# of Days"
+) %>%
+  gf_facet_wrap(~catmonth)
 df_stats(avg_wind_mph ~ catmonth, data = HopkinsForest)
 ```
 
 #### Example 4.1: Comparing Groups with Stem-And-Leaf
 
-```{r}
+```{r message = FALSE}
 # Figure 4.1, page 97
 NestEgg <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nest_Egg_Index.csv") %>%
-  clean_names()
+  janitor::clean_names()
 with(NestEgg, stem(nest_egg_index))
 ```
 
 #### Boxplots
 
-As noted in the book, boxplots are most useful to compare distributions. Below, we have replicated the single boxplot from page 98, but we don't recommend the use of single boxplots.
+As noted in the book, boxplots are most useful to compare distributions.
+Below, we have replicated the single boxplot from page 98.
 
 ```{r}
 # Step 4 on page 98
-gf_boxplot(~ avg_wind_mph, data = HopkinsForest, y = "Daily Average Wind Speed (mph)")  # or gf_boxplot(X ~ 1)
+gf_boxplot(~avg_wind_mph, data = HopkinsForest) %>% # or gf_boxplot(X ~ 1)
+  gf_labs(y = "Daily Average Wind Speed (mph)") 
 ```
 
-Instead, we can make comparisons more easily by placing boxplots side by side with the following code: 
+I don't recommend the use of single boxplots.
+Instead, one can make comparisons more easily by placing boxplots side by side with the following code: 
 
 ```{r}
 # Figure 4.3, page 99
@@ -123,20 +132,20 @@ gf_boxplot(Speed ~ Track, data = Coasters)
 
 ```{r}
 Cups <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cups.csv")
-favstats(Difference ~ Container, data = Cups)
+df_stats(Difference ~ Container, data = Cups)
 # Mechanics, page 101
-gf_boxplot(Difference ~ Container, data = Cups, ylab = "Temp Change in F") 
+gf_boxplot(Difference ~ Container, data = Cups, ylab = "Temp Change in F")
 ```
 
 #### Just Checking
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, message = FALSE}
 Flights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Flights_on_time_2016.csv") %>%
-  clean_names()
+  janitor::clean_names()
 # Bureau of Transportation Statistics, page 101
-gf_histogram(~ ontime_pct, data = Flights, binwidth = 2, center = 1) %>%
+gf_histogram(~ontime_pct, data = Flights, binwidth = 2, center = 1) %>%
   gf_labs(x = "Ontime %", y = "$ of Months")
-gf_boxplot(~ ontime_pct, data = Flights)
+gf_boxplot(~ontime_pct, data = Flights)
 gf_boxplot(ontime_pct ~ month, data = Flights)
 ```
 
@@ -152,13 +161,16 @@ gf_boxplot(speed ~ direction, data = CarSpeeds)
 
 #### Re-Expressing to Improve Symmetry
 
-```{r}
+```{r message = FALSE}
 CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation_2014.csv") %>%
-  clean_names()
+  janitor::clean_names()
+```
+
+```{r}
 # Figure 4.6, page 105
-gf_histogram(~ ceo_compensation_m, data = CEOComp, binwidth = 2.5, center = 2.5/2) %>%
+gf_histogram(~ceo_compensation_m, data = CEOComp, binwidth = 2.5, center = 2.5 / 2) %>%
   gf_labs(x = "Compensation (M$)", y = "Millions of $")
-gf_boxplot(~ ceo_compensation_m, data = CEOComp) %>%
+gf_boxplot(~ceo_compensation_m, data = CEOComp) %>%
   gf_labs(x = "Compensation (M$)", y = "Millions of $")
 
 # Figure 4.7, page 106
@@ -170,6 +182,9 @@ gf_histogram(~ log(ceo_compensation_m), data = CEOComp, binwidth = .224, center 
 
 ```{r}
 PassiveSmoke <- read_csv("http://nhorton.people.amherst.edu/is5/data/Passive_smoke.csv")
+```
+
+```{r}
 # Figure 4.8, page 107
 gf_boxplot(cotinine ~ smoke_exposure, data = PassiveSmoke) %>%
   gf_labs(x = "Smoke Exposure", y = "Cotinine (ng/ml)")

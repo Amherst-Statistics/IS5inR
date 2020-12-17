@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Testing Hypotheses (Chapter 15)"
-author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 13, 2018"
+author: "Nicholas Horton (nhorton@amherst.edu)"
+date: "December 13, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -27,19 +27,20 @@ library(janitor)
 # knitr settings to control how R chunks work.
 require(knitr)
 opts_chunk$set(
-  tidy = FALSE,     # display code as typed
-  size = "small"    # slightly smaller font for code
+  tidy = FALSE, # display code as typed
+  size = "small" # slightly smaller font for code
 )
 ```
 
 ## Introduction and background 
 
-This document is intended to help describe how to undertake analyses introduced 
-as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-More information about the book can be found at http://wps.aw.com/aw_deveaux_stats_series.  This
-file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
+This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
+This file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
 
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum. In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses. A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (http://cran.r-project.org/web/packages/mosaic).  A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
+This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
+In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
+A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
+A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
 ## Chapter 15: Testing Hypotheses
 
@@ -61,9 +62,9 @@ library(janitor)
 n <- 90
 x <- 61
 p <- .8
-phat <- x/n
-sdphat <- ((p * (1 - p))/n)^.5
-z <- (phat - p)/sdphat
+phat <- x / n
+sdphat <- ((p * (1 - p)) / n)^.5
+z <- (phat - p) / sdphat
 pnorm(z)
 # Or, without calculating the z-score:
 pnorm(q = phat, mean = p, sd = sdphat)
@@ -79,13 +80,13 @@ By default, `read_csv()` prints the variable names. These messages can be suppre
 
 ```{r}
 # 2. Model (page 482)
-gf_histogram(~ Gestation, data = GestationTime, binwidth = 7.5, center = 3.75) %>%
+gf_histogram(~Gestation, data = GestationTime, binwidth = 7.5, center = 3.75) %>%
   gf_labs(x = "Gestation Time (days)", y = "# of Births")
 # 3. Mechanics
 gf_dist(dist = "t", df = 69) %>%
   gf_vline(xintercept = -3.118) %>%
-    gf_vline(xintercept = 3.118) %>%
-  gf_labs(x = "", y = "") + 
+  gf_vline(xintercept = 3.118) %>%
+  gf_labs(x = "", y = "") +
   xlim(-3.347, 3.347)
 ```
 
@@ -95,12 +96,12 @@ gf_dist(dist = "t", df = 69) %>%
 # page 485
 Sleep <- read_csv("http://nhorton.people.amherst.edu/is5/data/Sleep.csv")
 # Plan
-favstats(~ Sleep, data = Sleep)
-gf_histogram(~ Sleep, data = Sleep, binwidth = 1) %>%
+df_stats(~Sleep, data = Sleep)
+gf_histogram(~Sleep, data = Sleep, binwidth = 1) %>%
   gf_labs(x = "Hours of Sleep", y = "")
 gf_dist(dist = "t", df = 24) %>%
   gf_vline(xintercept = -1.67) %>%
-  gf_labs(x = "", y = "") + 
+  gf_labs(x = "", y = "") +
   xlim(-3, 3)
 # Mechanics
 n <- 25
@@ -108,8 +109,8 @@ mean <- 7.0
 df <- 24
 y <- 6.64
 s <- 1.075
-sey <- s/(n^.5)
-t <- (y - mean)/sey # t-statistic
+sey <- s / (n^.5)
+t <- (y - mean) / sey # t-statistic
 pt(q = t, df = df) # p-value
 ```
 
@@ -118,21 +119,21 @@ pt(q = t, df = df) # p-value
 ```{r}
 # page 487
 Temperatures <- read_csv("http://nhorton.people.amherst.edu/is5/data/Normal_temperature.csv")
-favstats(~ Temp, data = Temperatures)
-gf_histogram(~ Temp, data = Temperatures, binwidth = .2)
+df_stats(~Temp, data = Temperatures)
+gf_histogram(~Temp, data = Temperatures, binwidth = .2)
 # Confidence interval
-y <- mean(~ Temp, data = Temperatures)
+y <- mean(~Temp, data = Temperatures)
 y
-s <- sd(~ Temp, data = Temperatures)
+s <- sd(~Temp, data = Temperatures)
 s
 n <- nrow(Temperatures)
 n
 tstats <- qt(df = n - 1, p = c(.005, .995))
 tstats
-y + (tstats * (s/(n^.5)))
+y + (tstats * (s / (n^.5)))
 # Hypothesis test
 mu <- 98.6
-t <- (y - mu)/(s/(n^.5))
+t <- (y - mu) / (s / (n^.5))
 t
 2 * pt(q = t, df = n - 1) # two sided test
 ```
@@ -140,31 +141,31 @@ t
 #### Random Matters: Bootstrap Hypothesis Tests and Intervals
 
 ```{r}
-numsamp <- 10000 
+numsamp <- 10000
 
 # What does do() do?
-mean(~ Temp, data = resample(Temperatures)) # Mean of one random resample
-mean(~ Temp, data = resample(Temperatures)) # Mean of another random resample
+mean(~Temp, data = resample(Temperatures)) # Mean of one random resample
+mean(~Temp, data = resample(Temperatures)) # Mean of another random resample
 
-do(2) * mean(~ Temp, data = resample(Temperatures)) # Calculates means of two resamples
+do(2) * mean(~Temp, data = resample(Temperatures)) # Calculates means of two resamples
 
 # We will use do() a numsamp number of times
-resampletemps <- do(numsamp) * mean(~ Temp, data = resample(Temperatures))
+resampletemps <- do(numsamp) * mean(~Temp, data = resample(Temperatures))
 ```
 
 For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
 
 ```{r}
-gf_histogram(~ mean, data = resampletemps) %>%
+gf_histogram(~mean, data = resampletemps) %>%
   gf_labs(x = "Mean Temperature", y = "# of Samples")
-qdata(~ mean, p = c(.005, .995), data = resampletemps) # reject null hypothesis
+qdata(~mean, p = c(.005, .995), data = resampletemps) # reject null hypothesis
 
 # Making a model-centric distribution
 Temperatures2 <- Temperatures %>%
   mutate(Temp = Temp + .315)
-resampletemps2 <- do(numsamp) * mean(~ Temp, data = resample(Temperatures2))
-gf_histogram(~ mean, data = resampletemps2) %>%
-  gf_vline(xintercept = mean(~ Temp, data = Temperatures)) %>%
+resampletemps2 <- do(numsamp) * mean(~Temp, data = resample(Temperatures2))
+gf_histogram(~mean, data = resampletemps2) %>%
+  gf_vline(xintercept = mean(~Temp, data = Temperatures)) %>%
   gf_labs(x = "Mean Temperature Centered at 98.6", y = "# of Samples")
 ```
 
@@ -173,8 +174,8 @@ gf_histogram(~ mean, data = resampletemps2) %>%
 ```{r}
 # Creating the data set
 Baseball <- rbind(
-  do(1308) * (winner = "HOME"),
-  do(2431 - 1308) * (winner = "AWAY")
+  do(1308) * (winner <- "HOME"),
+  do(2431 - 1308) * (winner <- "AWAY")
 ) %>%
   rename(winner = result)
 # Mechanics (page 490)
@@ -182,17 +183,17 @@ n <- nrow(Baseball)
 p <- .5
 phat <- Baseball %>%
   filter(winner == "HOME") %>%
-  nrow()/n
+  nrow() / n
 phat
-sdphat <- ((p * (1 - p))/n)^.5
+sdphat <- ((p * (1 - p)) / n)^.5
 sdphat
-z <- (phat - p)/sdphat # z-value
+z <- (phat - p) / sdphat # z-value
 z
 1 - pnorm(z) # p-value
 # Or, without calculating the z-score:
 1 - pnorm(q = phat, mean = p, sd = sdphat)
 # Mechanics (page 491)
-sep <- ((phat * (1 - phat))/n)^.5
+sep <- ((phat * (1 - phat)) / n)^.5
 sep
 me <- 1.96 * sep
 phat - me # lower bound of 95% confidence

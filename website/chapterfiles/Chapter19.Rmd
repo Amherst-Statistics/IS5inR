@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Comparing Counts (Chapter 19)"
-author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 26, 2018"
+author: "Nicholas Horton (nhorton@amherst.edu)"
+date: "December 13, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -27,19 +27,13 @@ library(janitor)
 # knitr settings to control how R chunks work.
 require(knitr)
 opts_chunk$set(
-  tidy = FALSE,     # display code as typed
-  size = "small"    # slightly smaller font for code
+  tidy = FALSE, # display code as typed
+  size = "small" # slightly smaller font for code
 )
 ```
 
 ## Introduction and background 
 
-This document is intended to help describe how to undertake analyses introduced 
-as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-More information about the book can be found at http://wps.aw.com/aw_deveaux_stats_series.  This
-file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
-
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum. In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses. A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (http://cran.r-project.org/web/packages/mosaic).  A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
 ## Chapter 19: Comparing Counts
 
@@ -47,7 +41,7 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 library(mosaic)
 library(readr)
 library(janitor)
-Zodiac <- read_csv("http://nhorton.people.amherst.edu/is5/data/Zodiac.csv") 
+Zodiac <- read_csv("http://nhorton.people.amherst.edu/is5/data/Zodiac.csv")
 ```
 
 By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
@@ -61,24 +55,26 @@ Zodiac %>%
 
 #### Example 19.1: Finding Expected Counts
 
-```{r}
+```{r message = FALSE}
 # page 611
 BaseballBirths <- read_csv("http://nhorton.people.amherst.edu/is5/data/Ballplayer_births.csv") %>%
-  clean_names() # doesn't contain national birth %
+  janitor::clean_names() # doesn't contain national birth %
 ```
 
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace). 
 
 ```{r}
-natbirth <- c(.08, .07, .08, .08, .08, .08, .09, .09, .09, .09, .08, .09) 
+natbirth <- c(.08, .07, .08, .08, .08, .08, .09, .09, .09, .09, .08, .09)
 BaseballBirths <- cbind(BaseballBirths, natbirth) # adding a column for national birth %
-totaln <- sum(~ ballplayer_count , data = BaseballBirths)
+totaln <- sum(~ballplayer_count, data = BaseballBirths)
 totaln
 BaseballBirths <- BaseballBirths %>%
-  mutate(expected = totaln * natbirth,
-         observed = ballplayer_count, 
-         contrib = (observed - expected)^2/expected)
-sum(~ contrib, data = BaseballBirths)
+  mutate(
+    expected = totaln * natbirth,
+    observed = ballplayer_count,
+    contrib = (observed - expected)^2 / expected
+  )
+sum(~contrib, data = BaseballBirths)
 ```
 
 #### Assumptions and Conditions
@@ -99,18 +95,18 @@ qchisq(df = 10, p = .05, lower.tail = FALSE)
 # page 614
 df <- nrow(BaseballBirths) - 1
 df
-chisq <- sum(~ contrib, data = BaseballBirths)
-xpchisq(q = chisq, df = df, lower.tail = FALSE) 
+chisq <- sum(~contrib, data = BaseballBirths)
+xpchisq(q = chisq, df = df, lower.tail = FALSE)
 ```
 
 #### Step-By-Step Example: A Chi-Square Test for Goodness-of-Fit
 
 ```{r}
-expected <- mean(~ Births, data = Zodiac)
+expected <- mean(~Births, data = Zodiac)
 expected
 gf_col(Births ~ Month, data = Zodiac) %>%
   gf_hline(yintercept = expected) %>%
-  gf_labs(x = "Sign", y = "Count") + 
+  gf_labs(x = "Sign", y = "Count") +
   theme(axis.text.x = element_text(angle = 30, hjust = 1)) # to adjust the angle of the x axis labels
 ```
 
@@ -119,10 +115,10 @@ gf_col(Births ~ Month, data = Zodiac) %>%
 df <- nrow(Zodiac) - 1
 df
 Zodiac <- Zodiac %>%
-  mutate(chisq = ((Births - Expected)^2)/Expected)
-chisq <- sum(~ chisq, data = Zodiac)
+  mutate(chisq = ((Births - Expected)^2) / Expected)
+chisq <- sum(~chisq, data = Zodiac)
 chisq
-xpchisq(q = chisq, df = df, lower.tail = FALSE) 
+xpchisq(q = chisq, df = df, lower.tail = FALSE)
 ```
 
 #### The Chi-Square Calculation
@@ -130,7 +126,7 @@ xpchisq(q = chisq, df = df, lower.tail = FALSE)
 ```{r}
 Zodiac %>%
   mutate(residsq = Residual^2) %>%
-  mutate(component = residsq/Expected)
+  mutate(component = residsq / Expected)
 ```
 
 #### The Trouble with Goodness-of-Fit Tests: What's the Alternative?
@@ -147,11 +143,11 @@ Postgrad <- rbind(
   do(104) * data.frame(activity = "Grad School", school = "Agriculture"),
   do(171) * data.frame(activity = "Grad School", school = "Arts & Sciences"),
   do(158) * data.frame(activity = "Grad School", school = "Engineering"),
-  do(33)  * data.frame(activity = "Grad School", school = "ILR"),
+  do(33) * data.frame(activity = "Grad School", school = "ILR"),
   do(135) * data.frame(activity = "Other", school = "Agriculture"),
   do(115) * data.frame(activity = "Other", school = "Arts & Sciences"),
-  do(39)  * data.frame(activity = "Other", school = "Engineering"),
-  do(16)  * data.frame(activity = "Other", school = "ILR")
+  do(39) * data.frame(activity = "Other", school = "Engineering"),
+  do(16) * data.frame(activity = "Other", school = "ILR")
 )
 ```
 
@@ -169,7 +165,7 @@ with(chisq.test(tally(activity ~ school, data = Postgrad, margins = TRUE)), expe
 ```{r, fig.width=7}
 tally(activity ~ school, format = "percent", data = Postgrad) %>%
   data.frame() %>%
-  gf_col(Freq ~ school, fill = ~ activity, position = "dodge") %>%
+  gf_col(Freq ~ school, fill = ~activity, position = "dodge") %>%
   gf_labs(x = "School", y = "Percent", fill = "")
 ```
 
@@ -178,7 +174,7 @@ tally(activity ~ school, format = "percent", data = Postgrad) %>%
 tally(activity ~ school, data = Postgrad, margins = TRUE)
 with(chisq.test(tally(activity ~ school, data = Postgrad, margins = TRUE)), expected)
 with(chisq.test(tally(activity ~ school, data = Postgrad)), statistic)
-xpchisq(q = 93.7, df = 6, lower.tail = FALSE) 
+xpchisq(q = 93.7, df = 6, lower.tail = FALSE)
 ```
 
 ### Section 19.3: Examining the Residuals
@@ -192,15 +188,15 @@ with(chisq.test(tally(activity ~ school, data = Postgrad, margins = TRUE)), resi
 
 ```{r}
 BaseballBirths %>%
-  mutate(residuals = (ballplayer_count - expected)/(expected^.5)) %>%
+  mutate(residuals = (ballplayer_count - expected) / (expected^.5)) %>%
   select(month, residuals)
 ```
 
 ### Section 19.4: Chi-Square Test of Independence
 
-```{r}
+```{r message = FALSE}
 Tattoos <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tattoos.csv", skip = 1) %>%
-  clean_names() # skip = 1 because first row is "Col1", "Col2"
+  janitor::clean_names() # skip = 1 because first row is "Col1", "Col2"
 # Table 19.5, page 623
 tally(location ~ has_hepatitis_c, data = Tattoos, margins = TRUE)
 ```

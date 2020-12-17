@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Displaying and Describing Data (Chapter 2)"
-author: "Margaret Chien and Nicholas Horton (nhorton@amherst.edu)"
-date: "July 16, 2018"
+author: "Nicholas Horton (nhorton@amherst.edu)"
+date: "December 17, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -27,19 +27,20 @@ library(janitor)
 # knitr settings to control how R chunks work.
 require(knitr)
 opts_chunk$set(
-  tidy = FALSE,     # display code as typed
-  size = "small"    # slightly smaller font for code
+  tidy = FALSE, # display code as typed
+  size = "small" # slightly smaller font for code
 )
 ```
 
 ## Introduction and background 
 
-This document is intended to help describe how to undertake analyses introduced 
-as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-More information about the book can be found at http://wps.aw.com/aw_deveaux_stats_series.  This
-file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
+This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
+This file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
 
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum. In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses. A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (http://cran.r-project.org/web/packages/mosaic).  A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
+This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
+In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
+A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
+A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
 ## Chapter 2: Displaying and Describing Data
 
@@ -48,22 +49,22 @@ This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-
 ```{r message = FALSE}
 library(mosaic)
 library(readr)
-library(janitor) #for variable names
+library(janitor) # for variable names
 options(digits = 3)
 Titanic <- read_csv("http://nhorton.people.amherst.edu/is5/data/Titanic.csv")
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names. These messages were suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
 ```{r}
-#Table 2.2, page 19
-tally(~ Class, data = Titanic)
+# Table 2.2, page 19
+tally(~Class, data = Titanic)
 
-#Table 2.3
-tally(~ Class, format = "percent", data = Titanic)
+# Table 2.3
+tally(~Class, format = "percent", data = Titanic)
 
-#Figure 2.2, page 19
-gf_bar(~ Class, data = Titanic) %>%
+# Figure 2.2, page 19
+gf_bar(~Class, data = Titanic) %>%
   gf_labs(x = "Ticket Class", y = "Number of People")
 ```
 
@@ -76,7 +77,7 @@ We use `gf_bar()` to make a bar graph using the `ggformula` system, which is aut
 
 ```{r}
 # Figure 2.7, page 24
-gf_histogram(~ Age, data = Titanic, binwidth = 5, ylab = "# of People", center = 5/2)
+gf_histogram(~Age, data = Titanic, binwidth = 5, ylab = "# of People", center = 5 / 2)
 ```
 
 The function generates a warning because three of the ages are missing; this output can be suppressed by adding `warning=FALSE` as an option in this code chunk.
@@ -84,10 +85,12 @@ The function generates a warning because three of the ages are missing; this out
 #### Earthquakes and Tsunamis
 
 ```{r}
-#Example 2.3, page 25
+# Example 2.3, page 25
 Earthquakes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tsunamis_2016.csv")
-gf_histogram(~ Primary_Magnitude, data = Earthquakes, binwidth = 0.5, 
-             ylab = "# of Earthquakes", xlab = "Magnitude", center = 0.25)
+gf_histogram(~Primary_Magnitude,
+  data = Earthquakes, binwidth = 0.5,
+  ylab = "# of Earthquakes", xlab = "Magnitude", center = 0.25
+)
 ```
 
 #### Stem-and-Leaf Displays
@@ -97,7 +100,7 @@ See page 26.
 ```{r}
 # Figure 2.8, page 26
 Pulse_rates <- read_csv("http://nhorton.people.amherst.edu/is5/data/Pulse_rates.csv")
-gf_histogram(~ Pulse, data = Pulse_rates, binwidth = 5, center = 5/2)
+gf_histogram(~Pulse, data = Pulse_rates, binwidth = 5, center = 5 / 2)
 with(Pulse_rates, stem(Pulse))
 ```
 
@@ -106,7 +109,7 @@ with(Pulse_rates, stem(Pulse))
 ```{r}
 # Figure 2.9, page 27
 Derby <- read_csv("http://nhorton.people.amherst.edu/is5/data/Kentucky_Derby_2016.csv")
-gf_dotplot(~ Time_Sec, data = Derby, binwidth = 1) %>%
+gf_dotplot(~Time_Sec, data = Derby, binwidth = 1) %>%
   gf_labs(x = "Winning Time (sec)", y = "# of Races")
 ```
 
@@ -114,7 +117,7 @@ gf_dotplot(~ Time_Sec, data = Derby, binwidth = 1) %>%
 
 ```{r}
 # Figure 2.10, page 27
-gf_dens(~ Age, data = Titanic, y = "Density")
+gf_dens(~Age, data = Titanic)
 ```
 
 ### Section 2.3: Shape
@@ -123,13 +126,15 @@ See displays on pages 28-29.
 
 #### Consumer Price Index
 
-```{r}
+```{r message = FALSE}
 CPI <- read_csv("http://nhorton.people.amherst.edu/is5/data/CPI_Worldwide.csv") %>%
-  clean_names()
+  janitor::clean_names()
 names(CPI)
-#Example 2.5, page 30
-gf_histogram(~ consumer_price_index, data = CPI, ylab = "# of Cities", 
-             xlab = "Consumer Price Index", binwidth = 5, center = 5/2)
+# Example 2.5, page 30
+gf_histogram(~consumer_price_index,
+  data = CPI, ylab = "# of Cities",
+  xlab = "Consumer Price Index", binwidth = 5, center = 5 / 2
+)
 ```
 
 We can use `clean_names()` from the `janitor` package to format the names of the columns when necessary. You can use the `names()` function to check the reformatted names.    
@@ -137,12 +142,14 @@ The pipe operator (`%>%`) takes the output of the line of code and uses it in th
 
 #### Credit Card Expenditures
 
-```{r}
+```{r message = FALSE}
 CreditCardEx <- read_csv("http://nhorton.people.amherst.edu/is5/data/Credit_card_charges.csv") %>%
-  clean_names()
+  janitor::clean_names()
 # Figure 2.6, page 30
-gf_histogram(~ charges, data = CreditCardEx, ylab = "# of Customers", 
-             xlab = "Average Monthly Expenditure ($)", binwidth = 400, center = 200)
+gf_histogram(~charges,
+  data = CreditCardEx, ylab = "# of Customers",
+  xlab = "Average Monthly Expenditure ($)", binwidth = 400, center = 200
+)
 ```
 
 ### Section 2.4: Center
@@ -154,11 +161,17 @@ TitanicCrew <- filter(Titanic, Class == "Crew")
 # Figure 2.15, page 32
 TitanicCrew %>%
   mutate(color = ifelse(Age <= median(Age), "Less", "Greater")) %>%
-  gf_histogram(~ Age, fill = ~ color, binwidth = 5, center = 5/2, ylab = "# of Crew Members")
+  gf_histogram(~Age, fill = ~color, binwidth = 5, center = 5 / 2, ylab = "# of Crew Members")
 # Figure 2.16
-gf_histogram(~ Age, data = TitanicCrew, ylab = "# of Crew Members", binwidth = 5, center = 5/2) %>%
-  gf_vline(xintercept = mean(~ Age, data = TitanicCrew))
-favstats(~ Age, data = TitanicCrew)
+gf_histogram(~Age, data = TitanicCrew, ylab = "# of Crew Members", binwidth = 5, center = 5 / 2) %>%
+  gf_vline(xintercept = mean(~Age, data = TitanicCrew))
+df_stats(~Age, data = TitanicCrew)
+```
+
+Another way to generate summary statistics is the `favstats()` command (we will stick to `df_stats()` because it is more flexible).
+
+```{r}
+favstats(~Age, data = TitanicCrew)
 ```
 
 ### Section 2.5: Spread
@@ -166,8 +179,8 @@ favstats(~ Age, data = TitanicCrew)
 #### The Range
 
 ```{r}
-range(~ Age, data = TitanicCrew)
-diff(range(~ Age, data = TitanicCrew))
+range(~Age, data = TitanicCrew)
+diff(range(~Age, data = TitanicCrew))
 ```
 
 The `range()` function returns the maximum and minimum values, so we can use the `diff()`
@@ -176,18 +189,18 @@ function to find the difference between the two values.
 #### The Interquartile Range
 
 ```{r}
-favstats(~ Age, data = TitanicCrew)
-IQR(~ Age, data = TitanicCrew)
+df_stats(~Age, data = TitanicCrew)
+IQR(~Age, data = TitanicCrew)
 ```
 
 Using the `IQR()` function allows us to avoid having to manually find the 
-IQR by subtracting Q1 from Q3 from the `favstats()` output.  
+IQR by subtracting Q1 from Q3 from the `df_stats()` output.  
 
 #### Standard Deviation  
 
 ```{r}
-sd(~ Age, data = TitanicCrew)
-var(~ Age, data = TitanicCrew)
+sd(~Age, data = TitanicCrew)
+var(~Age, data = TitanicCrew)
 ```
 
 #### Summarizing a Distribution
@@ -195,17 +208,21 @@ var(~ Age, data = TitanicCrew)
 ```{r}
 Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
 # Step-by-Step Example, page 39
-gf_histogram(~ mpg, data = Nissan, binwidth = 1, xlab = "Fuel Efficiency (mpg)", 
-             ylab = "# of Fill-ups", center = 5/2)
-favstats(~ mpg, data = Nissan)
+gf_histogram(~mpg,
+  data = Nissan, binwidth = 1, xlab = "Fuel Efficiency (mpg)",
+  ylab = "# of Fill-ups", center = 5 / 2
+)
+df_stats(~mpg, data = Nissan)
 ```
 
 #### Random Matters
 
-```{r}
+```{r message = FALSE}
 Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv") %>%
-  clean_names()
+  janitor::clean_names()
 # Figure 2.19, page 40
-gf_histogram(~ commute_time, data = Commute, binwidth = 10, xlab = "Commute Time (min)", 
-             ylab = "# of Employees", center = 5)
+gf_histogram(~commute_time,
+  data = Commute, binwidth = 10, xlab = "Commute Time (min)",
+  ylab = "# of Employees", center = 5
+)
 ```
