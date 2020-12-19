@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: The Standard Deviation as a Ruler and the Normal Model (Chapter 5)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 19, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -69,18 +69,20 @@ with(WomenHeptathlon2016, stem(long_jump))
 
 ```{r}
 filter(WomenHeptathlon2016, last_name == "Thiam") %>%
-  data.frame()
+  tibble()
 # calculate z-score with mean and sd from df_stats
 (6.58 - 6.17) / .247 # long jump
 filter(WomenHeptathlon2016, last_name == "Johnson-Thompson") %>%
-  data.frame()
+  tibble()
 ```
 
-`data.frame()` converts an object into a data frame.  
+The `tibble()` function converts an object into a data frame (you may also see the use of `data.frame()` for this purpose.)
 
 ### Section 5.2: Shifting and Scaling
 
 #### Shifting to Adjust the Center
+
+We begin by reading in the data.
 
 ```{r message = FALSE}
 MenWeight <- read_csv("http://nhorton.people.amherst.edu/is5/data/Mens_Weights.csv") %>%
@@ -100,6 +102,8 @@ gf_histogram(~ (weight_in_kg - 74), data = MenWeight, binwidth = 10) %>%
 
 #### Rescaling to Adjust the Scale
 
+Let's review the data from the `MenWeight` dataset.
+
 ```{r message=FALSE}
 df_stats(~weight_in_kg, data = MenWeight)
 df_stats(~weight_in_pounds, data = MenWeight)
@@ -107,19 +111,22 @@ library(tidyr) # for gather() function
 
 # What does gather() do?
 MenWeight %>%
-  head() # There are two variables: weight_in_kg and weight_in_pounds. Each observation has a value for each.
+  head() # There are two variables: weight_in_kg and weight_in_pounds. 
+# Each observation has a value for each.
 nrow(MenWeight)
-MenGather <- MenWeight %>%
-  gather(key = weighttype, value = weight, weight_in_kg, weight_in_pounds)
-MenGather %>%
+MenLonger <- MenWeight %>%
+  pivot_longer(cols = starts_with("weight"), 
+               values_to = "weight",
+               names_to = "weighttype")
+MenLonger %>%
   head() # The two variables are weighttype and weight. weighttype is a categorical variable that is either in kg or pounds
-nrow(MenGather) # Each observation from before is now two rows
+nrow(MenLonger) # Each observation from before is now two rows
 ```
 
-Here we use the `gather()` function to transform the dataset into the needed format, which can be seen with the `head()` function.  
+Here we use the `tidyr::pivot_wider()` function to transform the dataset into the needed format, which can be seen with the `head()` function.  
 
 ```{r}
-MenGather %>%
+MenLonger %>%
   gf_boxplot(weight ~ weighttype) %>%
   gf_labs(x = "Weight Type", y = "")
 ```
@@ -147,7 +154,9 @@ xpnorm(c(-3, 3), mean = 0, sd = 1, verbose = FALSE)
 
 #### Example 5.4: Using the 68-95-99.7 Rule
 
-```{r}
+We begin by reading in the data.
+
+```{r message = FALSE}
 BodyFat <- read_csv("http://nhorton.people.amherst.edu/is5/data/Bodyfat.csv")
 gf_histogram(~Wrist,
   data = BodyFat, binwidth = .5,
@@ -176,7 +185,7 @@ mean(~commute_time, data = sample(Commute, size = 100)) # Mean of one random sam
 mean(~commute_time, data = sample(Commute, size = 100)) # Mean of another random sample
 ```
 
-The `do()` command allows us to run a command multiple times, saving the result as a data frame.
+The `mosaic::do()` command allows us to run a command multiple times, saving the result as a data frame.
 
 ```{r}
 do(2) * mean(~commute_time, data = sample(Commute, size = 100))
@@ -211,7 +220,9 @@ See examples on pages 136-140.
 
 ### Section 5.5: Normal Probability Plots
 
-```{r}
+We begin by reading in the data.
+
+```{r message = FALSE}
 Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
 # Figure 5.10, page 141
 gf_histogram(~mpg, data = Nissan, binwidth = 1, center = .5)

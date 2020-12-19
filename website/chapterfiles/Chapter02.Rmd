@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Displaying and Describing Data (Chapter 2)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 17, 2020"
+date: "December 19, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -71,6 +71,8 @@ gf_bar(~Class, data = Titanic) %>%
 `GOAL(~ X)` is the general form of the modeling language for one variable in the `mosaic` package.
 We use `gf_bar()` to make a bar graph using the `ggformula` system, which is automatically downloaded with the `mosaic` package.  
 
+See the Minimal Guide for more details: https://cran.r-project.org/web/packages/mosaic/vignettes/MinimalRgg.pdf
+
 ### Section 2.2: Displaying a Quantitative Variable
 
 #### Ages of Those Aboard the Titanic
@@ -80,11 +82,13 @@ We use `gf_bar()` to make a bar graph using the `ggformula` system, which is aut
 gf_histogram(~Age, data = Titanic, binwidth = 5, ylab = "# of People", center = 5 / 2)
 ```
 
-The function generates a warning because three of the ages are missing; this output can be suppressed by adding `warning=FALSE` as an option in this code chunk.
+The function generates a warning because three of the ages are missing; this output can (and should!) be suppressed by adding `warning=FALSE` as an option in this code chunk.
 
 #### Earthquakes and Tsunamis
 
-```{r}
+We begin by reading in the data.
+
+```{r message = FALSE, warning = FALSE}
 # Example 2.3, page 25
 Earthquakes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tsunamis_2016.csv")
 gf_histogram(~Primary_Magnitude,
@@ -97,7 +101,7 @@ gf_histogram(~Primary_Magnitude,
 
 See page 26.
 
-```{r}
+```{r message=FALSE}
 # Figure 2.8, page 26
 Pulse_rates <- read_csv("http://nhorton.people.amherst.edu/is5/data/Pulse_rates.csv")
 gf_histogram(~Pulse, data = Pulse_rates, binwidth = 5, center = 5 / 2)
@@ -106,8 +110,9 @@ with(Pulse_rates, stem(Pulse))
 
 #### Dotplot
 
-```{r}
-# Figure 2.9, page 27
+See Figure 2.9, page 27
+
+```{r message = FALSE}
 Derby <- read_csv("http://nhorton.people.amherst.edu/is5/data/Kentucky_Derby_2016.csv")
 gf_dotplot(~Time_Sec, data = Derby, binwidth = 1) %>%
   gf_labs(x = "Winning Time (sec)", y = "# of Races")
@@ -115,9 +120,13 @@ gf_dotplot(~Time_Sec, data = Derby, binwidth = 1) %>%
 
 #### Density Plots
 
-```{r}
+There are two forms of density plots: not-shaded, and shaded.
+The former will be useful when comparing multiple densities.
+
+```{r, warning = FALSE}
 # Figure 2.10, page 27
 gf_dens(~Age, data = Titanic)
+gf_density(~Age, data = Titanic)
 ```
 
 ### Section 2.3: Shape
@@ -125,6 +134,8 @@ gf_dens(~Age, data = Titanic)
 See displays on pages 28-29.
 
 #### Consumer Price Index
+
+First we need to load the data.
 
 ```{r message = FALSE}
 CPI <- read_csv("http://nhorton.people.amherst.edu/is5/data/CPI_Worldwide.csv") %>%
@@ -142,6 +153,8 @@ The pipe operator (`%>%`) takes the output of the line of code and uses it in th
 
 #### Credit Card Expenditures
 
+First we load the data.
+
 ```{r message = FALSE}
 CreditCardEx <- read_csv("http://nhorton.people.amherst.edu/is5/data/Credit_card_charges.csv") %>%
   janitor::clean_names()
@@ -156,14 +169,22 @@ gf_histogram(~charges,
 
 #### Finding Median and Mean
 
-```{r}
+First we need to load the data.
+
+```{r warning = FALSE}
 TitanicCrew <- filter(Titanic, Class == "Crew")
 # Figure 2.15, page 32
 TitanicCrew %>%
   mutate(color = ifelse(Age <= median(Age), "Less", "Greater")) %>%
-  gf_histogram(~Age, fill = ~color, binwidth = 5, center = 5 / 2, ylab = "# of Crew Members")
+  gf_histogram(~Age, fill = ~color, binwidth = 5, center = 5 / 2, ylab = "# of Crew Members") %>%
+  gf_labs(fill = "Age compared to median") 
 # Figure 2.16
-gf_histogram(~Age, data = TitanicCrew, ylab = "# of Crew Members", binwidth = 5, center = 5 / 2) %>%
+gf_histogram(
+  ~Age, 
+  data = TitanicCrew, 
+  ylab = "# of Crew Members", 
+  binwidth = 5, 
+  center = 5 / 2) %>%
   gf_vline(xintercept = mean(~Age, data = TitanicCrew))
 df_stats(~Age, data = TitanicCrew)
 ```
@@ -205,7 +226,9 @@ var(~Age, data = TitanicCrew)
 
 #### Summarizing a Distribution
 
-```{r}
+First we need to load the data.
+
+```{r message = FALSE}
 Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
 # Step-by-Step Example, page 39
 gf_histogram(~mpg,
@@ -216,6 +239,8 @@ df_stats(~mpg, data = Nissan)
 ```
 
 #### Random Matters
+
+First we need to load the data.
 
 ```{r message = FALSE}
 Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv") %>%

@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Stats Starts Here (Chapter 1)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 19, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -50,10 +50,9 @@ See table on page 7.
 
 ```{r}
 library(mosaic)
-library(readr)
 options(digits = 3)
 Tour <-
-  read_csv("http://nhorton.people.amherst.edu/is5/data/Tour_de_France_2016.csv") %>%
+  readr::read_csv("http://nhorton.people.amherst.edu/is5/data/Tour_de_France_2016.csv") %>%
   janitor::clean_names()
 ```
 
@@ -72,12 +71,16 @@ Piping (`%>%`) takes the output of the line of code and uses it in the next.
 
 #### Let's find who was the winner in 1998
 
+We use the `filter()` command.
+
 ```{r}
 filter(Tour, year == 1998) %>%
   select(winner, year, country)
 ```
 
 #### How many stages were there in the tour in the year that Alberto Contador won?
+
+We can also use the `filter()` command.
 
 ```{r}
 filter(Tour, winner == "Contador Alberto") %>%
@@ -97,6 +100,8 @@ another.
 
 #### What was the slowest average speed of any tour?  Fastest?
 
+Again, we use `filter()` but this time in conjunction with the `min()` function.
+
 ```{r}
 filter(Tour, average_speed == min(average_speed)) %>%
   select(year, average_speed)
@@ -105,6 +110,7 @@ filter(Tour, average_speed == max(average_speed)) %>%
 ```
 
 #### How can we summarize the distribution of Average Speeds?
+
 
 ```{r}
 df_stats(~average_speed, data = Tour)

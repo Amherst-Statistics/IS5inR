@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Understanding and Comparing Distributions (Chapter 4)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 19, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -70,6 +70,8 @@ df_stats(~avg_wind_mph, data = HopkinsForest)   # an improved version of "favsta
 
 #### Histograms
 
+We began by creating a new month to categorize the dates.
+
 ```{r}
 HopkinsForest <- HopkinsForest %>%
   mutate(catmonth = ifelse(month <= 9 & month >= 4, "Spring/Summer", "Fall/Winter"))
@@ -86,6 +88,8 @@ df_stats(avg_wind_mph ~ catmonth, data = HopkinsForest)
 ```
 
 #### Example 4.1: Comparing Groups with Stem-And-Leaf
+
+We begin by reading in the data.
 
 ```{r message = FALSE}
 # Figure 4.1, page 97
@@ -122,13 +126,17 @@ Here we use the mosaic modeling language to specify the variables.  As a general
 
 #### Example 4.2: Comparing Groups with Boxplots
 
-```{r}
+We begin by reading in the data.
+
+```{r message = FALSE}
 # Example 4.2, page 99
 Coasters <- read_csv("http://nhorton.people.amherst.edu/is5/data/Coasters_2015.csv")
 gf_boxplot(Speed ~ Track, data = Coasters)
 ```
 
 #### Step-By-Step Example: Comparing Groups
+
+We begin by reading in the data.
 
 ```{r}
 Cups <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cups.csv")
@@ -138,6 +146,8 @@ gf_boxplot(Difference ~ Container, data = Cups, ylab = "Temp Change in F")
 ```
 
 #### Just Checking
+
+We begin by reading in the data.
 
 ```{r, warning=FALSE, message = FALSE}
 Flights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Flights_on_time_2016.csv") %>%
@@ -151,6 +161,8 @@ gf_boxplot(ontime_pct ~ month, data = Flights)
 
 #### Random Matters
 
+We begin by reading in the data.
+
 ```{r}
 # Figure 4.4, page 102
 CarSpeeds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Car_speeds.csv")
@@ -160,6 +172,8 @@ gf_boxplot(speed ~ direction, data = CarSpeeds)
 ### Section 4.3: Re-Expressing Data: A First Look
 
 #### Re-Expressing to Improve Symmetry
+
+We begin by reading in the data.
 
 ```{r message = FALSE}
 CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation_2014.csv") %>%
@@ -179,6 +193,8 @@ gf_histogram(~ log(ceo_compensation_m), data = CEOComp, binwidth = .224, center 
 ```
 
 #### Re-Expression to Equalize Spread Across Groups
+
+We begin by reading in the data.
 
 ```{r}
 PassiveSmoke <- read_csv("http://nhorton.people.amherst.edu/is5/data/Passive_smoke.csv")
