@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Scatterplots, Association, and Correlation (Chapter 6)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 19, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -21,6 +21,7 @@ output:
 library(mosaic)
 library(readr)
 library(janitor)
+library(GGally)
 ```
 
 ```{r, include = FALSE}
@@ -44,14 +45,16 @@ A paper describing the mosaic approach was published in the *R Journal*: https:/
 
 ## Chapter 6: Scatterplots, Association, and Correlation
 
-```{r}
+We begin by reading in the data.
+
+```{r message = TRUE}
 library(mosaic)
 library(readr)
 library(janitor)
 Hurricanes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tracking_hurricanes_2015.csv")
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names. These messages can (and should!) be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
 ```{r}
 # Figure 6.1, page 164
@@ -65,13 +68,18 @@ See dots on pages 164-165.
 
 #### Example 6.1: Comparing Prices Worldwide
 
+We begin by reading in the data.
+
 ```{r message = FALSE}
 Prices <- read_csv("http://nhorton.people.amherst.edu/is5/data/Prices_and_Earnings.csv") %>%
   janitor::clean_names()
 names(Prices)
+glimpse(Prices)
 ```
 
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
+
+The `names()` function displays the names while the `glimpse()` function provides more detail about the dataset.
 
 ```{r}
 gf_point(food_costs ~ womens_clothing, data = Prices) %>%
@@ -88,7 +96,9 @@ gf_point(food_costs ~ vacation_days, data = Prices) %>%
 
 #### Smoothing Scatterplots
 
-```{r message = FALSE}
+We begin by reading in the data.
+
+```{r message = FALSE, warning = FALSE}
 HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
   janitor::clean_names()
 # Figure 6.2, page 168
@@ -97,9 +107,14 @@ gf_point(avg_wind_mph ~ day_of_year, data = HopkinsForest) %>%
   gf_labs(x = "Day of Year", y = "Average Wind Speed (mph)")
 ```
 
+The smoother warning messages provided by `gf_smooth()` have been removed from this output
+using the `warning = FALSE` code chunk option.
+
 #### Example 6.2: Smoothing Timeplots
 
-```{r, message=FALSE}
+We will explore smoothing using the fitness data.
+
+```{r, message=FALSE, warning = FALSE}
 Fitness <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fitness_data.csv") %>%
   janitor::clean_names()
 gf_histogram(~weight, data = Fitness, binwidth = 1, center = .5) %>%
@@ -111,11 +126,13 @@ gf_boxplot(weight ~ as.factor(month), data = Fitness) %>%
   gf_labs(x = "Month", y = "Weight (lb)")
 ```
 
-Warnings can be suppressed with the `warnings=FALSE` chunk option. 
+Warnings should be suppressed for your work once you have determined that they are innocuous.
 
 ### Section 6.2: Correlation
 
-```{r}
+We begin by reading in the data.
+
+```{r message = FALSE}
 HeightsWeights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Heights_and_weights.csv")
 
 # Figure 6.3, page 170
@@ -128,7 +145,9 @@ See displays on pages 170 - 171.
 
 #### Step-by-Step Example: Looking at Association
 
-```{r}
+We begin by loading the Framingham data.
+
+```{r message = FALSE, warning = FALSE}
 Framingham <- read_csv("http://nhorton.people.amherst.edu/is5/data/Framingham.csv")
 gf_point(SBP ~ DBP, data = Framingham) %>%
   gf_labs(x = "Diastolic BP (mm Hg)", y = "Systolic BP (mm Hg)")
@@ -136,6 +155,9 @@ cor(SBP ~ DBP, data = Framingham)
 ```
 
 #### Random Matters: Correlations Vary
+
+A recurring theme in the course involves random sampling of various sorts.  
+Here we explore a sample of babies born in 1998.
 
 ```{r, cache=TRUE, message = FALSE}
 LiveBirths <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") %>%
@@ -148,7 +170,7 @@ gf_point(mom_age ~ dad_age, data = sample(LiveBirths, size = 50))
 # Graph will look different for different samples
 cor(mom_age ~ dad_age, data = LiveBirths)
 
-# What does do() do?
+# What does mosaic::do() do?
 cor(mom_age ~ dad_age, data = sample(LiveBirths, size = 50)) # Correlation of one random sample
 cor(mom_age ~ dad_age, data = sample(LiveBirths, size = 50)) # Correlation of another random sample
 
@@ -173,7 +195,9 @@ gf_histogram(~cor, data = LiveCorr, binwidth = .05, center = .025) %>%
 
 ### Section 6.3: Warning: Correlation $\neq$ Causation
 
-```{r}
+The storks data is a classic example of how correlation does not always imply causation.
+
+```{r message = FALSE}
 Storks <- read_csv("http://nhorton.people.amherst.edu/is5/data/Storks.csv")
 # Figure 6.9
 gf_point(Population ~ Storks, data = Storks) %>%
@@ -181,6 +205,8 @@ gf_point(Population ~ Storks, data = Storks) %>%
 ```
 
 #### Correlation Tables
+
+We can display correlation tables as seen in Table 6.1 on page 178.
 
 ```{r message = FALSE}
 Companies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Companies.csv") %>%
@@ -191,7 +217,15 @@ Companies %>%
   cor()
 ```
 
+```{r fig.width = 7, fig.height = 7}
+Companies %>%
+  select(assets, sales, market_value, profits, cash_flow, employees) %>%
+  GGally::ggpairs()
+```
+
 ### Section 6.4: Straightening Scatterplots
+
+It's often possible to straightend scatterplots through use of a transformation.
 
 ```{r message = FALSE}
 FStops <- read_csv("http://nhorton.people.amherst.edu/is5/data/F-stops.csv") %>%
@@ -206,8 +240,9 @@ cor(f_stop ~ shutter_speed, data = FStops)
 
 #### f/Stops Again
 
+The f/Stops example is reviewed on page 181 (Figure 6.11)
+
 ```{r}
-# Figure 6.11, page 181
 gf_point(log(f_stop) ~ shutter_speed, data = FStops) %>%
   gf_labs(x = "Shutter Speed (sec)", y = "Log (f/stop)")
 # Figure 6.12
@@ -215,4 +250,4 @@ gf_point((f_stop)^2 ~ shutter_speed, data = FStops) %>%
   gf_labs(x = "Shutter Speed (sec)", y = "f/stop squareed")
 ```
 
-See displays in "What Can Go Wrong?" on pages 181-183.
+See the displays in "What Can Go Wrong?" on pages 181-183.

@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Linear Regression (Chapter 7)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 19, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -57,7 +57,7 @@ By default, `read_csv()` prints the variable names.
 These messages have been suppressed using the `message=FALSE` code chunk option to save space and improve readability. 
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).  
 
-```{r}
+```{r message = FALSE}
 gf_point(fat_g ~ protein_g, data = BurgerKing) %>%
   gf_smooth() %>%
   gf_labs(x = "Protein (g)", y = "Fat (g)")
@@ -70,7 +70,7 @@ Here we add a smoother to show a clearer picture of the relationship.
 See display on page 197.
 
 We can calculate the residual for a particular value with 31 grams of protein by creating an function called `burgerfun` using the 
-`makeFun()` function.  
+`mosaic::makeFun()` function.  
 
 ```{r}
 burgerlm <- lm(fat_g ~ protein_g, data = BurgerKing)
@@ -92,6 +92,8 @@ msummary(burgerlm)
 
 #### Example 7.1: A Linear Model for Hurricanes
 
+We begin by reading in the data.
+
 ```{r message = FALSE}
 Hurricanes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hurricanes_2015.csv") %>%
   janitor::clean_names()
@@ -100,7 +102,8 @@ gf_point(max_wind_speed_kts ~ central_pressure_mb, data = Hurricanes) %>%
   gf_labs(x = "Central Pressure (mb)", y = "Max Wind Speed (kts)")
 ```
 
-The function generates a warning because some of the data are missing: this output can be suppressed by adding `warning=FALSE` as an option in this code chunk.
+The function generates a warning because some of the data are missing: this output can (and should!) be suppressed by adding `warning=FALSE` as an option in this code chunk.
+Later examples will suppress this extraneous output.
 
 ### Section 7.3: Finding the Least Squares Line
 
@@ -120,6 +123,8 @@ coef(burgerlm)[2]
 ```
 
 #### Step-by-Step Example: Calculating a Regression Equation
+
+We begin by loading the bridge dataset.
 
 ```{r message = FALSE}
 TompkinsBridges <-

@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Regression Wisdom (Chapter 8)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 19, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -54,6 +54,8 @@ library(janitor)
 
 #### Getting the "Bends": When the Residuals Aren't Straight
 
+We begin by reading in the data.
+
 ```{r message = FALSE}
 Penguins <- read_csv("http://nhorton.people.amherst.edu/is5/data/Penguins.csv") %>%
   janitor::clean_names()
@@ -75,7 +77,9 @@ gf_point(resid(penguinlm) ~ duration_min, data = Penguins) %>%
 
 #### Sifting Residuals for Groups
 
-```{r}
+We begin by reading in the data.
+
+```{r message = FALSE}
 Cereal <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cereals.csv")
 cereallm <- lm(calories ~ sugars, data = Cereal)
 # Figure 8.3, page 235
@@ -124,7 +128,9 @@ See displays on page 237 and 238.
 
 #### Example 8.1: Extrapolation: Reaching Beyond the Data
 
-```{r}
+We begin by reading in the data.
+
+```{r message = FALSE}
 MarriageAge <- read_csv("http://nhorton.people.amherst.edu/is5/data/Marriage_age_2015.csv")
 MarriageAge <- MarriageAge %>%
   mutate(timeperiod = ifelse(Year <= 1940, "Section1", ifelse(Year >= 1980, "Section3", "Section2")))
@@ -132,11 +138,13 @@ gf_point(Men ~ Year, color = ~timeperiod, data = MarriageAge, ylab = "Men's Age 
   guides(color = FALSE)
 ```
 
-`ifelse()` works similarly to `recode()`.  
+The `ifelse()` function works similarly to `recode()` when only two levels exist.
 
 ### Section 8.3: Outliers, Leverage, and Influence
 
-```{r}
+We begin by reading in the data.
+
+```{r message = FALSE}
 Election2000 <- read_csv("http://nhorton.people.amherst.edu/is5/data/Election_2000.csv")
 withlm <- lm(Buchanan ~ Nader, data = Election2000)
 msummary(withlm)
@@ -153,7 +161,9 @@ See page 242 for example of high-leverage point.
 
 ### Section 8.4: Lurking Variables with Causation
 
-```{r message = FALSE}
+The Doctors data can help with thinking in a multivariate way.
+
+```{r message = FALSE, warning = FALSE}
 Doctors <- read_csv("http://nhorton.people.amherst.edu/is5/data/Doctors_and_life_expectancy.csv") %>%
   janitor::clean_names()
 # Figure 8.13, page 243
@@ -166,7 +176,9 @@ gf_point(life_exp ~ sqrt_tv_person, data = Doctors) %>%
 
 #### Example 8.2: Using Several of These Methods Together
 
-```{r}
+We can use these approaches together, as seen in the following example.
+
+```{r message = FALSE}
 # page 244
 DirtBikes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Dirt_bikes_2014.csv")
 gf_point(MSRP ~ Displacement, data = DirtBikes)
@@ -185,7 +197,9 @@ DirtBikes %>%
 
 ### Section 8.5: Working with Summary Values
 
-```{r}
+We can also work with summary values.
+
+```{r message = FALSE}
 HeightsWeights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Heights_and_weights.csv")
 # Figure 8.15, page 246
 gf_point(Weight ~ Height, data = HeightsWeights) %>%
@@ -204,12 +218,14 @@ Alternately, we can use `group_by()` and `summarise()` together to find summary 
 ```{r}
 HeightsWeights %>%
   group_by(Height) %>%
-  summarise(MeanWeight = mean(Weight)) %>%
+  summarise(MeanWeight = mean(Weight), .groups = "drop") %>%
   gf_point(MeanWeight ~ Height) %>%
   gf_lm()
 ```
 
 ### Section 8.6: Straightening Scatterplots--The Three Goals
+
+We begin by reading in the data.
 
 ```{r message = FALSE}
 FuelEfficiency <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fuel_efficiency.csv") %>%
@@ -222,7 +238,7 @@ gf_point(resid(fuellm) ~ fitted(fuellm)) %>%
   gf_labs(x = "Predicted (mpg)", y = "Residuals (mpg)")
 ```
 
-```{r}
+```{r warning = FALSE}
 FuelEfficiency <- FuelEfficiency %>%
   mutate(fuel_consumption = (1 / city_mpg) * 100)
 # Figure 8.19, page 247
@@ -235,7 +251,9 @@ gf_point(resid(fuellm2) ~ fitted(fuellm2)) %>%
 
 #### Goals of Re-Expression for Regression
 
-```{r, fig.width=7, message = FALSE}
+We use the hand dexterity data to illustrate re-expressions.
+
+```{r, fig.width=7, message = FALSE, warning = FALSE}
 HandDexterity <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hand_dexterity.csv") %>%
   janitor::clean_names() %>%
   mutate(dominant = ifelse(dominant == 0, "Dominant hand", "Non-dominant hand")) %>%
@@ -260,9 +278,11 @@ gf_histogram(~ resid(handlm), binwidth = .0075, center = .0075 / 2) %>%
 
 ### Section 8.7: Finding a Good Re-expression
 
-See table and Figure 8.23 on page 250.  
+See the table and Figure 8.23 on page 250.  
 
 #### Step-By-Step Example: Re-Expressing to Straighten a Scatterplot
+
+We can explore different re-expressions.
 
 ```{r}
 gf_point(dive_heart_rate ~ duration_min, data = Penguins, xlab = "Duration", ylab = "DHR")
@@ -303,4 +323,4 @@ gf_histogram(~ resid(penguinlm3), binwidth = 0.0025, center = 0.00125) %>%
   gf_labs(x = "Residuals", y = "# of Residuals")
 ```
 
-$-1/\sqrt{DHR}$ follows the same process on pages 253-254.
+The $-1/\sqrt{DHR}$ transformation follows the same process on pages 253-254.
