@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Paired Samples and Blocks (Chapter 18)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 19, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -45,7 +45,7 @@ A paper describing the mosaic approach was published in the *R Journal*: https:/
 
 ## Chapter 18: Paired Samples and Blocks
 
-```{r message = FALSE}
+```{r message = FALSE, warning = FALSE}
 library(mosaic)
 library(readr)
 library(janitor)
@@ -66,7 +66,7 @@ Dexterity %>%
 
 ### Section 18.1: Paired Data
 
-```{r}
+```{r warning = FALSE}
 # Figure 18.1
 Dexterity %>%
   select(dominant_1, non_dominant_2) %>%
@@ -79,9 +79,9 @@ Dexterity %>%
 
 #### Example 18.1: Identifying Paired Data
 
+We begin by creating the data set on page 586.
+
 ```{r}
-# page 586
-# Create the data set
 WorkWeek <- rbind(
   data.frame(name = "Jeff", fiveday = 2798, fourday = 2914),
   data.frame(name = "Betty", fiveday = 7724, fourday = 6112),
@@ -122,6 +122,8 @@ gf_histogram(~difference, data = WorkWeek, binwidth = 2000, center = 1000) %>%
 
 #### Example 18.3: Doing a Paired *t*-Test
 
+It is straightforward to carry out the paired t-test.
+
 ```{r}
 t.test(~difference, data = WorkWeek)
 ```
@@ -149,7 +151,9 @@ The `xpt()` function finds the p-value and plots it on a graph to visualize it. 
 
 ### Section 18.3: Confidence Intervals for Matched Pairs
 
-```{r}
+We begin by reading the data.
+
+```{r message = FALSE}
 Couples <- read_csv("http://nhorton.people.amherst.edu/is5/data/Couples.csv") %>%
   filter(wAge != "*") %>%
   mutate(wAge = as.numeric(wAge))
@@ -209,6 +213,8 @@ t.test(~difference, data = DexData, df = df)
 
 #### Example 18.4: Looking at Effect Size with a Paired *t* Confidence Interval
 
+We can verify the calculations from the example.
+
 ```{r}
 tstats <- qt(p = c(.025, .975), df = nwork - 1)
 tstats
@@ -224,6 +230,8 @@ dwork + me # confidence interval
 #### What's Independent?
 
 #### Random Matters: A Bootstrapped Paired Data Confidence Interval and Hypothesis Test
+
+Our usual approach to bootstrapping works here.
 
 ```{r}
 set.seed(2345)
@@ -241,7 +249,7 @@ DexBoots <- do(numsim) * mean(~difference, data = resample(DexData))
 
 For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
 
-```{r}
+```{r warning = FALSE}
 qdata(~mean, p = c(.025, .975), data = DexBoots)
 DexBoots <- DexBoots %>%
   mutate(interval = ifelse(mean > .0245 & mean < .0783, "Within 95% Confidence",

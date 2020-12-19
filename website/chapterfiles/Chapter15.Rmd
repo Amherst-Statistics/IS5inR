@@ -58,6 +58,8 @@ library(janitor)
 
 #### Example 15.5: Finding A P-Value
 
+It is straightforward to find p-values using summary statistics. 
+
 ```{r}
 n <- 90
 x <- 61
@@ -72,13 +74,15 @@ pnorm(q = phat, mean = p, sd = sdphat)
 
 ### Section 15.4: A Hypothesis Test for the Mean
 
-```{r}
+We begin by reading the data.
+
+```{r message = FALSE}
 GestationTime <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nashville.csv")
 ```
 
 By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
 
-```{r}
+```{r warning = FALSE}
 # 2. Model (page 482)
 gf_histogram(~Gestation, data = GestationTime, binwidth = 7.5, center = 3.75) %>%
   gf_labs(x = "Gestation Time (days)", y = "# of Births")
@@ -92,7 +96,9 @@ gf_dist(dist = "t", df = 69) %>%
 
 #### Step-By-Step Example: A One-Sample *t*-Test for the Mean
 
-```{r}
+We begin by reading in the data.
+
+```{r message = FALSE, warning = FALSE}
 # page 485
 Sleep <- read_csv("http://nhorton.people.amherst.edu/is5/data/Sleep.csv")
 # Plan
@@ -116,7 +122,9 @@ pt(q = t, df = df) # p-value
 
 ### Section 15.5: Intervals and Tests
 
-```{r}
+It is straightforward to calculate confidence intervals and carry out hypothesis tests.
+
+```{r message = FALSE}
 # page 487
 Temperatures <- read_csv("http://nhorton.people.amherst.edu/is5/data/Normal_temperature.csv")
 df_stats(~Temp, data = Temperatures)
@@ -140,6 +148,8 @@ t
 
 #### Random Matters: Bootstrap Hypothesis Tests and Intervals
 
+The boostrap is a flexible alternative approach to inference.
+
 ```{r}
 numsamp <- 10000
 
@@ -155,7 +165,7 @@ resampletemps <- do(numsamp) * mean(~Temp, data = resample(Temperatures))
 
 For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
 
-```{r}
+```{r warning = FALSE}
 gf_histogram(~mean, data = resampletemps) %>%
   gf_labs(x = "Mean Temperature", y = "# of Samples")
 qdata(~mean, p = c(.005, .995), data = resampletemps) # reject null hypothesis
@@ -170,6 +180,8 @@ gf_histogram(~mean, data = resampletemps2) %>%
 ```
 
 #### Step-By-Step Example: Tests and Intervals
+
+We begin by creating the dataset.
 
 ```{r}
 # Creating the data set

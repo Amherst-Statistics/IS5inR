@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Comparing Groups (Chapter 17)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 19, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -63,7 +63,7 @@ Seatbelts <- rbind(
   select(passenger, belted)
 ```
 
-The `do()` function constructs the correct number of rows for the data frame from provided cell counts.
+The `mosaic::do()` function constructs the correct number of rows for the data frame from provided cell counts.
 
 ```{r belted, cache=TRUE}
 set.seed(234)
@@ -90,6 +90,8 @@ gf_histogram(~diffmean, data = seatbeltresamples) %>%
 ```
 
 #### Example 17.1: Finding the Standard Error of a Difference in Proportions
+
+We begin with some wrangling to create the dataset.
 
 ```{r}
 # Creating the data set for online profiles
@@ -131,6 +133,8 @@ sep # overall SE
 
 #### Example 17.2: Finding a Two-Proportion *z*-Interval
 
+We can calculate the desired Z interval.
+
 ```{r}
 zstats <- qnorm(p = c(.025, .975))
 (propFyes - propMyes) + zstats * sep
@@ -146,6 +150,8 @@ The `prop.test()` function can be used to find confidence intervals and p-values
 ### Section 17.3: The Two-Sample *z*-Test: Testing for the Difference Between Proportions
 
 #### Step-By-Step Example: A Two-Proportion *z*-Test
+
+Again, we need to create the data table of counts.
 
 ```{r}
 # Create the data set
@@ -188,6 +194,8 @@ The `t.test()` function can be used to generate a confidence interval for the di
 
 #### Example 17.7: Finding a Confidence Interval for the Difference in Sample Means
 
+We can calculate the confidence interval using summary statistics.
+
 ```{r}
 # page 555
 nord <- 27 # n for ordinary bowls
@@ -210,7 +218,9 @@ diffy + me # confidence interval
 
 #### Step-By-Step Example: A Two-Sample *t*-Test for the Difference Between the Two Means
 
-```{r}
+We begin by reading the data.
+
+```{r message = FALSE}
 # page 556
 BuyingCam <- read_csv("http://nhorton.people.amherst.edu/is5/data/Buy_from_a_friend.csv")
 ```
@@ -242,13 +252,15 @@ t.test(amount_offered ~ buying_type, data = BuyingCam)
 
 ### Section 17.6: Randomization Tests and Confidence Intervals for Two Means
 
-```{r}
+We begin by reading in the Cars dataset.
+
+```{r message = FALSE}
 Cars <- read_csv("http://nhorton.people.amherst.edu/is5/data/Car_speeds.csv")
 # Figure 17.2 (page 560) is the same as Figure 4.4 (page 102)
 df_stats(speed ~ direction, data = Cars)
 ```
 
-```{r Carsims, cache=TRUE}
+```{r Carsims, cache=TRUE, warning = FALSE}
 set.seed(23456)
 numsim <- 10000
 CarSims <- do(numsim) * diffmean(speed ~ shuffle(direction), data = Cars)
@@ -270,7 +282,7 @@ CarBoots <- CarBoots %>%
   ))
 ```
 
-```{r}
+```{r warning = FALSE}
 # Figure 17.4
 gf_histogram(~diffmean,
   fill = ~interval, data = CarBoots, binwidth = .2,

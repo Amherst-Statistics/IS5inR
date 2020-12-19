@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: More About Tests and Intervals (Chapter 16)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 19, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -52,6 +52,8 @@ library(mosaic)
 
 #### What to Do with a High P-Value
 
+No need for tables: we can calculate everything in R!
+
 ```{r, fig.width=7}
 # curve on page 511
 xqnorm(p = .467, mean = 0, sd = 1, verbose = FALSE)
@@ -59,7 +61,7 @@ xqnorm(p = .467, mean = 0, sd = 1, verbose = FALSE)
 
 ### Section 16.2: Alpha Levels and Critical Values
 
-```{r}
+```{r fig.width = 7}
 # Figure 16.1, page 513
 xpnorm(q = c(-1.96, 1.96), mean = 0, sd = 1, verbose = FALSE)
 ```
@@ -74,7 +76,9 @@ xpnorm(q = c(-1.96, 1.96), mean = 0, sd = 1, verbose = FALSE)
 
 #### A Picture Worth $\frac{1}{P(z > 3.09)}$ Words
 
-```{r, fig.width=7, fig.height=4}
+When in doubt, draw a picture!
+
+```{r, fig.width=7, fig.height=4, warning = FALSE}
 # Figure 16.2, page 520
 gf_dist("norm",
   mean = 0, sd = 1, fill = ~ cut(x, c(-Inf, 2, 100, Inf)), geom = "area",

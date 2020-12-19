@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Relationships Between Categorical Variables--Contingency Tables (Chapter 3)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
+date: "December 19, 2020"
 output: 
   pdf_document:
     fig_height: 3
@@ -59,7 +59,7 @@ names(OKCupid)
 The `read_csv()` function lists the input variable names by default.
 These were suppressed using the `message = FALSE` code chunk option to save space.
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).
-You can use the `names()` function to check the cleaned names.    
+You can use the `names()` function to check the cleaned names.
 We use `skip = 1` because the first line in the original data set is a set of variable labels (e.g., `Col1`, `Col2`).
 
 ```{r}
@@ -81,7 +81,9 @@ tally(gender ~ cats_dogs_both, format = "percent", margin = TRUE, data = OKCupid
 
 #### Example 3.1: Exploring Marginal Distributions
 
-```{r}
+We begin by reading and tallying the data.
+
+```{r message = FALSE}
 SuperBowl <-
   read_csv("http://nhorton.people.amherst.edu/is5/data/Watch_the_Super_bowl.csv",
     skip = 1
@@ -91,7 +93,9 @@ tally(~ Plan + Sex, data = SuperBowl)
 
 #### Example 3.2: Exploring Percentages: Children and First-Class Ticket Holders First?
 
-```{r}
+We do the same for the Titanic data.
+
+```{r message = FALSE}
 Titanic <- read_csv("http://nhorton.people.amherst.edu/is5/data/Titanic.csv")
 tally(~ Class + Survived, format = "percent", margin = TRUE, data = Titanic)
 tally(Class ~ Survived, format = "percent", margin = TRUE, data = Titanic)
@@ -114,6 +118,8 @@ gf_col(Freq ~ gender, fill = ~cats_dogs_both, position = "dodge", data = OKdata)
 ```
 
 #### Example 3.3: Finding Conditional Distributions: Watching the Super Bowl
+
+We can calculate conditional probabilities from tables using `mosaic::tally()`.
 
 ```{r}
 tally(~ Plan + Sex, margin = TRUE, data = SuperBowl)
@@ -142,7 +148,7 @@ tally(~ diet_counts + cancer_counts, margins = TRUE, data = FishDiet)
 
 See display on page 74.
 
-```{r}
+```{r message = FALSE}
 Nightmares <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nightmares.csv", skip = 1)
 Nightmares <- Nightmares %>%
   mutate(Dream = ifelse(Dream == "N", "Nightmare", "SweetDreams"))
@@ -160,7 +166,7 @@ gf_percents(~Class, fill = ~Survived, position = position_dodge(), data = Titani
 gf_percents(~Survived, fill = ~Class, position = "fill", data = Titanic)
 ```
 
-```{r fig.width=7}
+```{r fig.width=7, fig.height = 7}
 # Figure 3.6, page 76
 vcd::mosaic(tally(~ Survived + Class, data = Titanic),
   main = "Mosaic plot of Class by Survival",
@@ -177,6 +183,8 @@ tally(~ gender + cats_dogs_both + drugs_y_n, format = "percent", data = OKCupid)
 ```
 
 #### Example 3.7: Looking for Associations Among Three Variables at Once
+
+We can repeat the mosaic plot with three variables.
 
 ```{r fig.height=5, fig.width=7}
 vcd::mosaic(tally(~ Sex + Survived + Class, data = Titanic), shade = TRUE)
