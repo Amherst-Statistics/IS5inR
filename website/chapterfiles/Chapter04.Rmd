@@ -149,7 +149,7 @@ gf_boxplot(Difference ~ Container, data = Cups, ylab = "Temp Change in F")
 
 We begin by reading in the data.
 
-```{r, warning=FALSE, message = FALSE}
+```{r, warning=FALSE, message = FALSE, fig.width = 7}
 Flights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Flights_on_time_2016.csv") %>%
   janitor::clean_names()
 # Let's improve the ordering of the months (by default they are alphabetical!)
@@ -172,7 +172,7 @@ gf_boxplot(ontime_pct ~ month, data = Flights)   # should be in order!
 
 We begin by reading in the data.
 
-```{r}
+```{r message = FALSE}
 # Figure 4.4, page 102
 CarSpeeds <- read_csv("http://nhorton.people.amherst.edu/is5/data/Car_speeds.csv")
 gf_boxplot(speed ~ direction, data = CarSpeeds)
