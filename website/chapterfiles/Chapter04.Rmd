@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Understanding and Comparing Distributions (Chapter 4)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "January 5, 2021"
+date: "January 10, 2021"
 output: 
   pdf_document:
     fig_height: 3
@@ -152,6 +152,15 @@ We begin by reading in the data.
 ```{r, warning=FALSE, message = FALSE}
 Flights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Flights_on_time_2016.csv") %>%
   janitor::clean_names()
+# Let's improve the ordering of the months (by default they are alphabetical!)
+Flights <- Flights %>%
+  mutate(month = forcats::fct_relevel(
+    month,
+    "January", "February", "March", "April",
+    "May", "June", "July", "August",
+    "September", "October", "November", "December"
+    )
+  )
 # Bureau of Transportation Statistics, page 101
 gf_histogram(~ontime_pct, data = Flights, binwidth = 2, center = 1) %>%
   gf_labs(x = "Ontime %", y = "Number of Months")
