@@ -165,7 +165,7 @@ Flights <- Flights %>%
 gf_histogram(~ontime_pct, data = Flights, binwidth = 2, center = 1) %>%
   gf_labs(x = "Ontime %", y = "Number of Months")
 gf_boxplot(~ontime_pct, data = Flights)
-gf_boxplot(ontime_pct ~ month, data = Flights)   # should be in order!
+gf_boxplot(ontime_pct ~ month, data = Flights)   # now they are in order!
 ```
 
 #### Random Matters

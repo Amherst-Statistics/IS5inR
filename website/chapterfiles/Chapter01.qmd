@@ -1,0 +1,122 @@
+---
+title: "IS5 in R: Stats Starts Here (Chapter 1)"
+author: "Nicholas Horton (nhorton@amherst.edu)"
+date: "2025-01-02"
+date-format: iso
+format: pdf
+toc: true
+editor: source
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(mosaic)   
+library(tidyverse)
+```
+
+
+## Introduction and background 
+
+This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
+This file as well as the associated Quarto reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
+
+This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
+In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
+A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
+A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
+
+## Chapter 1: Stats Starts Here
+
+### Section 1.1: What is Statistics?
+### Section 1.2: Data
+### Section 1.3: Variables
+
+See table on page 7.
+
+```{r}
+library(mosaic)
+options(digits = 3)
+Tour <-
+  readr::read_csv("http://nhorton.people.amherst.edu/is5/data/Tour_de_France_2016.csv") |>
+  janitor::clean_names()
+```
+
+By default, `read_csv()` prints the variable names as it reads the online file.
+These messages can be suppressed using the `message: false` code chunk option to save space and improve readability. 
+(I'll ask you to do this in future as you develop more familiarity with these systems.)
+
+```{r}
+names(Tour)
+glimpse(Tour)
+head(Tour, 3)
+tail(Tour, 8) |>
+  select(winner, year, country)
+```
+
+Piping (`|>`) takes the output of the line of code and passes it along to the next command.
+We will use this to "chain" together commands to do useful things.
+(`%>%` is an alternative pipe operator that you may sometimes see: it works in almost the same manner.)
+
+#### Let's find who was the winner in 1998
+
+We use the `filter()` command.
+
+```{r}
+filter(Tour, year == 1998) |>
+  select(winner, year, country)
+```
+
+Several things are noteworthy here:
+
+1. Two equal signs are used for "comparison" (we will see that one equal sign is used for options to commands).
+2. Nothing is saved from this pipeline: the output is displayed.
+(Later we will "assign" the output to an object that can be reused.)
+
+#### How many stages were there in the tour in the year that Alberto Contador won?
+
+We can also use the `filter()` command.
+
+```{r}
+filter(Tour, winner == "Contador Alberto") |>
+  select(winner, year, stages)
+```
+
+Note that the following command generates the same output.
+
+```{r}
+Tour |>
+  filter(winner == "Contador Alberto") |>
+  select(winner, year, stages)
+```
+
+As does:
+
+```{r}
+select(filter(Tour, winner == "Contador Alberto"), winner, year, stages)
+```
+
+The pipe operator (`|>`) can help improve the readability of code, since each step is clearly indicated.
+
+#### What was the slowest average speed of any tour?  Fastest?
+
+Again, we use `filter()` but this time in conjunction with the `min()` function.
+
+```{r}
+Tour |>
+filter(average_speed == min(average_speed)) |>
+  select(year, average_speed)
+Tour |>
+filter(average_speed == max(average_speed)) |>
+  select(year, average_speed)
+```
+
+#### How can we summarize the distribution of Average Speeds?
+
+
+```{r}
+df_stats(~ average_speed, data = Tour)
+```
+
+Note that `~ x` denotes the simplest form of the general modelling language (used to indicate a single variable in using the `mosaic` package).  
+
