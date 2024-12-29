@@ -9,9 +9,9 @@ Part V: Inference for Relationships
 <h4><right>Chapters: 17-20</right></h4>
 </br>
 
-Title  | Links to Rmd and PDF files
+Title  | Links to Quarto and PDF files
 ------------- | -------------
-Chapter 17 : Comparing Groups | <a href='chapterfiles/Chapter17.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter17.pdf'>(pdf)</a>
-Chapter 18 : Paired Samples and Blocks | <a href='chapterfiles/Chapter18.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter18.pdf'>(pdf)</a>
-Chapter 19 : Comparing Counts | <a href='chapterfiles/Chapter19.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter19.pdf'>(pdf)</a>
-Chapter 20 : Inferences for Regression | <a href='chapterfiles/Chapter20.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter20.pdf'>(pdf)</a>
+Chapter 17 : Comparing Groups | <a href='chapterfiles/Chapter17.qmd'>.qmd </a> <a href='chapterfiles/Chapter17.pdf'>(pdf)</a>
+Chapter 18 : Paired Samples and Blocks | <a href='chapterfiles/Chapter18.qmd'>.qmd </a> <a href='chapterfiles/Chapter18.pdf'>(pdf)</a>
+Chapter 19 : Comparing Counts | <a href='chapterfiles/Chapter19.qmd'>.qmd File</a> <a href='chapterfiles/Chapter19.pdf'>(pdf)</a>
+Chapter 20 : Inferences for Regression | <a href='chapterfiles/Chapter20.qmd'>.qmd File</a> <a href='chapterfiles/Chapter20.pdf'>(pdf)</a>

@@ -9,10 +9,10 @@ Part IV: From the Data at Hand to the World At Large
 <h4><right>Chapters: 12-16</right></h4>
 </br>
 
-Title  | Links to Rmd and PDF files
+Title  | Links to Quarto and PDF files
 ------------- | -------------
 Chapter 12 : From Randomness to Probability | There was not a significant use of R in chapter 12
-Chapter 13 : Sampling Distribution Models and Confidence Intervals for Proportions | <a href='chapterfiles/Chapter13.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter13.pdf'>(pdf)</a>
-Chapter 14 : Confidence Intervals for Means | <a href='chapterfiles/Chapter14.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter14.pdf'>(pdf)</a>
-Chapter 15 : Testing Hypotheses | <a href='chapterfiles/Chapter15.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter15.pdf'>(pdf)</a>
-Chapter 16 : More About Tests and Intervals | <a href='chapterfiles/Chapter16.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter16.pdf'>(pdf)</a>
+Chapter 13 : Sampling Distribution Models and Confidence Intervals for Proportions | <a href='chapterfiles/Chapter13.qmd'>.qmd </a> <a href='chapterfiles/Chapter13.pdf'>(pdf)</a>
+Chapter 14 : Confidence Intervals for Means | <a href='chapterfiles/Chapter14.qmd'>.qmd File</a> <a href='chapterfiles/Chapter14.pdf'>(pdf)</a>
+Chapter 15 : Testing Hypotheses | <a href='chapterfiles/Chapter15.qmd'>.qmd </a> <a href='chapterfiles/Chapter15.pdf'>(pdf)</a>
+Chapter 16 : More About Tests and Intervals | <a href='chapterfiles/Chapter16.qmd'>.qmd </a> <a href='chapterfiles/Chapter16.pdf'>(pdf)</a>

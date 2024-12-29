@@ -3,6 +3,7 @@ title: Videos to accompany the chapters
 ---
 
 Here are pointers to videos that accompany the chapters.  They provide an overview of key points and discuss how to implement the examples using R.
+(Note that these refer to older versions using RMarkdown, not Quarto.)
 
 - Chapter 0 (overview): https://youtu.be/K7zZEznqRwQ
 - Chapter 1 (stats starts here): https://youtu.be/hPXKhNQt8lg

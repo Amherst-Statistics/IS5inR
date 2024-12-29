@@ -9,8 +9,8 @@ Part III: Gathering Data
 <h4><right>Chapters: 10-11</right></h4>
 </br>
 
-Title  | Links to Rmd and PDF files
+Title  | Links to Quarto and PDF files
 ------------- | -------------
-Chapter 10 : Sample Surveys | <a href='chapterfiles/Chapter10.Rmd'>.Rmd File</a> <a href='chapterfiles/Chapter10.pdf'>(pdf)</a>
+Chapter 10 : Sample Surveys | <a href='chapterfiles/Chapter10.qmd'>.qmd </a> <a href='chapterfiles/Chapter10.pdf'>(pdf)</a>
 Chapter 11 : Experiments and Observational Studies | There was not a significant use of R in chapter 11
 
