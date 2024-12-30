@@ -1,77 +1,68 @@
 ---
 title: "IS5 in R: Displaying and Describing Data (Chapter 2)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 19, 2020"
-output: 
-  pdf_document:
-    fig_height: 3
-    fig_width: 5
-  html_document:
-    fig_height: 3
-    fig_width: 5
-  word_document:
-    fig_height: 4
-    fig_width: 6
+date: "2025-01-02"
+date-format: iso
+format: pdf
+editor: source
 ---
 
-
-```{r, include = FALSE}
-# Don't delete this chunk if you are using the mosaic package
-# This loads the mosaic and dplyr packages
-library(mosaic)
-library(readr)
-library(janitor)
+```{r}
+#| label: setup
+#| include: false
+library(mosaic)   
+library(tidyverse)
 ```
 
-```{r, include = FALSE}
-# knitr settings to control how R chunks work.
-require(knitr)
-opts_chunk$set(
-  tidy = FALSE, # display code as typed
-  size = "small" # slightly smaller font for code
-)
-```
 
 ## Introduction and background 
 
 This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-This file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
+This file as well as the associated Quarto reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
 
 This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
 In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
 A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
 A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
+We begin by loading packages that will be required for our analyses.
+
+```{r}
+library(mosaic)
+library(tidyverse)
+```
+
+
+
 ## Chapter 2: Displaying and Describing Data
 
 ### Section 2.1: Summarizing and Displaying a Categorical Variable
 
-```{r message = FALSE}
-library(mosaic)
-library(readr)
-library(janitor) # for variable names
-options(digits = 3)
+```{r}
+#| message: false
+options(digits = 3) # make decimal results easier to read
 Titanic <- read_csv("http://nhorton.people.amherst.edu/is5/data/Titanic.csv")
 ```
 
-By default, `read_csv()` prints the variable names. These messages were suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
+By default, the `read_csv()` function (loaded with the `tidyverse` package) prints the variable names.
+These messages were suppressed using the `message: false` code chunk option to save space and improve readability.  
 
 ```{r}
 # Table 2.2, page 19
-tally(~Class, data = Titanic)
+tally(~ Class, data = Titanic)
 
 # Table 2.3
-tally(~Class, format = "percent", data = Titanic)
+tally(~ Class, format = "percent", data = Titanic)
 
 # Figure 2.2, page 19
-gf_bar(~Class, data = Titanic) %>%
+gf_bar(~ Class, data = Titanic) |>
   gf_labs(x = "Ticket Class", y = "Number of People")
 ```
 
 `GOAL(~ X)` is the general form of the modeling language for one variable in the `mosaic` package.
-We use `gf_bar()` to make a bar graph using the `ggformula` system, which is automatically downloaded with the `mosaic` package.  
+We use `gf_bar()` to make a bar graph using the `ggformula` system, which is automatically make accessible by loading the `mosaic` package.  
 
-See the Minimal Guide for more details: https://cran.r-project.org/web/packages/mosaic/vignettes/MinimalRgg.pdf
+See the Mosaic Minimal Guide for more details: https://cran.r-project.org/web/packages/mosaic/vignettes/MinimalRgg.pdf
 
 ### Section 2.2: Displaying a Quantitative Variable
 
@@ -79,19 +70,22 @@ See the Minimal Guide for more details: https://cran.r-project.org/web/packages/
 
 ```{r}
 # Figure 2.7, page 24
-gf_histogram(~Age, data = Titanic, binwidth = 5, ylab = "# of People", center = 5 / 2)
+gf_histogram(~ Age, data = Titanic, binwidth = 5, ylab = "# of People", center = 5 / 2)
 ```
 
-The function generates a warning because three of the ages are missing; this output can (and should!) be suppressed by adding `warning=FALSE` as an option in this code chunk.
+The function generates a warning because three of the ages are missing; this output can (and should!) be suppressed by adding `warning: false` as an option in this code chunk.
+Note: be sure to double check about a warning before suppressing it!
 
 #### Earthquakes and Tsunamis
 
 We begin by reading in the data.
 
-```{r message = FALSE, warning = FALSE}
+```{r}
+#| message: false
+#| warning: false
 # Example 2.3, page 25
 Earthquakes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tsunamis_2016.csv")
-gf_histogram(~Primary_Magnitude,
+gf_histogram(~ Primary_Magnitude,
   data = Earthquakes, binwidth = 0.5,
   ylab = "# of Earthquakes", xlab = "Magnitude", center = 0.25
 )
@@ -101,20 +95,22 @@ gf_histogram(~Primary_Magnitude,
 
 See page 26.
 
-```{r message=FALSE}
+```{r}
+#| message: false
 # Figure 2.8, page 26
 Pulse_rates <- read_csv("http://nhorton.people.amherst.edu/is5/data/Pulse_rates.csv")
 gf_histogram(~Pulse, data = Pulse_rates, binwidth = 5, center = 5 / 2)
-with(Pulse_rates, stem(Pulse))
+with(Pulse_rates, stem(Pulse)) # base R function that doesn't have a `data =` option.
 ```
 
 #### Dotplot
 
 See Figure 2.9, page 27
 
-```{r message = FALSE}
-Derby <- read_csv("http://nhorton.people.amherst.edu/is5/data/Kentucky_Derby_2016.csv")
-gf_dotplot(~Time_Sec, data = Derby, binwidth = 1) %>%
+```{r}
+#| message: false
+Derby <- readr::read_csv("http://nhorton.people.amherst.edu/is5/data/Kentucky_Derby_2016.csv")
+gf_dotplot(~Time_Sec, data = Derby, binwidth = 1) |>
   gf_labs(x = "Winning Time (sec)", y = "# of Races")
 ```
 
@@ -123,10 +119,11 @@ gf_dotplot(~Time_Sec, data = Derby, binwidth = 1) %>%
 There are two forms of density plots: not-shaded, and shaded.
 The former will be useful when comparing multiple densities.
 
-```{r, warning = FALSE}
+```{r}
+#| warning: false
 # Figure 2.10, page 27
-gf_dens(~Age, data = Titanic)
-gf_density(~Age, data = Titanic)
+gf_dens(~ Age, data = Titanic)
+gf_density(~ Age, data = Titanic)
 ```
 
 ### Section 2.3: Shape
@@ -137,10 +134,25 @@ See displays on pages 28-29.
 
 First we need to load the data.
 
-```{r message = FALSE}
-CPI <- read_csv("http://nhorton.people.amherst.edu/is5/data/CPI_Worldwide.csv") %>%
+```{r}
+#| message: false
+CPI <- read_csv("http://nhorton.people.amherst.edu/is5/data/CPI_Worldwide.csv") |>
   janitor::clean_names()
+```
+
+The pipe operator (`|>`) takes the output of the first command and uses it as input for the next.  
+
+The variable names coming out of spreadsheet files can sometimes be quite wonky. 
+The results from `read_csv()` are passed to the `clean_names()` function from the `janitor` package to make them more consistent.
+
+```{r}
 names(CPI)
+```
+
+You can use the `names()` function to check the reformatted names.    
+(We'll often use the `glimpse()` command to provide even more information about a dataset.)
+
+```{r}
 # Example 2.5, page 30
 gf_histogram(~consumer_price_index,
   data = CPI, ylab = "# of Cities",
@@ -148,15 +160,13 @@ gf_histogram(~consumer_price_index,
 )
 ```
 
-We can use `clean_names()` from the `janitor` package to format the names of the columns when necessary. You can use the `names()` function to check the reformatted names.    
-The pipe operator (`%>%`) takes the output of the line of code and uses it in the next.  
-
 #### Credit Card Expenditures
 
 First we load the data.
 
-```{r message = FALSE}
-CreditCardEx <- read_csv("http://nhorton.people.amherst.edu/is5/data/Credit_card_charges.csv") %>%
+```{r}
+#! message: false
+CreditCardEx <- read_csv("http://nhorton.people.amherst.edu/is5/data/Credit_card_charges.csv") |>
   janitor::clean_names()
 # Figure 2.6, page 30
 gf_histogram(~charges,

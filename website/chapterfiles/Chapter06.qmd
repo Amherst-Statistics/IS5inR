@@ -1,4 +1,40 @@
 ---
+title: "IS5 in R: XX (Chapter XX)"
+author: "Nicholas Horton (nhorton@amherst.edu)"
+date: "2025-01-02"
+date-format: iso
+format: pdf
+editor: source
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(mosaic)   
+library(tidyverse)
+```
+
+
+## Introduction and background 
+
+This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
+This file as well as the associated Quarto reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
+
+This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
+In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
+A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
+A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
+
+We begin by loading packages that will be required for our analyses.
+
+```{r}
+library(mosaic)
+library(tidyverse)
+```
+
+## Chapter X: XX
+
+---
 title: "IS5 in R: Scatterplots, Association, and Correlation (Chapter 6)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
 date: "December 19, 2020"

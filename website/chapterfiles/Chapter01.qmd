@@ -26,6 +26,14 @@ In particular, we utilize the `mosaic` package, which was written to simplify th
 A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
 A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
+We begin by loading packages that will be required for our analyses.
+
+```{r}
+library(mosaic)
+library(tidyverse)
+```
+
+
 ## Chapter 1: Stats Starts Here
 
 ### Section 1.1: What is Statistics?
@@ -37,14 +45,18 @@ See table on page 7.
 ```{r}
 library(mosaic)
 options(digits = 3)
-Tour <-
-  readr::read_csv("http://nhorton.people.amherst.edu/is5/data/Tour_de_France_2016.csv") |>
+Tour <- read_csv(
+  "http://nhorton.people.amherst.edu/is5/data/Tour_de_France_2016.csv"
+) |>
   janitor::clean_names()
 ```
 
 By default, `read_csv()` prints the variable names as it reads the online file.
 These messages can be suppressed using the `message: false` code chunk option to save space and improve readability. 
 (I'll ask you to do this in future as you develop more familiarity with these systems.)
+
+The variable names coming out of spreadsheet files can sometimes be quite wonky.
+The results from `read_csv()` are passed to the `clean_names()` function from the `janitor` package to make them more consistent.
 
 ```{r}
 names(Tour)
