@@ -4,6 +4,7 @@ author: "Nicholas Horton (nhorton@amherst.edu)"
 date: "2025-01-02"
 date-format: iso
 format: pdf
+toc: true
 editor: source
 ---
 
