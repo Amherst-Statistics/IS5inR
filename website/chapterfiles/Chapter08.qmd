@@ -1,7 +1,7 @@
 ---
-title: "IS5 in R: XX (Chapter XX)"
+title: "IS5 in R: Regression Wisdom (Chapter 8)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "2025-01-02"
+date: "2025-01-14"
 date-format: iso
 format: pdf
 toc: true
@@ -33,59 +33,7 @@ library(mosaic)
 library(tidyverse)
 ```
 
-## Chapter X: XX
-
----
-title: "IS5 in R: Regression Wisdom (Chapter 8)"
-author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 19, 2020"
-output: 
-  pdf_document:
-    fig_height: 3
-    fig_width: 5
-  html_document:
-    fig_height: 3
-    fig_width: 5
-  word_document:
-    fig_height: 4
-    fig_width: 6
----
-
-
-```{r, include = FALSE}
-# Don't delete this chunk if you are using the mosaic package
-# This loads the mosaic and dplyr packages
-library(mosaic)
-library(readr)
-library(janitor)
-```
-
-```{r, include = FALSE}
-# knitr settings to control how R chunks work.
-require(knitr)
-opts_chunk$set(
-  tidy = FALSE, # display code as typed
-  size = "small" # slightly smaller font for code
-)
-```
-
-## Introduction and background 
-
-This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-This file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
-
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
-In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
-A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
-A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
-
 ## Chapter 8: Regression Wisdom
-
-```{r}
-library(mosaic)
-library(readr)
-library(janitor)
-```
 
 ### Section 8.1: Examining Residuals
 
@@ -93,53 +41,81 @@ library(janitor)
 
 We begin by reading in the data.
 
-```{r message = FALSE}
-Penguins <- read_csv("http://nhorton.people.amherst.edu/is5/data/Penguins.csv") %>%
+```{r}
+#| message: false
+Penguins <- read_csv("http://nhorton.people.amherst.edu/is5/data/Penguins.csv") |>
   janitor::clean_names()
 ```
 
-By default, `read_csv()` prints the variable names.
-These messages have been suppressed using the `message=FALSE` code chunk option to save space and improve readability. 
+By default, the `read_csv()` function prints the variable names.
+These messages have been suppressed using the `message: false` code chunk option to save space and improve readability. 
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
 
 ```{r }
 # Figure 8.1, page 234
-gf_point(dive_heart_rate ~ duration_min, data = Penguins) %>%
+gf_point(dive_heart_rate ~ duration_min, data = Penguins) |>
   gf_labs(x = "Duration (min)", y = "Dive Heart Rate (bpm)")
 penguinlm <- lm(dive_heart_rate ~ duration_min, data = Penguins)
 # Figure 8.2
-gf_point(resid(penguinlm) ~ duration_min, data = Penguins) %>%
+gf_point(resid(penguinlm) ~ duration_min, data = Penguins) |>
   gf_labs(x = "Duration (min)", y = "Residuals")
 ```
+
+This figure calls out for a smoother (to help better understand the relationship between duration and heart rate).
+It would be appropriate to add the `message: false` option to suppress the message about which method is being used since it is a distraction.
+Here we've left it.
+
+```{r}
+# improved Figure 8.2
+gf_point(resid(penguinlm) ~ duration_min, data = Penguins) |>
+  gf_labs(x = "Duration (min)", y = "Residuals") |>
+  gf_smooth(se = FALSE)
+```
+
 
 #### Sifting Residuals for Groups
 
 We begin by reading in the data.
 
-```{r message = FALSE}
+```{r}
+#| message: false
 Cereal <- read_csv("http://nhorton.people.amherst.edu/is5/data/Cereals.csv")
 cereallm <- lm(calories ~ sugars, data = Cereal)
 # Figure 8.3, page 235
-gf_histogram(~ resid(cereallm), binwidth = 7.5, center = 7.5 / 2) %>%
+gf_histogram(~ resid(cereallm), binwidth = 7.5, center = 7.5 / 2) |>
   gf_labs(x = "Residuals (calories)", y = "# of Cereals")
 
-Cereal <- Cereal %>%
+Cereal <- Cereal |>
   mutate(
     residuals = resid(cereallm),
     fitted = fitted(cereallm)
-  ) %>%
-  mutate(resid_cat = ifelse(residuals >= -30 & residuals <= 25, "mid",
-    ifelse(residuals > 25, "high", "low")
-  )) # For color categories
-# Figure 8.4
-gf_point(jitter(residuals) ~ jitter(fitted), color = ~resid_cat, data = Cereal)
+  ) |> 
+  mutate(
+   resid_cat = case_when(
+     residuals >= -30 & residuals <= 25 ~ "mid",
+     residuals > 25 ~ "high", 
+     TRUE ~ "low" # or residuals < -30!
+  )) # Needed for color categories
 ```
 
-Jitter adds some random noise to allow easier observation of values that are shared by more than one type of breakfast cereal.  
+The `case_when()` function allows us to use logic to create groupings based on the values of the residual.
+This approach is far more straightforward than making nested `ifelse()` calls.
 
 ```{r}
-tally(~shelf, data = Cereal)
-Cereal <- mutate(Cereal,
+#| message: false
+# Figure 8.4
+gf_point(jitter(residuals) ~ jitter(fitted), color = ~ resid_cat, data = Cereal) |>
+  gf_labs(color = "Residual\ngrouping")
+```
+
+The `jitter()` function adds some random noise to allow easier observation of values that are shared by more than one type of breakfast cereal.  
+
+Here we relabeled the legend title to improve readability.
+
+```{r}
+tally(~ shelf, data = Cereal)
+Cereal <- Cereal |>
+  mutate(,
   shelfgroup =
     recode(shelf,
       `1` = "Bottom Shelf",
@@ -149,13 +125,19 @@ Cereal <- mutate(Cereal,
 )
 ```
 
-The `recode()` function allows for efficient mutation of levels.  
+The `recode()` function allows for efficient recoding of levels.  
 
 ```{r}
-tally(~shelfgroup, data = Cereal)
+#| echo: false
+# XX the warning below is to suppress: Using the `size` aesthetic with geom_line was deprecated in ggplot2 3.4.0.  Please use the `linewidth` aesthetic instead.
+```
+
+```{r}
+#| warning: false
+tally(~ shelfgroup, data = Cereal)
 # Figure 8.5
-gf_point(jitter(calories) ~ sugars, color = ~shelfgroup, data = Cereal) %>%
-  gf_lm() %>%
+gf_point(jitter(calories) ~ sugars, color = ~ shelfgroup, data = Cereal) |>
+  gf_lm() |>
   gf_labs(x = "Sugar (g)", y = "Calories")
 ```
 
@@ -167,30 +149,43 @@ See displays on page 237 and 238.
 
 We begin by reading in the data.
 
-```{r message = FALSE}
+```{r}
+#| message: false
 MarriageAge <- read_csv("http://nhorton.people.amherst.edu/is5/data/Marriage_age_2015.csv")
-MarriageAge <- MarriageAge %>%
-  mutate(timeperiod = ifelse(Year <= 1940, "Section1", ifelse(Year >= 1980, "Section3", "Section2")))
-gf_point(Men ~ Year, color = ~timeperiod, data = MarriageAge, ylab = "Men's Age at First Marriage") +
-  guides(color = FALSE)
+MarriageAge <- MarriageAge |>
+  mutate(
+    timeperiod = case_when(
+      Year <= 1940 ~ "Section1", 
+      Year >= 1980 ~ "Section3",
+      TRUE ~  "Section2"
+  ))
+gf_point(
+  Men ~ Year, 
+  color = ~ timeperiod, 
+  data = MarriageAge, 
+  ylab = "Men's Age at First Marriage"
+) +
+  guides(color = "none")
 ```
 
-The `ifelse()` function works similarly to `recode()` when only two levels exist.
+The `case_when()` function works similarly to `recode()` for more general logic.
+Here we use a `ggplot2` function (`guides()`) which requires special syntax (+) to connect to a ggformula graphic.
 
 ### Section 8.3: Outliers, Leverage, and Influence
 
 We begin by reading in the data.
 
-```{r message = FALSE}
+```{r}
+#| message: false
 Election2000 <- read_csv("http://nhorton.people.amherst.edu/is5/data/Election_2000.csv")
 withlm <- lm(Buchanan ~ Nader, data = Election2000)
 msummary(withlm)
 withoutlm <- lm(Buchanan ~ Nader, data = filter(Election2000, Buchanan <= 3000))
 msummary(withoutlm)
 # Figure 8.10, page 241
-gf_point(Buchanan ~ Nader, data = Election2000) %>%
-  gf_lm(color = "red") %>%
-  gf_labs(x = "Nader (votes)", y = "Buchanan (votes)") %>%
+gf_point(Buchanan ~ Nader, data = Election2000) |>
+  gf_lm(color = "red") |>
+  gf_labs(x = "Nader (votes)", y = "Buchanan (votes)") |>
   gf_fun(withoutlm, color = "blue") # adds line for model without outlier
 ```
 
@@ -200,14 +195,17 @@ See page 242 for example of high-leverage point.
 
 The Doctors data can help with thinking in a multivariate way.
 
-```{r message = FALSE, warning = FALSE}
-Doctors <- read_csv("http://nhorton.people.amherst.edu/is5/data/Doctors_and_life_expectancy.csv") %>%
+```{r}
+#| message: false
+#| warning: false
+Doctors <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Doctors_and_life_expectancy.csv") |>
   janitor::clean_names()
 # Figure 8.13, page 243
-gf_point(life_exp ~ sqrt_doctors_person, data = Doctors) %>%
+gf_point(life_exp ~ sqrt_doctors_person, data = Doctors) |>
   gf_labs(x = "Sqrt (Doctors/Person)", y = "Life Expectancy (yr)")
 # Figure 8.14
-gf_point(life_exp ~ sqrt_tv_person, data = Doctors) %>%
+gf_point(life_exp ~ sqrt_tv_person, data = Doctors) |>
   gf_labs(x = "Sqrt (TVs/Person)", y = "Live Expectancy (yr)")
 ```
 
@@ -215,20 +213,21 @@ gf_point(life_exp ~ sqrt_tv_person, data = Doctors) %>%
 
 We can use these approaches together, as seen in the following example.
 
-```{r message = FALSE}
+```{r}
+#| message: false
 # page 244
 DirtBikes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Dirt_bikes_2014.csv")
 gf_point(MSRP ~ Displacement, data = DirtBikes)
 bikeslm <- lm(MSRP ~ Displacement, data = DirtBikes)
-gf_point(resid(bikeslm) ~ fitted(bikeslm)) %>%
+gf_point(resid(bikeslm) ~ fitted(bikeslm)) |>
   gf_labs(x = "Predicted Values", y = "Residuals")
 ```
 
 ```{r, fig.width=7}
-DirtBikes %>%
-  filter(Cooling != "NA") %>%
-  mutate(Cooling = ifelse(Cooling == "Air-Cooled", "Air-Cooled", "LiquidCooled")) %>%
-  gf_point(MSRP ~ (Displacement)^(1 / 3), color = ~Cooling) %>%
+DirtBikes |>
+  filter(Cooling != "NA") |>
+  mutate(Cooling = ifelse(Cooling == "Air-Cooled", "Air-Cooled", "LiquidCooled")) |>
+  gf_point(MSRP ~ (Displacement)^(1 / 3), color = ~Cooling) |>
   gf_lm()
 ```
 
@@ -236,27 +235,29 @@ DirtBikes %>%
 
 We can also work with summary values.
 
-```{r message = FALSE}
-HeightsWeights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Heights_and_weights.csv")
+```{r}
+#| message: false
+HeightsWeights <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Heights_and_weights.csv")
 # Figure 8.15, page 246
-gf_point(Weight ~ Height, data = HeightsWeights) %>%
+gf_point(Weight ~ Height, data = HeightsWeights) |>
   gf_lm()
 
 # Figure 8.16
 HeightWeightSum <- df_stats(Weight ~ Height, data = HeightsWeights)
 head(HeightWeightSum)
-gf_point(mean ~ Height, data = HeightWeightSum) %>%
-  gf_lm() %>%
+gf_point(mean ~ Height, data = HeightWeightSum) |>
+  gf_lm() |>
   gf_labs(x = "Height", y = "Mean Weights")
 ```
 
 Alternately, we can use `group_by()` and `summarise()` together to find summary values of data:  
 
 ```{r}
-HeightsWeights %>%
-  group_by(Height) %>%
-  summarise(MeanWeight = mean(Weight), .groups = "drop") %>%
-  gf_point(MeanWeight ~ Height) %>%
+HeightsWeights |>
+  group_by(Height) |>
+  summarise(MeanWeight = mean(Weight), .groups = "drop") |>
+  gf_point(MeanWeight ~ Height) |>
   gf_lm()
 ```
 
@@ -264,25 +265,27 @@ HeightsWeights %>%
 
 We begin by reading in the data.
 
-```{r message = FALSE}
-FuelEfficiency <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fuel_efficiency.csv") %>%
+```{r}
+#| message: false
+FuelEfficiency <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Fuel_efficiency.csv") |>
   janitor::clean_names()
 # Figure 8.17
-gf_point(city_mpg ~ weight, data = filter(FuelEfficiency, city_mpg <= 40)) %>%
+gf_point(city_mpg ~ weight, data = filter(FuelEfficiency, city_mpg <= 40)) |>
   gf_labs(x = "Weight (lb)", y = "Fuel Efficiency (mpg)")
 fuellm <- lm(city_mpg ~ weight, data = filter(FuelEfficiency, city_mpg <= 40))
-gf_point(resid(fuellm) ~ fitted(fuellm)) %>%
+gf_point(resid(fuellm) ~ fitted(fuellm)) |>
   gf_labs(x = "Predicted (mpg)", y = "Residuals (mpg)")
 ```
 
 ```{r warning = FALSE}
-FuelEfficiency <- FuelEfficiency %>%
+FuelEfficiency <- FuelEfficiency |>
   mutate(fuel_consumption = (1 / city_mpg) * 100)
 # Figure 8.19, page 247
-gf_point(fuel_consumption ~ weight, data = FuelEfficiency) %>%
+gf_point(fuel_consumption ~ weight, data = FuelEfficiency) |>
   gf_labs(x = "Weight (lb)", y = "Fuel Consumption (gal/100 mi)")
 fuellm2 <- lm(fuel_consumption ~ weight, data = FuelEfficiency)
-gf_point(resid(fuellm2) ~ fitted(fuellm2)) %>%
+gf_point(resid(fuellm2) ~ fitted(fuellm2)) |>
   gf_labs(x = "Predicted (gal/100 mi)", y = "Residuals (gal/100 mi)")
 ```
 
@@ -290,26 +293,30 @@ gf_point(resid(fuellm2) ~ fitted(fuellm2)) %>%
 
 We use the hand dexterity data to illustrate re-expressions.
 
-```{r, fig.width=7, message = FALSE, warning = FALSE}
-HandDexterity <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hand_dexterity.csv") %>%
-  janitor::clean_names() %>%
-  mutate(dominant = ifelse(dominant == 0, "Dominant hand", "Non-dominant hand")) %>%
+```{r}
+#| message: false
+#| warning: false
+#| fig.width: 7
+HandDexterity <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Hand_dexterity.csv") |>
+  janitor::clean_names() |>
+  mutate(dominant = ifelse(dominant == 0, "Dominant hand", "Non-dominant hand")) |>
   mutate(dominant = as.factor(dominant))
 # Figure 8.20, page 248
-gf_point(time_sec ~ age_yr, color = ~dominant, data = HandDexterity) %>%
+gf_point(time_sec ~ age_yr, color = ~ dominant, data = HandDexterity) |>
   gf_labs(x = "Age (yr)", y = "Time (sec)", color = "")
-HandDexterity <- HandDexterity %>%
+HandDexterity <- HandDexterity |>
   mutate(speed = 1 / time_sec)
 # Figure 8.21
-gf_point(speed ~ age_yr, color = ~dominant, data = HandDexterity) %>%
-  gf_lm() %>%
+gf_point(speed ~ age_yr, color = ~ dominant, data = HandDexterity) |>
+  gf_lm() |>
   gf_labs(x = "Age (yr)", y = "Speed", color = "")
 ```
 
 ```{r}
 handlm <- lm(speed ~ age_yr, data = HandDexterity)
 # Figure 8.22
-gf_histogram(~ resid(handlm), binwidth = .0075, center = .0075 / 2) %>%
+gf_histogram(~ resid(handlm), binwidth = .0075, center = .0075 / 2) |>
   gf_labs(x = "Residuals", y = "")
 ```
 
@@ -323,40 +330,40 @@ We can explore different re-expressions.
 
 ```{r}
 gf_point(dive_heart_rate ~ duration_min, data = Penguins, xlab = "Duration", ylab = "DHR")
-gf_point(resid(penguinlm) ~ fitted(penguinlm), data = Penguins) %>%
+gf_point(resid(penguinlm) ~ fitted(penguinlm), data = Penguins) |>
   gf_labs(x = "Predicted Values", y = "Residuals")
-gf_histogram(~ resid(penguinlm), binwidth = 10, center = 5) %>%
+gf_histogram(~ resid(penguinlm), binwidth = 10, center = 5) |>
   gf_labs(x = "Residuals", y = "# of Residuals")
 ```
 
 Mutating with the square root:  
 
 ```{r}
-gf_point((dive_heart_rate)^(1 / 2) ~ duration_min, data = Penguins) %>%
+gf_point((dive_heart_rate)^(1 / 2) ~ duration_min, data = Penguins) |>
   gf_labs(x = "Duration", y = "sqrt(DHR)")
 ```
 
 Mutating with a log:  
 
 ```{r}
-gf_point(log(dive_heart_rate) ~ duration_min, data = Penguins) %>%
+gf_point(log(dive_heart_rate) ~ duration_min, data = Penguins) |>
   gf_labs(x = "Duration", y = "Log (DHR)")
 penguinlm2 <- lm(log(dive_heart_rate) ~ duration_min, data = Penguins)
-gf_point(resid(penguinlm2) ~ fitted(penguinlm2)) %>%
+gf_point(resid(penguinlm2) ~ fitted(penguinlm2)) |>
   gf_labs(x = "Predicted Values", y = "Residuals")
-gf_histogram(~ resid(penguinlm2), binwidth = 0.1, center = .025) %>%
+gf_histogram(~ resid(penguinlm2), binwidth = 0.1, center = .025) |>
   gf_labs(x = "Residuals", y = "# of Residuals")
 ```
 
 Mutating with a (negative) reciprocal:  
 
 ```{r}
-gf_point(-1 / (dive_heart_rate) ~ duration_min, data = Penguins) %>%
+gf_point(-1 / (dive_heart_rate) ~ duration_min, data = Penguins) |>
   gf_labs(x = "Duration", y = "-1/DHR")
 penguinlm3 <- lm(-1 / (dive_heart_rate) ~ duration_min, data = Penguins)
-gf_point(resid(penguinlm3) ~ fitted(penguinlm3)) %>%
+gf_point(resid(penguinlm3) ~ fitted(penguinlm3)) |>
   gf_labs(x = "Predicted Values", y = "Residuals")
-gf_histogram(~ resid(penguinlm3), binwidth = 0.0025, center = 0.00125) %>%
+gf_histogram(~ resid(penguinlm3), binwidth = 0.0025, center = 0.00125) |>
   gf_labs(x = "Residuals", y = "# of Residuals")
 ```
 

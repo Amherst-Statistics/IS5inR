@@ -1,7 +1,7 @@
 ---
-title: "IS5 in R: XX (Chapter XX)"
+title: "IS5 in R: Sampling Distribution Models and Confidence Intervals for Proportions (Chapter 13)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "2025-01-02"
+date: "2025-01-15"
 date-format: iso
 format: pdf
 toc: true
@@ -33,70 +33,26 @@ library(mosaic)
 library(tidyverse)
 ```
 
-## Chapter X: XX
-
----
-title: "IS5 in R: Sampling Distribution Models and Confidence Intervals for Proportions (Chapter 13)"
-author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 17, 2020"
-output: 
-  pdf_document:
-    fig_height: 3
-    fig_width: 5
-  html_document:
-    fig_height: 3
-    fig_width: 5
-  word_document:
-    fig_height: 4
-    fig_width: 6
----
-
-
-```{r, include = FALSE}
-# Don't delete this chunk if you are using the mosaic package
-# This loads the mosaic and dplyr packages
-library(mosaic)
-library(readr)
-library(janitor)
-```
-
-```{r, include = FALSE}
-# knitr settings to control how R chunks work.
-require(knitr)
-opts_chunk$set(
-  tidy = FALSE, # display code as typed
-  size = "small" # slightly smaller font for code
-)
-```
-
-## Introduction and background 
-
-This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-This file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
-
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
-In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
-A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
-A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
 ## Chapter 13: Sampling Distribution Models and Confidence Intervals for Proportions
 
-```{r message = FALSE}
-library(mosaic)
-library(readr)
-library(janitor)
-Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") %>%
-  janitor::clean_names() %>%
+```{r}
+#| message: false
+Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") |>
+  janitor::clean_names() |>
   mutate(status = ifelse(preemie, "Premature", "Normal"))
+glimpse(Babies)
 ```
 
 By default, `read_csv()` prints the variable names.
-These messages have been suppressed using the `message=FALSE` code chunk option to save space and improve readability. 
+These messages have been suppressed using the `message: false` code chunk option to save space and improve readability. 
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
+
+The `mutate()` function is used in conjunction with the `ifelse()` function to create a new variable `status`.
 
 ```{r}
 # Figure 13.1, page 411
-gf_histogram(~gestation, binwidth = 1, center = .5, fill = ~status, data = Babies) %>%
+gf_histogram(~ gestation, binwidth = 1, center = .5, fill = ~ status, data = Babies) |>
   gf_labs(x = "Gestation Time (weeks)", y = "Births", fill = "")
 ```
 
@@ -108,34 +64,43 @@ gf_histogram(~gestation, binwidth = 1, center = .5, fill = ~status, data = Babie
 
 #### Random Matters: Does the Normal Model Always Work? Sampling Distributions for Other Statistics
 
-```{r message = FALSE}
+```{r}
+#| message: false
 # page 418
-BodyFat <- read_csv("http://nhorton.people.amherst.edu/is5/data/Bodyfat.csv") %>%
+BodyFat <- read_csv("http://nhorton.people.amherst.edu/is5/data/Bodyfat.csv") |>
   janitor::clean_names()
 set.seed(3245) # To ensure we get the same values when we run it multiple times
-numsim <- 1000 # Number of samples
+num_sim <- 1000 # Number of samples
+```
 
+```{r}
 # What does do() do?
-df_stats(~weight, data = sample(BodyFat, 10)) # df_stats of one random sample of 10
-df_stats(~weight, data = sample(BodyFat, 10)) # df_stats of another random sample
+df_stats(~ weight, data = sample(BodyFat, 10)) # df_stats of one random sample of 10
+df_stats(~ weight, data = sample(BodyFat, 10)) # df_stats of another random sample
+```
 
-do(2) * df_stats(~weight, data = sample(BodyFat, 10)) # finds df_stats twice
+The `do()` function in the `mosaic` package is used in combination with the `*` operator to run functions repeatedly.
+We will use these functions to sample in different ways.
 
-# For the visualization, we need 1,000 df_stats
-bodyfatsamples <- do(numsim) * df_stats(~weight, data = sample(BodyFat, 10))
+```{r}
+do(2) * df_stats(~ weight, data = sample(BodyFat, 10)) # finds df_stats twice
+
+# For the visualization, we need num_sim = 1,000 df_stats
+bodyfatsamples <- do(num_sim) * df_stats(~ weight, data = sample(BodyFat, 10))
 ```
 
 Here the `do()` function repeatedly calculates the summary statistics for a random sample of 10 weights. 
 
-```{r message = FALSE}
-bodyfatsamples <- bodyfatsamples %>%
+```{r}
+#| message: false
+bodyfatsamples <- bodyfatsamples |>
   janitor::clean_names()
 names(bodyfatsamples)
-gf_histogram(~median, data = bodyfatsamples, binwidth = 3, center = 1.5) %>%
+gf_histogram(~ median, data = bodyfatsamples, binwidth = 3, center = 1.5) |>
   gf_labs(x = "Medians", y = "# of Samples")
-gf_histogram(~ sd^2, data = bodyfatsamples) %>%
+gf_histogram(~ sd^2, data = bodyfatsamples) |>
   gf_labs(x = "Variance", y = "# of Samples")
-gf_histogram(~min, data = bodyfatsamples, binwidth = 3, center = 1.5) %>%
+gf_histogram(~ min, data = bodyfatsamples, binwidth = 3, center = 1.5) |>
   gf_labs(x = "Minimums", y = "# of Samples")
 ```
 
@@ -184,8 +149,8 @@ set.seed(234)
 findingpoints <- function(sampsize) {
   CItest <- do(1) * t.test(~preemie, data = sample(Babies, size = sampsize))
   # Using do() so that CItest can run as a data frame
-  CItest <- CItest %>%
-    select(lower, upper) %>%
+  CItest <- CItest |>
+    select(lower, upper) |>
     mutate(
       mean = (upper + lower) / 2,
       success = ifelse(lower <= .11 & upper >= .11, TRUE, FALSE)
@@ -195,9 +160,9 @@ findingpoints <- function(sampsize) {
 numsamp <- 20
 ConfData <- do(numsamp) * findingpoints(sampsize = 100)
 
-gf_point(mean ~ (1:20), data = ConfData, color = ~success) %>%
-  gf_segment(upper + lower ~ (1:20) + (1:20), data = ConfData) %>%
-  gf_hline(yintercept = ~ mean(preemie), data = Babies, color = 4) %>%
+gf_point(mean ~ (1:numsamp), data = ConfData, color = ~ success) |>
+  gf_segment(upper + lower ~ (1:numsamp) + (1:numsamp), data = ConfData) |>
+  gf_hline(yintercept = ~ mean(preemie), data = Babies, color = 4) |>
   gf_labs(x = "", y = "Proportion")
 ```
 

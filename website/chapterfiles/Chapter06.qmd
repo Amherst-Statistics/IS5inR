@@ -1,7 +1,7 @@
 ---
-title: "IS5 in R: XX (Chapter XX)"
+title: "IS5 in R: Scatterplots, Association, and Correlation (Chapter 6)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "2025-01-02"
+date: "2025-01-20"
 date-format: iso
 format: pdf
 toc: true
@@ -33,65 +33,20 @@ library(mosaic)
 library(tidyverse)
 ```
 
-## Chapter X: XX
 
----
-title: "IS5 in R: Scatterplots, Association, and Correlation (Chapter 6)"
-author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 19, 2020"
-output: 
-  pdf_document:
-    fig_height: 3
-    fig_width: 5
-  html_document:
-    fig_height: 3
-    fig_width: 5
-  word_document:
-    fig_height: 4
-    fig_width: 6
----
-
-
-```{r, include = FALSE}
-# Don't delete this chunk if you are using the mosaic package
-# This loads the mosaic and dplyr packages
-library(mosaic)
-library(readr)
-library(janitor)
-library(GGally)
-```
-
-```{r, include = FALSE}
-# knitr settings to control how R chunks work.
-require(knitr)
-opts_chunk$set(
-  tidy = FALSE, # display code as typed
-  size = "small" # slightly smaller font for code
-)
-```
-
-## Introduction and background 
-
-This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-This file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
-
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
-In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
-A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
-A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
 ## Chapter 6: Scatterplots, Association, and Correlation
 
 We begin by reading in the data.
 
-```{r message = TRUE}
-library(mosaic)
-library(readr)
-library(janitor)
-Hurricanes <- read_csv("http://nhorton.people.amherst.edu/is5/data/Tracking_hurricanes_2015.csv")
+```{r}
+#| message: false
+Hurricanes <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Tracking_hurricanes_2015.csv")
 ```
 
-By default, `read_csv()` prints the variable names. These messages can (and should!) be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names.
+These messages can (and should!) be suppressed using the `message: false` code chunk option to save space and improve readability.  
 
 ```{r}
 # Figure 6.1, page 164
@@ -107,8 +62,9 @@ See dots on pages 164-165.
 
 We begin by reading in the data.
 
-```{r message = FALSE}
-Prices <- read_csv("http://nhorton.people.amherst.edu/is5/data/Prices_and_Earnings.csv") %>%
+```{r}
+#| message: false
+Prices <- read_csv("http://nhorton.people.amherst.edu/is5/data/Prices_and_Earnings.csv") |>
   janitor::clean_names()
 names(Prices)
 glimpse(Prices)
@@ -119,13 +75,13 @@ Here we use the `clean_names()` function from the `janitor` package to sanitize 
 The `names()` function displays the names while the `glimpse()` function provides more detail about the dataset.
 
 ```{r}
-gf_point(food_costs ~ womens_clothing, data = Prices) %>%
+gf_point(food_costs ~ womens_clothing, data = Prices) |>
   gf_labs(x = "Cost of Women's Clothes", y = "Food Costs ($)")
-gf_point(i_phone_4s_hr ~ wage_gross, data = Prices) %>%
+gf_point(i_phone_4s_hr ~ wage_gross, data = Prices) |>
   gf_labs(x = "Average Hourly Wage", y = "Hours to Earn an iPhone 4S")
-gf_point(clothing_index ~ hours_worked, data = Prices) %>%
+gf_point(clothing_index ~ hours_worked, data = Prices) |>
   gf_labs(x = "Working Hours", y = "Clothes Index")
-gf_point(food_costs ~ vacation_days, data = Prices) %>%
+gf_point(food_costs ~ vacation_days, data = Prices) |>
   gf_labs(x = "Vacation Days (per year)", y = "Food Costs ($)")
 ```
 
@@ -133,47 +89,55 @@ gf_point(food_costs ~ vacation_days, data = Prices) %>%
 
 #### Smoothing Scatterplots
 
-We begin by reading in the data.
+Many of the previous scatterplots would have benefited from adding a smoother (or smoothing spline).
 
-```{r message = FALSE, warning = FALSE}
-HopkinsForest <- read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") %>%
+We demonstate using the `HopkinsForest` data.
+
+```{r}
+#| message: false
+#| warning: false
+HopkinsForest <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Hopkins_Forest.csv") |>
   janitor::clean_names()
 # Figure 6.2, page 168
-gf_point(avg_wind_mph ~ day_of_year, data = HopkinsForest) %>%
-  gf_smooth(se = FALSE) %>%
+gf_point(avg_wind_mph ~ day_of_year, data = HopkinsForest) |>
+  gf_smooth(se = FALSE) |>
   gf_labs(x = "Day of Year", y = "Average Wind Speed (mph)")
 ```
 
-The smoother warning messages provided by `gf_smooth()` have been removed from this output
-using the `warning = FALSE` code chunk option.
+The smoother warning messages provided by `gf_smooth()` have been removed from this output using the `warning: false` code chunk option.
 
 #### Example 6.2: Smoothing Timeplots
 
 We will explore smoothing using the fitness data.
 
-```{r, message=FALSE, warning = FALSE}
-Fitness <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fitness_data.csv") %>%
+```{r}
+#| message: false
+#| warning: false
+Fitness <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fitness_data.csv") |>
   janitor::clean_names()
-gf_histogram(~weight, data = Fitness, binwidth = 1, center = .5) %>%
+gf_histogram(~weight, data = Fitness, binwidth = 1, center = .5) |>
   gf_labs(x = "Weight (lb)", y = "# of Days")
-gf_point(weight ~ days_since_july_19_2014, data = Fitness) %>%
-  gf_smooth(se = FALSE) %>%
+gf_point(weight ~ days_since_july_19_2014, data = Fitness) |>
+  gf_smooth(se = FALSE) |>
   gf_labs(x = "Days Since July 19, 2014", y = "Weight (lb)")
-gf_boxplot(weight ~ as.factor(month), data = Fitness) %>%
+gf_boxplot(weight ~ as.factor(month), data = Fitness) |>
   gf_labs(x = "Month", y = "Weight (lb)")
 ```
 
-Warnings should be suppressed for your work once you have determined that they are innocuous.
+Warnings should be suppressed for your work but only when you have determined that they are innocuous.
 
 ### Section 6.2: Correlation
 
 We begin by reading in the data.
 
-```{r message = FALSE}
-HeightsWeights <- read_csv("http://nhorton.people.amherst.edu/is5/data/Heights_and_weights.csv")
+```{r}
+#| message: false
+HeightsWeights <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Heights_and_weights.csv")
 
 # Figure 6.3, page 170
-gf_point(Weight ~ Height, data = HeightsWeights) %>%
+gf_point(Weight ~ Height, data = HeightsWeights) |>
   gf_labs(x = "Height (in.)", y = "Weight (lb)")
 cor(Weight ~ Height, data = HeightsWeights)
 ```
@@ -184,9 +148,11 @@ See displays on pages 170 - 171.
 
 We begin by loading the Framingham data.
 
-```{r message = FALSE, warning = FALSE}
+```{r}
+#| message: false
+#| warning: false
 Framingham <- read_csv("http://nhorton.people.amherst.edu/is5/data/Framingham.csv")
-gf_point(SBP ~ DBP, data = Framingham) %>%
+gf_point(SBP ~ DBP, data = Framingham) |>
   gf_labs(x = "Diastolic BP (mm Hg)", y = "Systolic BP (mm Hg)")
 cor(SBP ~ DBP, data = Framingham)
 ```
@@ -196,34 +162,43 @@ cor(SBP ~ DBP, data = Framingham)
 A recurring theme in the course involves random sampling of various sorts.  
 Here we explore a sample of babies born in 1998.
 
-```{r, cache=TRUE, message = FALSE}
-LiveBirths <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") %>%
+```{r}
+#| label: babies
+#| cache: true
+#| message: false
+LiveBirths <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") |>
   janitor::clean_names()
-LiveBirths <- LiveBirths %>%
+LiveBirths <- LiveBirths |>
   filter(dad_age != "NA")
 set.seed(14513) # To ensure we get the same values when we run it multiple times
-numsim <- 10000 # Number of samples
-gf_point(mom_age ~ dad_age, data = sample(LiveBirths, size = 50))
+num_sim <- 10000 # Number of samples
+samp_size <- 50
+gf_point(mom_age ~ dad_age, data = sample(LiveBirths, size = samp_size))
 # Graph will look different for different samples
 cor(mom_age ~ dad_age, data = LiveBirths)
 
 # What does mosaic::do() do?
-cor(mom_age ~ dad_age, data = sample(LiveBirths, size = 50)) # Correlation of one random sample
-cor(mom_age ~ dad_age, data = sample(LiveBirths, size = 50)) # Correlation of another random sample
 
-do(2) * cor(mom_age ~ dad_age, data = sample(LiveBirths, size = 50)) # Finds the correlation twice
+cor(mom_age ~ dad_age, data = sample(LiveBirths, size = samp_size))
+# Correlation of one random sample
 
-# For the visualization, we need 10,000 correlations
-LiveCorr <- do(numsim) * cor(mom_age ~ dad_age, data = sample(LiveBirths, size = 50))
+cor(mom_age ~ dad_age, data = sample(LiveBirths, size = samp_size))
+# Correlation of another random sample
+
+do(2) * cor(mom_age ~ dad_age, data = sample(LiveBirths, size = samp_size))
+# Finds the correlation twice
+
+# For the visualization, we need num_sim = 10,000 correlations
+LiveCorr <- do(num_sim) * cor(mom_age ~ dad_age, data = sample(LiveBirths, size = samp_size))
 ```
 
-The `do()` function runs, 10,000 times, the correlation and sampling functions on a random sample of 50.  
+The `do()` function runs, 10,000 times, the correlation and sampling functions each time on a random sample of `samp_size = 50`.  
 
-(We can use the chunk option `cache=TRUE` to enable caching to save results for next time.) 
+(We can use the chunk option `cache: true` to enable caching to save results for next time.) 
 
 ```{r}
 # Figure 6.8, page 176
-gf_histogram(~cor, data = LiveCorr, binwidth = .05, center = .025) %>%
+gf_histogram(~ cor, data = LiveCorr, binwidth = -0.05, center = 0.025) |>
   gf_labs(
     x = "Correlation of Mother's Age and Father's Age in Samples of Size 50",
     y = "# of Samples"
@@ -234,10 +209,11 @@ gf_histogram(~cor, data = LiveCorr, binwidth = .05, center = .025) %>%
 
 The storks data is a classic example of how correlation does not always imply causation.
 
-```{r message = FALSE}
+```{r}
+#| message: false
 Storks <- read_csv("http://nhorton.people.amherst.edu/is5/data/Storks.csv")
 # Figure 6.9
-gf_point(Population ~ Storks, data = Storks) %>%
+gf_point(Population ~ Storks, data = Storks) |>
   gf_labs(x = "# of Storks", y = "Human Population")
 ```
 
@@ -245,30 +221,34 @@ gf_point(Population ~ Storks, data = Storks) %>%
 
 We can display correlation tables as seen in Table 6.1 on page 178.
 
-```{r message = FALSE}
-Companies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Companies.csv") %>%
+```{r}
+#| message: false
+Companies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Companies.csv") |>
   janitor::clean_names()
 # Table 6.1, page 178
-Companies %>%
-  select(assets, sales, market_value, profits, cash_flow, employees) %>%
+Companies |>
+  select(assets, sales, market_value, profits, cash_flow, employees) |>
   cor()
 ```
 
-```{r fig.width = 7, fig.height = 7}
-Companies %>%
-  select(assets, sales, market_value, profits, cash_flow, employees) %>%
+```{r}
+#| fig.width: 7
+#| fig.height: 7
+Companies |>
+  select(assets, sales, market_value, profits, cash_flow, employees) |>
   GGally::ggpairs()
 ```
 
 ### Section 6.4: Straightening Scatterplots
 
-It's often possible to straightend scatterplots through use of a transformation.
+It's often possible to straighten scatterplots through use of a transformation.
 
-```{r message = FALSE}
-FStops <- read_csv("http://nhorton.people.amherst.edu/is5/data/F-stops.csv") %>%
+```{r}
+#| message: false
+FStops <- read_csv("http://nhorton.people.amherst.edu/is5/data/F-stops.csv") |>
   janitor::clean_names()
 # Figure 6.10, page 179
-gf_point(f_stop ~ shutter_speed, data = FStops) %>%
+gf_point(f_stop ~ shutter_speed, data = FStops) |>
   gf_labs(x = "Shutter Speed (sec)", y = "f/stop")
 cor(f_stop ~ shutter_speed, data = FStops)
 ```
@@ -280,10 +260,10 @@ cor(f_stop ~ shutter_speed, data = FStops)
 The f/Stops example is reviewed on page 181 (Figure 6.11)
 
 ```{r}
-gf_point(log(f_stop) ~ shutter_speed, data = FStops) %>%
+gf_point(log(f_stop) ~ shutter_speed, data = FStops) |>
   gf_labs(x = "Shutter Speed (sec)", y = "Log (f/stop)")
 # Figure 6.12
-gf_point((f_stop)^2 ~ shutter_speed, data = FStops) %>%
+gf_point((f_stop)^2 ~ shutter_speed, data = FStops) |>
   gf_labs(x = "Shutter Speed (sec)", y = "f/stop squareed")
 ```
 

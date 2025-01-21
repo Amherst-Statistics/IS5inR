@@ -1,7 +1,7 @@
 ---
-title: "IS5 in R: XX (Chapter XX)"
+title: "IS5 in R: Confidence Intervals for Means (Chapter 14)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "2025-01-02"
+date: "2025-01-15"
 date-format: iso
 format: pdf
 toc: true
@@ -33,126 +33,94 @@ library(mosaic)
 library(tidyverse)
 ```
 
-## Chapter X: XX
-
----
-title: "IS5 in R: Confidence Intervals for Means (Chapter 14)"
-author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 17, 2020"
-output: 
-  pdf_document:
-    fig_height: 3
-    fig_width: 5
-  html_document:
-    fig_height: 3
-    fig_width: 5
-  word_document:
-    fig_height: 4
-    fig_width: 6
----
-
-
-```{r, include = FALSE}
-# Don't delete this chunk if you are using the mosaic package
-# This loads the mosaic and dplyr packages
-library(mosaic)
-library(readr)
-library(janitor)
-```
-
-```{r, include = FALSE}
-# knitr settings to control how R chunks work.
-require(knitr)
-opts_chunk$set(
-  tidy = FALSE, # display code as typed
-  size = "small" # slightly smaller font for code
-)
-```
-
-## Introduction and background 
-
-This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-This file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
-
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
-In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
-A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
-A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
 ## Chapter 14: Confidence Intervals for Means
 
-```{r message = FALSE}
-library(mosaic)
-library(readr)
-library(janitor)
-Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") %>%
+```{r}
+#| message: false
+Babies <- read_csv("http://nhorton.people.amherst.edu/is5/data/Babysamp_98.csv") |>
   janitor::clean_names()
 ```
 
 By default, `read_csv()` prints the variable names.
-These messages have been suppressed using the `message=FALSE` code chunk option to save space and improve readability. 
+These messages have been suppressed using the `message: false` code chunk option to save space and improve readability. 
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).   
 
 ```{r, cache=TRUE}
 # Figure 14.1, page 441
-gf_histogram(~weight, data = Babies, binwidth = 125) %>%
+gf_histogram(~ weight, data = Babies, binwidth = 125) |>
   gf_labs(x = "Birthweight (g)", y = "# of Babies")
 
 set.seed(12346) # To ensure we get the same values when we run it multiple times
-numsim <- 10000 # Number of simulations
+num_sim <- 10000 # Number of simulations
 
 # What does do() do?
-mean(~weight, data = sample(Babies, size = 100)) # Mean of a random sample of 100
-mean(~weight, data = sample(Babies, size = 100)) # Mean of another random sample
+mean(~ weight, data = sample(Babies, size = 100)) # Mean of a random sample of 100
+mean(~ weight, data = sample(Babies, size = 100)) # Mean of another random sample
 
-do(2) * mean(~weight, data = sample(Babies, size = 100)) # Calculates the mean twice
+do(2) * mean(~ weight, data = sample(Babies, size = 100)) # Calculates the mean twice
 
 # For the visualization, we need 10,000 means
-WeightMeans <- do(numsim) * mean(~weight, data = sample(Babies, size = 100))
+WeightMeans <- do(num_sim) * mean(~ weight, data = sample(Babies, size = 100))
 ```
 
 The `do()` function repeatedly calculates the mean of a random sample of 100 baby weights. 
 
 ```{r}
 # Figure 14.2
-gf_histogram(~mean, data = WeightMeans, binwidth = 10)
-df_stats(~mean, data = WeightMeans)
+gf_histogram(~ mean, data = WeightMeans, binwidth = 10)
+df_stats(~ mean, data = WeightMeans)
 ```
 
 ### Section 14.1: The Central Limit Theorem
 
-```{r, cache=TRUE, message = FALSE}
-CEOComp <- read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation_2014.csv") %>%
+```{r}
+#| label: CEOComp
+#| cache: true
+#| message: false
+set.seed(1821)
+CEOComp <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/CEO_Compensation_2014.csv") |>
   janitor::clean_names()
 
 # Figure 14.3, page 443
-gf_histogram(~ceo_compensation_m, data = CEOComp, binwidth = 10, center = 5) %>%
+gf_histogram(~ ceo_compensation_m, data = CEOComp, binwidth = 10, center = 5) |>
   gf_labs(x = "CEO Compensation in $1,000,000", y = "Frequency")
 
 # Figure 14.4
-numsim <- 1000 # Here the number of simulations is 1,000
-CEOMeansn10 <- do(numsim) * mean(~ceo_compensation_m, data = sample(CEOComp, size = 10))
-gf_histogram(~mean, data = CEOMeansn10) %>%
-  gf_labs(x = "Sampling Distribution of Mean Compensation (in millions), n = 10", y = "Frequency")
+num_sim <- 1000 # Here the number of simulations is 1,000
+CEOMeansn10 <- do(num_sim) * mean(~ ceo_compensation_m, data = sample(CEOComp, size = 10))
+gf_histogram(~ mean, data = CEOMeansn10) |>
+  gf_labs(
+    x = "Sampling Distribution of Mean Compensation (in millions), n = 10", 
+    y = "Frequency"
+  )
 
 # Figure 14.5
-CEOMeansn50 <- do(numsim) * mean(~ceo_compensation_m, data = sample(CEOComp, size = 50))
-gf_histogram(~mean, data = CEOMeansn50) %>%
-  gf_labs(x = "Sampling Distribution of Mean Compensation (in millions), n = 50", y = "Frequency")
+CEOMeansn50 <- do(num_sim) * mean(~ ceo_compensation_m, data = sample(CEOComp, size = 50))
+gf_histogram(~ mean, data = CEOMeansn50) |>
+  gf_labs(
+    x = "Sampling Distribution of Mean Compensation (in millions), n = 50", 
+    y = "Frequency"
+  )
 
 # Figure 14.7 (skipped 14.6 because it's similar)
-CEOMeansn200 <- do(numsim) * mean(~ceo_compensation_m, data = sample(CEOComp, size = 200))
-gf_histogram(~mean, data = CEOMeansn200) %>%
-  gf_labs(x = "Sampling Distribution of Mean Compensation (in millions), n = 200", y = "Frequency")
+CEOMeansn200 <- do(num_sim) * mean(~ ceo_compensation_m, data = sample(CEOComp, size = 200))
+gf_histogram(~ mean, data = CEOMeansn200) |>
+  gf_labs(
+    x = "Sampling Distribution of Mean Compensation (in millions), n = 200", 
+    y = "Frequency"
+  )
 ```
 
 For each example sample size, the `do()` function calculates the mean of random samples of that specified size.
 
-```{r warning = FALSE}
+```{r}
+#| warning: false
 # Samples as overlaid density plots
-gf_density(~mean, data = CEOMeansn10, fill = "purple") %>%
-  gf_density(~mean, data = CEOMeansn50, fill = "blue") %>%
-  gf_density(~mean, data = CEOMeansn200, fill = "red") %>%
+gf_density(~ mean, data = CEOMeansn10, fill = "purple") |>
+  gf_density(~ mean, data = CEOMeansn50, fill = "blue") |>
+  gf_density(~ mean, data = CEOMeansn200, fill = "red") |>
   gf_labs(y = "Density", x = "Means") +
   xlim(7, 25)
 ```
@@ -162,32 +130,34 @@ The purple density reflects the distribution of the means from random samples of
 ### Section 14.2: A Confidence Interval for the Mean
 
 ```{r}
+#| warning: false
 # Figure 14.9, page 446
-gf_dist(dist = "norm", linetype = 2, lwd = 1.5) %>%
-  gf_refine(annotate(geom = "text", x = 1.9, y = .35, label = "Normal Distribution")) %>%
-  gf_labs(x = "", y = "") %>%
-  gf_dist(dist = "t", df = 2, lwd = 1.25) %>%
+gf_dist(dist = "norm", linetype = 2, lwd = 1.5) |>
+  gf_refine(annotate(geom = "text", x = 1.9, y = .35, label = "Normal Distribution")) |>
+  gf_labs(x = "", y = "") |>
+  gf_dist(dist = "t", df = 2, lwd = 1.25) |>
   gf_refine(annotate(geom = "text", x = 3.4, y = .05, label = "T Distribution")) +
   xlim(-4, 4)
 ```
 
 #### Example 14.1: A One-Sample *t*-Interval for the Mean
 
-```{r message = FALSE}
+```{r}
+#| message: false
 # page 448
-Salmon <- read_csv("http://nhorton.people.amherst.edu/is5/data/Farmed_salmon.csv") %>%
+Salmon <- read_csv("http://nhorton.people.amherst.edu/is5/data/Farmed_salmon.csv") |>
   janitor::clean_names()
-Salmon <- Salmon %>%
+Salmon <- Salmon |>
   filter(mirex != "NA")
-df_stats(~mirex, data = Salmon)
-t.test(~mirex, data = Salmon)
+df_stats(~ mirex, data = Salmon)
+t.test(~ mirex, data = Salmon)
 salmonlm <- lm(mirex ~ 1, data = Salmon) # equiv to t.test(~ mirex)
 # replication of interval from page 448
 confint(salmonlm, data = Salmon)
 tstats <- xqt(df = 149, p = c(.025, .975), plot = FALSE)
 # finds the t statistics when given quantiles and df (default will plot a graph)
-sey <- sd(~mirex, data = Salmon) / (150^(1 / 2)) # standard error
-mean(~mirex, data = Salmon) + sey * tstats # calculations match those from confint
+sey <- sd(~ mirex, data = Salmon) / (150^(1 / 2)) # standard error
+mean(~ mirex, data = Salmon) + sey * tstats # calculations match those from confint
 ```
 
 The `confint()` function takes an object, in this case a linear regression model, as an argument.  
@@ -196,10 +166,15 @@ The `confint()` function takes an object, in this case a linear regression model
 
 We can generate a histogram to check the assumptions of the model.
 
-```{r warning = FALSE}
+```{r}
+#| warning: false
 # With a normal distribution (page 450)
-gf_dhistogram(~mirex, data = Salmon, bins = 40) %>%
-  gf_dist(dist = "norm", mean = mean(~mirex, data = Salmon), sd = sd(~mirex, data = Salmon)) %>%
+gf_dhistogram(~ mirex, data = Salmon, bins = 40) |>
+  gf_dist(
+    dist = "norm", 
+    mean = mean(~ mirex, data = Salmon), 
+    sd = sd(~ mirex, data = Salmon)
+  ) |>
   gf_labs(x = "Mirex (ppm)", y = "Density of Salmon") +
   xlim(0, .2)
 ```
@@ -210,9 +185,9 @@ We can do the same for a sample of size 30 from the `Babies` dataset.
 
 ```{r}
 BabiesSample <- sample(Babies, size = 30)
-gf_histogram(~weight, data = BabiesSample, binwidth = 200, center = 100) %>%
+gf_histogram(~ weight, data = BabiesSample, binwidth = 200, center = 100) |>
   gf_labs(x = "Sample of 30 Birthweights", y = "# of Babies")
-df_stats(~weight, data = BabiesSample)
+df_stats(~ weight, data = BabiesSample)
 babieslm <- lm(weight ~ 1, data = BabiesSample)
 confint(babieslm, level = 0.90)
 ```
@@ -223,34 +198,41 @@ confint(babieslm, level = 0.90)
 
 ```{r}
 # page 453
-gf_histogram(~mean, data = WeightMeans, binwidth = 10, center = 5) %>%
+gf_histogram(~ mean, data = WeightMeans, binwidth = 10, center = 5) |>
   gf_labs(x = "Sample Means from Samples of Size 100", y = "# of Samples")
 ```
 
 #### Step-By-Step Example: A Bootstrap Confidence Interval for the Mean
 
 ```{r}
+#| message: false
 # page 455
-CommuteSample <- read_csv("http://nhorton.people.amherst.edu/is5/data/Commuter_sample.csv")
-gf_histogram(~time, data = CommuteSample, binwidth = 10, center = 5)
+CommuteSample <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Commuter_sample.csv")
+gf_histogram(~ time, data = CommuteSample, binwidth = 10, center = 5)
+
 # Bootstrap
-numsim <- 10000
-commutebootstrap <- do(numsim) * mean(~time, data = resample(CommuteSample))
+num_sim <- 10000
+commutebootstrap <- do(num_sim) * mean(~ time, data = resample(CommuteSample))
 ```
 
-The `resample()` function samples of that data set size with replacement. For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
+The `resample()` function samples of that data set size with replacement.
+For more information about `resample()`, refer to the resampling vignette: https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.html
 
-```{r, fig.width=7}
-qdata(~mean, p = c(.025, .975), data = commutebootstrap) # grab the percentiles with qdata
+
+```{r}
+#| fig.width: 7
+qdata(~ mean, p = c(.025, .975), data = commutebootstrap) # grab the percentiles with qdata
 confint(commutebootstrap, method = "quantile") # an equivalent quantile approach
-commutebootstrap <- commutebootstrap %>%
+commutebootstrap <- commutebootstrap |>
   mutate(interval = ifelse(mean > 39.28 & mean < 50.98, "Within 95% Confidence",
     "Outside 95% Confidence"
   )) # for fill
-gf_histogram(~mean,
-  fill = ~interval, data = commutebootstrap,
+gf_histogram(
+  ~ mean,
+  fill = ~ interval, data = commutebootstrap,
   title = "Bootstrap Estimates of Mean Commute Times (minutes)"
-) %>%
+) |>
   gf_labs(x = "Commute Time", y = "", fill = "")
 ```
 

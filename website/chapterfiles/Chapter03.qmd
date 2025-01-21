@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Relationships Between Categorical Variables--Contingency Tables (Chapter 3)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "2025-01-08"
+date: "2025-01-20"
 date-format: iso
 format: pdf
 toc: true
@@ -43,16 +43,30 @@ library(tidyverse)
 #| message: false
 library(janitor)
 OKCupid <-
-  read_csv("http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", skip = 1) |>
+  read_csv(
+    "http://nhorton.people.amherst.edu/is5/data/OKCupid_CatsDogs.csv", 
+    skip = 1
+  ) |>
   janitor::clean_names()
-names(OKCupid)
 ```
 
 The `read_csv()` function lists the input variable names by default.
-These were suppressed using the `message = FALSE` code chunk option to save space.
+These were suppressed using the `message: false` code chunk option to save space.
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace).
 You can use the `names()` function to check the cleaned names.
 We use `skip = 1` because the first line in the original data set is a set of variable labels (e.g., `Col1`, `Col2`).
+
+```{r}
+names(OKCupid)
+```
+
+The `names()` function is an easy way to see what variables are included in a dataset.
+
+```{r}
+glimpse(OKCupid)
+```
+
+The `glimpse()` function provides more information.
 
 ```{r}
 # Table 3.1, page 65
@@ -70,14 +84,18 @@ tally(cats_dogs_both ~ gender,
 tally(gender ~ cats_dogs_both, format = "percent", margin = TRUE, data = OKCupid)
 ```
 
+We note that the logical values `TRUE` and `FALSE` are all caps in R, but that code chunk options are all lower-case (e.g., `message: false`).
+
 
 #### Example 3.1: Exploring Marginal Distributions
 
 We begin by reading and tallying the data.
 
-```{r message = FALSE}
+```{r}
+#| message: false
 SuperBowl <-
-  read_csv("http://nhorton.people.amherst.edu/is5/data/Watch_the_Super_bowl.csv",
+  read_csv(
+    "http://nhorton.people.amherst.edu/is5/data/Watch_the_Super_bowl.csv",
     skip = 1
   )
 tally(~ Plan + Sex, data = SuperBowl)
@@ -87,7 +105,8 @@ tally(~ Plan + Sex, data = SuperBowl)
 
 We do the same for the Titanic data.
 
-```{r message = FALSE}
+```{r}
+#| message: false
 Titanic <- read_csv("http://nhorton.people.amherst.edu/is5/data/Titanic.csv")
 tally(~ Class + Survived, format = "percent", margin = TRUE, data = Titanic)
 tally(Class ~ Survived, format = "percent", margin = TRUE, data = Titanic)
@@ -132,7 +151,8 @@ gf_col(Freq ~ Plan, fill = ~Sex, position = "dodge", data = Superdata)
 
 See displays on page 72.  
 
-```{r message = FALSE}
+```{r}
+#| message: false
 FishDiet <- read_csv("http://nhorton.people.amherst.edu/is5/data/Fish_diet.csv", skip = 1) |>
   janitor::clean_names()
 tally(~ diet_counts + cancer_counts, margins = TRUE, data = FishDiet)
@@ -142,10 +162,19 @@ tally(~ diet_counts + cancer_counts, margins = TRUE, data = FishDiet)
 
 See display on page 74.
 
-```{r message = FALSE}
-Nightmares <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nightmares.csv", skip = 1)
-Nightmares <- Nightmares |>
+```{r}
+#| message: false
+Nightmares <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Nightmares.csv", skip = 1)
+glimpse(Nightmares)
+Nightmares <- Nightmares |>   # recode the `Dream` variable
   mutate(Dream = ifelse(Dream == "N", "Nightmare", "SweetDreams"))
+glimpse(Nightmares)
+```
+
+Now we can calculate the contingency table.
+
+```{r}
 tally(~ Dream + Side, margins = TRUE, data = Nightmares)
 ```
 
@@ -155,12 +184,14 @@ tally(~ Dream + Side, margins = TRUE, data = Nightmares)
 tally(~ Class + Survived, format = "count", data = Titanic)
 tally(~ Class + Survived, format = "percent", data = Titanic)
 # Figure 3.4, page 75
-gf_percents(~Class, fill = ~Survived, position = position_dodge(), data = Titanic)
+gf_percents(~ Class, fill = ~ Survived, position = position_dodge(), data = Titanic)
 # Figure 3.5
-gf_percents(~Survived, fill = ~Class, position = "fill", data = Titanic)
+gf_percents(~ Survived, fill = ~ Class, position = "fill", data = Titanic)
 ```
 
-```{r fig.width=7, fig.height = 7}
+```{r}
+#| fig.width: 7
+#| fig.height: 7
 # Figure 3.6, page 76
 vcd::mosaic(tally(~ Survived + Class, data = Titanic),
   main = "Mosaic plot of Class by Survival",
@@ -180,7 +211,9 @@ tally(~ gender + cats_dogs_both + drugs_y_n, format = "percent", data = OKCupid)
 
 We can repeat the mosaic plot with three variables.
 
-```{r fig.height=5, fig.width=7}
+```{r}
+#| fig.height: 5
+#| fig.width: 7
 vcd::mosaic(tally(~ Sex + Survived + Class, data = Titanic), shade = TRUE)
 ```
 
@@ -191,7 +224,7 @@ Here we demonstrate how to generate one of the tables on page 80.
 ```{r}
 # Create a dataframe from the counts
 # http://mathemathinking.blogspot.com/2012/06/simpsons-paradox.html
-Berk <- rbind(
+Berk <- bind_rows(
   do(512) * data.frame(admit = TRUE, sex = "M", school = "A"),
   do(825 - 512) * data.frame(admit = FALSE, sex = "M", school = "A"),
   do(89) * data.frame(admit = TRUE, sex = "F", school = "A"),
@@ -199,7 +232,10 @@ Berk <- rbind(
 )
 ```
 
-In this case, `do(n)` creates `n` observations with the specified values in `data.frame()`. The `rbind()` function can then be used to combine the data frames into one.  
+As noted previously, the logical values `TRUE` and `FALSE` are all caps in R, but that code chunk options are all lower-case (e.g., `message: false`).
+
+Here, the `do(n)` function is used to create `n` observations with the specified values in `data.frame()`.
+The `bind_rows()` function can then be used to combine the data frames into one.  
 
 ```{r}
 tally(~ sex + admit, data = Berk)

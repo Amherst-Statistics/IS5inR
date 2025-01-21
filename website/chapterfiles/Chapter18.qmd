@@ -1,7 +1,7 @@
 ---
-title: "IS5 in R: XX (Chapter XX)"
+title: "IS5 in R: Paired Samples and Blocks (Chapter 18)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "2025-01-02"
+date: "2025-01-20"
 date-format: iso
 format: pdf
 toc: true
@@ -31,95 +31,56 @@ We begin by loading packages that will be required for our analyses.
 ```{r}
 library(mosaic)
 library(tidyverse)
+library(tidyr) # for the pivot_longer() function
 ```
-
-## Chapter X: XX
-
----
-title: "IS5 in R: Paired Samples and Blocks (Chapter 18)"
-author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 19, 2020"
-output: 
-  pdf_document:
-    fig_height: 3
-    fig_width: 5
-  html_document:
-    fig_height: 3
-    fig_width: 5
-  word_document:
-    fig_height: 4
-    fig_width: 6
----
-
-
-```{r, include = FALSE}
-# Don't delete this chunk if you are using the mosaic package
-# This loads the mosaic and dplyr packages
-library(mosaic)
-library(readr)
-library(janitor)
-library(tidyr)
-```
-
-```{r, include = FALSE}
-# knitr settings to control how R chunks work.
-require(knitr)
-opts_chunk$set(
-  tidy = FALSE, # display code as typed
-  size = "small" # slightly smaller font for code
-)
-```
-
-## Introduction and background 
-
-This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-This file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
-
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
-In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
-A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
-A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
 
 ## Chapter 18: Paired Samples and Blocks
 
-```{r message = FALSE, warning = FALSE}
-library(mosaic)
-library(readr)
-library(janitor)
-library(tidyr) # for the gather() function
-Dexterity <- read_csv("http://nhorton.people.amherst.edu/is5/data/Dexterity.csv") %>%
+```{r}
+#| message: false
+#| warning: false
+Dexterity <- read_csv("http://nhorton.people.amherst.edu/is5/data/Dexterity.csv") |>
   janitor::clean_names()
 ```
 
-By default, `read_csv()` prints the variable names.
-These messages have been suppressed using the `message=FALSE` code chunk option to save space and improve readability. 
+By default, the `read_csv()` function prints the variable names.
+These messages have been suppressed using the `message: false` code chunk option to save space and improve readability. 
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace). 
 
 ```{r}
-Dexterity %>%
-  select(age_months, dominant_1, non_dominant_2, gender) %>%
+Dexterity |>
+  select(age_months, dominant_6, non_dominant_2, gender) |>
   head(n = 7)
 ```
 
 ### Section 18.1: Paired Data
 
-```{r warning = FALSE}
+```{r}
+#| warning: false
 # Figure 18.1
-Dexterity %>%
-  select(dominant_1, non_dominant_2) %>%
-  gather(key = hand_type, value = speed, dominant_1, non_dominant_2) %>%
-  gf_boxplot(speed ~ hand_type, fill = ~hand_type) %>%
+Dexterity |>
+  select(dominant_6, non_dominant_2) |>
+  rename(dominant = dominant_6, non_dominant = non_dominant_2) |>
+  tidyr::pivot_longer(
+    dominant:non_dominant,
+    names_to = "hand_type", 
+    values_to = "speed"
+  ) |>
+  gf_boxplot(speed ~ hand_type, fill = ~ hand_type) |>
   gf_labs(x = "", y = "Speed (cyl/sec)") +
-  ylim(.2, .9) +
+  ylim(0.2, 0.9) +
   guides(fill = FALSE)
 ```
+
+The `pivot_longer()` function is used to reshape the data from wide to long format.
+This is a powerful and flexible function to convert datasets to the format needed to display or model them.
 
 #### Example 18.1: Identifying Paired Data
 
 We begin by creating the data set on page 586.
 
 ```{r}
-WorkWeek <- rbind(
+WorkWeek <- bind_rows(
   data.frame(name = "Jeff", fiveday = 2798, fourday = 2914),
   data.frame(name = "Betty", fiveday = 7724, fourday = 6112),
   data.frame(name = "Roger", fiveday = 7505, fourday = 6177),
@@ -138,9 +99,9 @@ WorkWeek
 Looking at pairwise differences in `Dexterity`.
 
 ```{r}
-Dexterity %>%
-  select(dominant_1, non_dominant_2) %>%
-  mutate(difference = dominant_1 - non_dominant_2) %>%
+Dexterity |>
+  select(dominant_6, non_dominant_2) |>
+  mutate(difference = dominant_6 - non_dominant_2) |>
   head(n = 18)
 ```
 
@@ -151,9 +112,9 @@ Dexterity %>%
 We can display the distribution of the differences (see page 588).
 
 ```{r}
-WorkWeek <- WorkWeek %>%
+WorkWeek <- WorkWeek |>
   mutate(difference = fiveday - fourday)
-gf_histogram(~difference, data = WorkWeek, binwidth = 2000, center = 1000) %>%
+gf_histogram(~ difference, data = WorkWeek, binwidth = 2000, center = 1000) |>
   gf_labs(x = "Difference (mi)", y = "# of Workers")
 ```
 
@@ -162,17 +123,17 @@ gf_histogram(~difference, data = WorkWeek, binwidth = 2000, center = 1000) %>%
 It is straightforward to carry out the paired t-test.
 
 ```{r}
-t.test(~difference, data = WorkWeek)
+t.test(~ difference, data = WorkWeek)
 ```
 
-or
+or do the same by "hand" within R:
 
 ```{r}
 nwork <- nrow(WorkWeek)
 nwork # number of pairs
-dwork <- mean(~difference, data = WorkWeek)
+dwork <- mean(~ difference, data = WorkWeek)
 dwork # mean of differences
-swork <- sd(~difference, data = WorkWeek)
+swork <- sd(~ difference, data = WorkWeek)
 swork # SD of differences
 
 sework <- swork / (nwork^.5)
@@ -184,20 +145,22 @@ twork # t stat
 2 * xpt(twork, df = nwork - 1, lower.tail = FALSE)
 ```
 
-The `xpt()` function finds the p-value and plots it on a graph to visualize it. Here, the visualization shows a one-sided test, but in the book, it is two sided.
+The `xpt()` function finds the p-value and plots it on a graph to visualize it.
+Here, the visualization shows a one-sided test, but in the book, it is two sided.
 
 ### Section 18.3: Confidence Intervals for Matched Pairs
 
 We begin by reading the data.
 
-```{r message = FALSE}
-Couples <- read_csv("http://nhorton.people.amherst.edu/is5/data/Couples.csv") %>%
-  filter(wAge != "*") %>%
+```{r}
+#| message: false
+Couples <- read_csv("http://nhorton.people.amherst.edu/is5/data/Couples.csv") |>
+  filter(wAge != "*") |>
   mutate(wAge = as.numeric(wAge))
 # table on page 592
-Couples %>%
-  select(wAge, hAge) %>%
-  mutate(difference = hAge - wAge) %>%
+Couples |>
+  select(wAge, hAge) |>
+  mutate(difference = hAge - wAge) |>
   head(n = 7)
 ```
 
@@ -206,13 +169,13 @@ Couples %>%
 We replicate the example from page 593.
 
 ```{r}
-DexData <- Dexterity %>%
-  select(dominant_1, non_dominant_2) %>%
-  mutate(difference = dominant_1 - non_dominant_2) %>%
-  filter(dominant_1 < 1)
-# For some reason, the book has removed one observation where dominant_1 = 1,
+DexData <- Dexterity |>
+  select(dominant_6, non_dominant_2) |>
+  mutate(difference = dominant_6 - non_dominant_2) |>
+  filter(dominant_6 < 1)
+# For some reason, the book has removed one observation where dominant_6 = 1,
 # but has kept the count of children at 93 instead of 92
-gf_histogram(~difference, data = DexData, binwidth = .05, center = .025) %>%
+gf_histogram(~ difference, data = DexData, binwidth = .05, center = .025) |>
   gf_labs(x = "Dominant-Non-dominant", y = "# Subjects")
 ```
 
@@ -220,16 +183,16 @@ Here we display the calculations using the `t.test()` function and then by hand.
 
 
 ```{r}
-df_stats(~difference, data = DexData)
-t.test(~difference, data = DexData)
+df_stats(~ difference, data = DexData)
+t.test(~ difference, data = DexData)
 ```
 
 ```{r}
 ndex <- nrow(DexData) + 1 # the book kept n at 93 for some reason
 ndex # number of pairs (children)
-ddex <- mean(~difference, data = DexData)
+ddex <- mean(~ difference, data = DexData)
 ddex # mean difference
-sdex <- sd(~difference, data = DexData)
+sdex <- sd(~ difference, data = DexData)
 sdex # standard deviation of the differences
 sedex <- sdex / (ndex^.5)
 sedex # standard error of the differences
@@ -243,7 +206,7 @@ medex # margin of error of the differences
 ddex + medex
 
 # Or, if you don't want to go through all those calculations:
-t.test(~difference, data = DexData, df = df)
+t.test(~ difference, data = DexData, df = df)
 ```
 
 #### Effect Size  
@@ -272,38 +235,48 @@ Our usual approach to bootstrapping works here.
 
 ```{r}
 set.seed(2345)
-numsim <- 5000
+num_sim <- 5000
 
 # What does do() do?
-mean(~difference, data = resample(DexData)) # One mean of a random resample
-mean(~difference, data = resample(DexData)) # Another mean of a random resample
+mean(~ difference, data = resample(DexData)) # One mean of a random resample
+mean(~ difference, data = resample(DexData)) # Another mean of a random resample
 
-do(2) * mean(~difference, data = resample(DexData)) # Calculates two means
+do(2) * mean(~ difference, data = resample(DexData)) # Calculates two means
 
-# We need numsim means
-DexBoots <- do(numsim) * mean(~difference, data = resample(DexData))
+# We need num_sim means
+DexBoots <- do(num_sim) * mean(~ difference, data = resample(DexData))
 ```
 
-For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
+For more information about `resample()`, refer to the resampling vignette: https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.html
 
-```{r warning = FALSE}
-qdata(~mean, p = c(.025, .975), data = DexBoots)
-DexBoots <- DexBoots %>%
-  mutate(interval = ifelse(mean > .0245 & mean < .0783, "Within 95% Confidence",
+
+```{r}
+#| warning: false
+qdata(~ mean, p = c(.025, .975), data = DexBoots)
+DexBoots <- DexBoots |>
+  mutate(interval = ifelse(
+    mean > 0.0245 & mean < 0.0783, 
+    "Within 95% Confidence",
     "Outside 95% Confidence"
   ))
 
 # Figure 18.4, page 597
-gf_histogram(~mean, fill = ~interval, data = DexBoots, binwidth = .002, center = .001) %>%
-  gf_vline(xintercept = .0245) %>%
-  gf_vline(xintercept = .0783) %>%
+gf_histogram(
+  ~ mean, 
+  fill = ~interval, 
+  data = DexBoots, 
+  binwidth = 0.002, 
+  center = 0.001
+) |>
+  gf_vline(xintercept = 0.0245) |>
+  gf_vline(xintercept = 0.0783) |>
   gf_labs(x = "Differences of Bootstrapped Means", y = "# of Trials") +
   guides(fill = FALSE)
 
 # Figure 18.5
-gf_histogram(~ (mean - ddex), data = DexBoots, binwidth = .002, center = .001) %>%
-  gf_vline(xintercept = ddex) %>%
-  gf_vline(xintercept = -ddex) %>%
+gf_histogram(~ (mean - ddex), data = DexBoots, binwidth = .002, center = .001) |>
+  gf_vline(xintercept = ddex) |>
+  gf_vline(xintercept = -ddex) |>
   gf_labs(x = "Differences of Bootstrapped Means - Actual Difference", y = "# of Trials")
 ```
 
@@ -314,7 +287,7 @@ df_stats(~ (mean - ddex), data = DexBoots)
 With `df_stats()`, we can see that our minimum is within the interval, but our maximum isn't.
 
 ```{r}
-DexBoots %>%
+DexBoots |>
   filter((mean - ddex) > ddex)
 ```
 

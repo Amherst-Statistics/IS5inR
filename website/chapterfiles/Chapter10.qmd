@@ -1,7 +1,7 @@
 ---
-title: "IS5 in R: XX (Chapter XX)"
+title: "IS5 in R: Sample Surveys (Chapter 10)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "2025-01-02"
+date: "2025-01-15"
 date-format: iso
 format: pdf
 toc: true
@@ -33,59 +33,8 @@ library(mosaic)
 library(tidyverse)
 ```
 
-## Chapter X: XX
-
----
-title: "IS5 in R: Sample Surveys (Chapter 10)"
-author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 17, 2020"
-output: 
-  pdf_document:
-    fig_height: 3
-    fig_width: 5
-  html_document:
-    fig_height: 3
-    fig_width: 5
-  word_document:
-    fig_height: 4
-    fig_width: 6
----
-
-
-```{r, include = FALSE}
-# Don't delete this chunk if you are using the mosaic package
-# This loads the mosaic and dplyr packages
-library(mosaic)
-library(readr)
-library(janitor)
-```
-
-```{r, include = FALSE}
-# knitr settings to control how R chunks work.
-require(knitr)
-opts_chunk$set(
-  tidy = FALSE, # display code as typed
-  size = "small" # slightly smaller font for code
-)
-```
-
-## Introduction and background 
-
-This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-This file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
-
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
-In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
-A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
-A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
-
 ## Chapter 10: Sample Surveys
 
-```{r}
-library(mosaic)
-library(readr)
-library(janitor)
-```
 
 ### Section 10.1: The Three Big Ideas of Sampling
 
@@ -97,21 +46,24 @@ library(janitor)
 
 We begin by loading in the data on birthweights.
 
-```{r message = FALSE, warning = FALSE}
+```{r}
+#| message: false
+#| warning: false
 Births <- read_csv("http://nhorton.people.amherst.edu/is5/data/AllBirths1998.csv")
 ```
 
 By default, `read_csv()` prints the variable names.
-These messages were suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
+These messages were suppressed using the `message: false` code chunk option to save space and improve readability.  
 
-```{r warning = FALSE}
+```{r}
+#| warning: false
 # Histogram of known population
-gf_histogram(~birthweight, data = Births, binwidth = 125, center = 62.5) %>%
+gf_histogram(~ birthweight, data = Births, binwidth = 125, center = 62.5) |>
   gf_labs(x = "Weight (g)", y = "Births")
 ```
 
 The histogram shows the distribution of the population of nearly four million births.
-Warning messages about missing values were suppressed using the `warnings=FALSE` code chunk option.
+Warning messages about missing values were suppressed using the `warnings: false` code chunk option.
 
 
 Figure 10.2 (page 326):
@@ -119,24 +71,38 @@ Figure 10.2 (page 326):
 ```{r}
 # Samples of 100
 set.seed(12452)
-gf_density(~birthweight, data = sample(Births, size = 100), fill = 5) %>%
-  gf_density(~birthweight, data = sample(Births, size = 100), fill = 4) %>%
+gf_density(~ birthweight, data = sample(Births, size = 100), fill = 5) |>
+  gf_density(~ birthweight, data = sample(Births, size = 100), fill = 4) |>
+  gf_labs(x = "Birthweights", y = "", title = "Two Samples of Size 100")
+```
+
+Here we set an (arbitrary) random number seed (`12452`).
+This sets our location in a long list of pseudo-random numbers.
+Use of a seed in this manner allows us to rerun the code and get the same answer.
+
+It's not necessarily a best practice to display overlapping densities (or histograms).
+Perhaps a better approach would be to use `gf_dens()` to only display the line.
+
+```{r}
+set.seed(12452)
+gf_dens(~ birthweight, data = sample(Births, size = 100)) |>
+  gf_dens(~ birthweight, data = sample(Births, size = 100)) |>
   gf_labs(x = "Birthweights", y = "", title = "Two Samples of Size 100")
 ```
 
 ```{r}
 # Samples of 250
 set.seed(12452)
-gf_density(~birthweight, data = sample(Births, size = 250), fill = 5) %>%
-  gf_density(~birthweight, data = sample(Births, size = 250), fill = 4) %>%
+gf_density(~ birthweight, data = sample(Births, size = 250), fill = 5) |>
+  gf_density(~ birthweight, data = sample(Births, size = 250), fill = 4) |>
   gf_labs(x = "Birthweights", y = "", title = "Two Samples of Size 250")
 ```
 
 ```{r}
 # Samples of 1000
 set.seed(12452)
-gf_density(~birthweight, data = sample(Births, size = 1000), fill = 5) %>%
-  gf_density(~birthweight, data = sample(Births, size = 1000), fill = 4) %>%
+gf_density(~ birthweight, data = sample(Births, size = 1000), fill = 5) |>
+  gf_density(~ birthweight, data = sample(Births, size = 1000), fill = 4) |>
   gf_labs(x = "Birthweights", y = "", title = "Two Samples of Size 1000")
 ```
 

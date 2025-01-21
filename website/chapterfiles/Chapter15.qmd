@@ -1,7 +1,7 @@
 ---
-title: "IS5 in R: XX (Chapter XX)"
+title: "IS5 in R: Testing Hypotheses (Chapter 15)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "2025-01-02"
+date: "2025-01-20"
 date-format: iso
 format: pdf
 toc: true
@@ -33,59 +33,7 @@ library(mosaic)
 library(tidyverse)
 ```
 
-## Chapter X: XX
-
----
-title: "IS5 in R: Testing Hypotheses (Chapter 15)"
-author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "December 13, 2020"
-output: 
-  pdf_document:
-    fig_height: 3
-    fig_width: 5
-  html_document:
-    fig_height: 3
-    fig_width: 5
-  word_document:
-    fig_height: 4
-    fig_width: 6
----
-
-
-```{r, include = FALSE}
-# Don't delete this chunk if you are using the mosaic package
-# This loads the mosaic and dplyr packages
-library(mosaic)
-library(readr)
-library(janitor)
-```
-
-```{r, include = FALSE}
-# knitr settings to control how R chunks work.
-require(knitr)
-opts_chunk$set(
-  tidy = FALSE, # display code as typed
-  size = "small" # slightly smaller font for code
-)
-```
-
-## Introduction and background 
-
-This document is intended to help describe how to undertake analyses introduced as examples in the Fifth Edition of *Intro Stats* (2018) by De Veaux, Velleman, and Bock.
-This file as well as the associated R Markdown reproducible analysis source file used to create it can be found at http://nhorton.people.amherst.edu/is5.
-
-This work leverages initiatives undertaken by Project MOSAIC (http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum.
-In particular, we utilize the `mosaic` package, which was written to simplify the use of R for introductory statistics courses.
-A short summary of the R needed to teach introductory statistics can be found in the mosaic package vignettes (https://cran.r-project.org/web/packages/mosaic).
-A paper describing the mosaic approach was published in the *R Journal*: https://journal.r-project.org/archive/2017/RJ-2017-024.
-
 ## Chapter 15: Testing Hypotheses
-
-```{r}
-library(mosaic)
-library(readr)
-library(janitor)
-```   
 
 ### Section 15.1: Hypotheses
 
@@ -93,7 +41,7 @@ library(janitor)
 
 ### Section 15.3: The Reasoning of Hypothesis Testing
 
-#### Example 15.5: Finding A P-Value
+#### Example 15.5: Finding a P-Value
 
 It is straightforward to find p-values using summary statistics. 
 
@@ -113,20 +61,23 @@ pnorm(q = phat, mean = p, sd = sdphat)
 
 We begin by reading the data.
 
-```{r message = FALSE}
+```{r}
+#| message: false
 GestationTime <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nashville.csv")
 ```
 
-By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message=FALSE` code chunk option to save space and improve readability.  
+By default, `read_csv()` prints the variable names. These messages can be suppressed using the `message: false` code chunk option to save space and improve readability.  
 
-```{r warning = FALSE}
+```{r}
+#| message: false
+#| warning: false
 # 2. Model (page 482)
-gf_histogram(~Gestation, data = GestationTime, binwidth = 7.5, center = 3.75) %>%
+gf_histogram(~ Gestation, data = GestationTime, binwidth = 7.5, center = 3.75) |>
   gf_labs(x = "Gestation Time (days)", y = "# of Births")
 # 3. Mechanics
-gf_dist(dist = "t", df = 69) %>%
-  gf_vline(xintercept = -3.118) %>%
-  gf_vline(xintercept = 3.118) %>%
+gf_dist(dist = "t", df = 69) |>
+  gf_vline(xintercept = -3.118) |>
+  gf_vline(xintercept = 3.118) |>
   gf_labs(x = "", y = "") +
   xlim(-3.347, 3.347)
 ```
@@ -135,15 +86,17 @@ gf_dist(dist = "t", df = 69) %>%
 
 We begin by reading in the data.
 
-```{r message = FALSE, warning = FALSE}
+```{r}
+#| message: false
+#| warning: false
 # page 485
 Sleep <- read_csv("http://nhorton.people.amherst.edu/is5/data/Sleep.csv")
 # Plan
-df_stats(~Sleep, data = Sleep)
-gf_histogram(~Sleep, data = Sleep, binwidth = 1) %>%
+df_stats(~ Sleep, data = Sleep)
+gf_histogram(~ Sleep, data = Sleep, binwidth = 1) |>
   gf_labs(x = "Hours of Sleep", y = "")
-gf_dist(dist = "t", df = 24) %>%
-  gf_vline(xintercept = -1.67) %>%
+gf_dist(dist = "t", df = 24) |>
+  gf_vline(xintercept = -1.67) |>
   gf_labs(x = "", y = "") +
   xlim(-3, 3)
 # Mechanics
@@ -161,15 +114,17 @@ pt(q = t, df = df) # p-value
 
 It is straightforward to calculate confidence intervals and carry out hypothesis tests.
 
-```{r message = FALSE}
+```{r}
+#| message: false
 # page 487
-Temperatures <- read_csv("http://nhorton.people.amherst.edu/is5/data/Normal_temperature.csv")
-df_stats(~Temp, data = Temperatures)
-gf_histogram(~Temp, data = Temperatures, binwidth = .2)
+Temperatures <- 
+  read_csv("http://nhorton.people.amherst.edu/is5/data/Normal_temperature.csv")
+df_stats(~ Temp, data = Temperatures)
+gf_histogram(~ Temp, data = Temperatures, binwidth = .2)
 # Confidence interval
-y <- mean(~Temp, data = Temperatures)
+y <- mean(~ Temp, data = Temperatures)
 y
-s <- sd(~Temp, data = Temperatures)
+s <- sd(~ Temp, data = Temperatures)
 s
 n <- nrow(Temperatures)
 n
@@ -191,28 +146,30 @@ The boostrap is a flexible alternative approach to inference.
 numsamp <- 10000
 
 # What does do() do?
-mean(~Temp, data = resample(Temperatures)) # Mean of one random resample
-mean(~Temp, data = resample(Temperatures)) # Mean of another random resample
+mean(~ Temp, data = resample(Temperatures)) # Mean of one random resample
+mean(~ Temp, data = resample(Temperatures)) # Mean of another random resample
 
-do(2) * mean(~Temp, data = resample(Temperatures)) # Calculates means of two resamples
+do(2) * mean(~ Temp, data = resample(Temperatures)) # Calculates means of two resamples
 
 # We will use do() a numsamp number of times
-resampletemps <- do(numsamp) * mean(~Temp, data = resample(Temperatures))
+resampletemps <- do(numsamp) * mean(~ Temp, data = resample(Temperatures))
 ```
 
-For more information about `resample()`, refer to the [resample vignette in mosaic](https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf).  
+For more information about `resample()`, refer to the resampling vignette in mosaic: https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.html
 
-```{r warning = FALSE}
-gf_histogram(~mean, data = resampletemps) %>%
+
+```{r}
+#| warning: false
+gf_histogram(~ mean, data = resampletemps) |>
   gf_labs(x = "Mean Temperature", y = "# of Samples")
-qdata(~mean, p = c(.005, .995), data = resampletemps) # reject null hypothesis
+qdata(~ mean, p = c(.005, .995), data = resampletemps) # reject null hypothesis
 
 # Making a model-centric distribution
-Temperatures2 <- Temperatures %>%
+Temperatures2 <- Temperatures |>
   mutate(Temp = Temp + .315)
-resampletemps2 <- do(numsamp) * mean(~Temp, data = resample(Temperatures2))
-gf_histogram(~mean, data = resampletemps2) %>%
-  gf_vline(xintercept = mean(~Temp, data = Temperatures)) %>%
+resampletemps2 <- do(numsamp) * mean(~ Temp, data = resample(Temperatures2))
+gf_histogram(~ mean, data = resampletemps2) |>
+  gf_vline(xintercept = mean(~ Temp, data = Temperatures)) |>
   gf_labs(x = "Mean Temperature Centered at 98.6", y = "# of Samples")
 ```
 
@@ -222,16 +179,16 @@ We begin by creating the dataset.
 
 ```{r}
 # Creating the data set
-Baseball <- rbind(
+Baseball <- bind_rows(
   do(1308) * (winner <- "HOME"),
   do(2431 - 1308) * (winner <- "AWAY")
-) %>%
+) |>
   rename(winner = result)
 # Mechanics (page 490)
 n <- nrow(Baseball)
 p <- .5
-phat <- Baseball %>%
-  filter(winner == "HOME") %>%
+phat <- Baseball |>
+  filter(winner == "HOME") |>
   nrow() / n
 phat
 sdphat <- ((p * (1 - p)) / n)^.5

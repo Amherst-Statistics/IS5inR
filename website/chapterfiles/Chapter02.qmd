@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Displaying and Describing Data (Chapter 2)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "2025-01-08"
+date: "2025-01-20"
 date-format: iso
 format: pdf
 toc: true
@@ -183,7 +183,8 @@ gf_histogram(~charges,
 
 First we need to load the data.
 
-```{r warning = FALSE}
+```{r}
+#| warning: false
 TitanicCrew <- filter(Titanic, Class == "Crew")
 # Figure 2.15, page 32
 TitanicCrew |>
@@ -222,8 +223,8 @@ function to find the difference between the two values.
 #### The Interquartile Range
 
 ```{r}
-df_stats(~Age, data = TitanicCrew)
-IQR(~Age, data = TitanicCrew)
+df_stats(~ Age, data = TitanicCrew)
+IQR(~ Age, data = TitanicCrew)
 ```
 
 Using the `IQR()` function allows us to avoid having to manually find the 
@@ -240,21 +241,23 @@ var(~Age, data = TitanicCrew)
 
 First we need to load the data.
 
-```{r message = FALSE}
+```{r}
+#| message: false
 Nissan <- read_csv("http://nhorton.people.amherst.edu/is5/data/Nissan.csv")
 # Step-by-Step Example, page 39
 gf_histogram(~mpg,
   data = Nissan, binwidth = 1, xlab = "Fuel Efficiency (mpg)",
   ylab = "# of Fill-ups", center = 5 / 2
 )
-df_stats(~mpg, data = Nissan)
+df_stats(~ mpg, data = Nissan)
 ```
 
 #### Random Matters
 
 First we need to load the data.
 
-```{r message = FALSE}
+```{r}
+#| message: false
 Commute <- read_csv("http://nhorton.people.amherst.edu/is5/data/Population_Commute_Times.csv") |>
   janitor::clean_names()
 # Figure 2.19, page 40
