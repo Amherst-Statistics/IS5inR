@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Comparing Counts (Chapter 19)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "2025-01-20"
+date: "2025-01-23"
 date-format: iso
 format: pdf
 toc: true
@@ -61,9 +61,11 @@ BaseballBirths <- read_csv("http://nhorton.people.amherst.edu/is5/data/Ballplaye
 Here we use the `clean_names()` function from the `janitor` package to sanitize the names of the columns (which would otherwise contain special characters or whitespace). 
 
 ```{r}
+#| message: false
 natbirth <- c(.08, .07, .08, .08, .08, .08, .09, .09, .09, .09, .08, .09)
-BaseballBirths <- cbind(BaseballBirths, natbirth) # adding a column for national birth %
-totaln <- sum(~ballplayer_count, data = BaseballBirths)
+BaseballBirths <- # adding a column for national birth %
+  bind_cols(BaseballBirths, natbirth) 
+totaln <- sum(~ ballplayer_count, data = BaseballBirths)
 totaln
 BaseballBirths <- BaseballBirths |>
   mutate(
@@ -71,7 +73,7 @@ BaseballBirths <- BaseballBirths |>
     observed = ballplayer_count,
     contrib = (observed - expected)^2 / expected
   )
-sum(~contrib, data = BaseballBirths)
+sum(~ contrib, data = BaseballBirths)
 ```
 
 #### Assumptions and Conditions
