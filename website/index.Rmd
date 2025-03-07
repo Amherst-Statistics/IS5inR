@@ -6,7 +6,15 @@ title: "Introduction"
 These documents are intended to help describe how to undertake analyses introduced 
 as examples in *Intro Stats* (Fifth Edition, 2018) by De Veaux, Velleman, and Bock.
 
-The data from the textbook can be found at https:data.
+The chapter examples have been organized into parts (following the table of contents):
+
+- [Part I](partI.html) 
+- [Part II](partII.html) 
+- [Part III](partIII.html) 
+- [Part IV](partIV.html) 
+- [Part V](partV.html) 
+
+The datasets from the textbook can be found [HERE](https:data).
 
 This work leverages initiatives undertaken by [Project MOSAIC](http://www.mosaic-web.org), an NSF-funded effort to improve the teaching of statistics, calculus, science and computing in the undergraduate curriculum. For more information about the `mosaic` package, visit the `About' tab. 
 

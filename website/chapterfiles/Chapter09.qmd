@@ -1,7 +1,7 @@
 ---
 title: "IS5 in R: Multiple Regression (Chapter 9)"
 author: "Nicholas Horton (nhorton@amherst.edu)"
-date: "2025-01-20"
+date: "2025-03-07"
 date-format: iso
 format: pdf
 toc: true
@@ -152,10 +152,13 @@ We can assess the equal variance assumption in several ways.
 The simplest is through a scatterplot of residuals vs. fitted values.
 
 ```{r}
+#| message: false
 bodyfatlm <- lm(pct_bf ~ waist + height, data = BodyFat)
+mosaic::msummary(bodyfatlm)
 # Figure 9.4, page 282
 gf_point(resid(bodyfatlm) ~ fitted(bodyfatlm)) |>
-  gf_lm() |>
+  gf_lm(linetype = 2, color = "black") |>
+  gf_smooth(color = "green") |>
   gf_labs(x = "Predicted", y = "Residuals")
 ```
 
@@ -165,11 +168,19 @@ It's important to look at the residuals to see if the "Nearly Normal" condition 
 
 ```{r}
 # Figure 9.5
-gf_histogram(~ resid(bodyfatlm), binwidth = 1.5, center = 0.75) |>
+gf_dhistogram(~ resid(bodyfatlm), binwidth = 1.5, center = 0.75) |>
+  gf_dist("norm", color = "red", sd = 4.46) |> # see residual SE
   gf_labs(x = "Residuals", y = "Counts")
 gf_qq(~ resid(bodyfatlm)) |>
   gf_qqline(linetype = "solid", color = "red") |>
   gf_labs(x = "Normal Scores", y = "Residuals (% Body Fat)")
+```
+
+Alternatively we can generate the QQ plot using the `mplot()` function.
+
+```{r}
+#| message: false
+mplot(bodyfatlm, which = 2)
 ```
 
 #### Step-By-Step Example: Multiple Regression
@@ -213,13 +224,42 @@ gf_point(price ~ age, data = HousingPrices) |>
 gf_point(price ~ log(age + 1), data = HousingPrices) |>
   gf_smooth() |>
   gf_labs(x = "LogAge", y = "Price")
+```
+
+
+```{r}
+#| message: false
 housinglm <- lm(price ~ log(age + 1), data = HousingPrices)
 gf_point(resid(housinglm) ~ fitted(housinglm)) |>
   gf_smooth() |>
   gf_labs(x = "Predicted Values", y = "Residuals")
+```
+
+A similar plot can be generated using `mplot()`:
+
+```{r}
+#| message: false
+mplot(housinglm, which = 1)
+```
+
+Let's fit the model described on page 285.
+
+```{r}
 housinglm2 <- lm(price ~ living_area + log(age + 1) + bedrooms, data = HousingPrices)
 msummary(housinglm2)
 ```
+
+```{r}
+#| message: false
+mplot(housinglm2, which = 1)
+```
+
+```{r}
+#| message: false
+mplot(housinglm2, which = 2)
+```
+
+We see that the NEARLY NORMAL condition isn't well satisfied: there are heavy tails particularly for higher priced homes.
 
 ### Section 9.4: Partial Regression Plots
 
@@ -379,7 +419,8 @@ gf_point(sqrt_price ~ carat_size, color = ~ color, data = diamonddata) |>
   ylim(30, 100)
 ```
 
-```{r warning = FALSE}
+```{r}
+#| warning: false
 # With interaction
 diamondlm2 <- lm(sqrt(price) ~ carat_size * color, data = Diamonds)
 msummary(diamondlm2)

@@ -4,10 +4,10 @@ navbar:
   type: inverse
   left:
 
-    - text: "PDF and Rmd Files"
+    - text: "PDF and Quarto Files"
       icon: fa-file
       menu:
-        - text: "PDF and Rmd Files for Parts I-V of IS5"
+        - text: "PDF and Quarto Files for Parts I-V of IS5"
         - text: "Chapters 1-5 : Part I Exploring and Understanding Data"
           href: partI.html
         - text: "Chapters 6-9 : Part II Exploring Relationships Between Variables"
